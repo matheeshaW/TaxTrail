@@ -6,10 +6,16 @@ make sure you have npm installed on your system,
 
 clone this reposotory, 
 
+
+
 go inside the cloned reposotory and run:
 
 cd backend && npm i
 
-then 
+npm run env:init
+
+open .env and set the MONGO_URI to your mongo db connection string.
+
+then to run the backend
 
 npm run dev
