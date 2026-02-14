@@ -1,9 +1,15 @@
 const User = require('../models/userModel')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 const generateToken = (userId) => {
     return jwt.sign({id: userId},process.env.JWT_SECRET, {expiresIn: '1d'})
+}
+
+const sanitizeUser = (user) => {
+    const safeUser = user.toObject()
+    delete safeUser.password
+    return safeUser
 }
 
 const registerUser = async (userData) => {
@@ -26,7 +32,7 @@ const registerUser = async (userData) => {
 
     const token = generateToken(user._id)
 
-    return {user, token}
+    return {user: sanitizeUser(user), token}
 
 }
 
@@ -45,7 +51,7 @@ const loginUser = async (email, password) => {
 
     const token = generateToken(user._id)
 
-    return {user, token}
+    return {user: sanitizeUser(user), token}
 }
 
 module.exports = {

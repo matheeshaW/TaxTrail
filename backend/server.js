@@ -3,6 +3,9 @@ require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
 const testRoutes = require('./routes/testroutes')
+const authRoutes = require('./routes/authRoutes')
+
+const protect = require('./middleware/authMiddleware')
 
 const app = express()
 
@@ -14,9 +17,12 @@ app.use((req, res, next) => {
 })
 
 //routes
-app.use('/api/testroutes', testRoutes)
+app.use('/api/testroutes', protect, testRoutes)
+app.use('/api/auth', authRoutes)
 
-// connect to db
+
+
+// connect to db and start server
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         //listen for requests
