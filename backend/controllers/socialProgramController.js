@@ -1,4 +1,4 @@
-const SocialProgram = require('../models/socialProgramModel');
+const SocialProgram = require('../models/SocialProgram');
 
 //Create a new social program
 
