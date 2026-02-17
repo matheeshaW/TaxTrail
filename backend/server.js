@@ -4,6 +4,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const testRoutes = require('./routes/testroutes')
 const authRoutes = require('./routes/authRoutes')
+const socialProgramRoutes = require('./routes/socialProgramRoutes')
 
 const protect = require('./middleware/authMiddleware')
 
@@ -19,7 +20,7 @@ app.use((req, res, next) => {
 //routes
 app.use('/api/testroutes', protect, testRoutes)
 app.use('/api/auth', authRoutes)
-
+app.use('/api/socialprograms', socialProgramRoutes)
 
 
 // connect to db and start server
