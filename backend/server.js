@@ -6,6 +6,7 @@ const testRoutes = require('./routes/testroutes')
 const authRoutes = require('./routes/authRoutes')
 
 const protect = require('./middleware/authMiddleware')
+const authorize = require('./middleware/roleMiddleware')
 
 const app = express()
 
@@ -17,7 +18,7 @@ app.use((req, res, next) => {
 })
 
 //routes
-app.use('/api/testroutes', protect, testRoutes)
+app.use('/api/testroutes', protect, authorize('Admin'), testRoutes)
 app.use('/api/auth', authRoutes)
 
 

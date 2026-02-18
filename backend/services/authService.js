@@ -20,7 +20,7 @@ const sanitizeUser = (user) => {
 }
 
 const registerUser = async (userData) => {
-    const {name, email, password} = userData
+    const {name, email, password, role} = userData
 
     const userExists = await User.findOne({ email })
     if(userExists) {
@@ -34,7 +34,8 @@ const registerUser = async (userData) => {
     const user = await User.create({
         name,
         email,
-        password: hashedPassword
+        password: hashedPassword,
+        role
     })
 
     const token = generateToken(user)
