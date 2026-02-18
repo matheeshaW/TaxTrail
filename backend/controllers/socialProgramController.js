@@ -1,17 +1,28 @@
 const SocialProgram = require('../models/SocialProgram');
+const Region = require('../models/regionModel');
 
 //Create a new social program
 
 exports.createProgram = async (req, res) => {
     try {
+        // Check if region exists
+        const regionExists = await Region.findById(req.body.region);
+        if (!regionExists) {
+            return res.status(400).json({ message: 'Region does not exist' });
+        }
+
         const program = await SocialProgram.create({
             ...req.body,
             createdBy: req.user.id
         });
         res.status(201).json(program)
     } catch (error) {
+        console.log(error)
         if (error.name === 'ValidationError') {
             return res.status(400).json({ message: error.message });
+        }
+        if (error.name === 'CastError') {
+            return res.status(400).json({ message: 'Invalid ID format' });
         }
         res.status(500).json({ message: 'Server error' });
     }
@@ -59,9 +70,26 @@ exports.getProgramById = async (req, res) => {
 
 exports.updateProgram = async (req, res) => {
     try {
+        // Filter allowed fields
+        const allowedFields = ['programName', 'sector', 'targetGroup', 'beneficiariesCount', 'budgetUsed', 'year', 'region'];
+        const updates = {};
+        for (const key of Object.keys(req.body)) {
+            if (allowedFields.includes(key)) {
+                updates[key] = req.body[key];
+            }
+        }
+
+        // If region is being updated, check it exists
+        if (updates.region) {
+            const regionExists = await Region.findById(updates.region);
+            if (!regionExists) {
+                return res.status(400).json({ message: 'Region does not exist' });
+            }
+        }
+
         const programUpdated = await SocialProgram.findByIdAndUpdate(
             req.params.id,
-            req.body,
+            updates,
             { new: true, runValidators: true }
         )
 

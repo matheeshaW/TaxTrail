@@ -12,11 +12,9 @@ const authorize = require('../middleware/roleMiddleware')
 router.get('/', socialProgramController.getAllPrograms)
 router.get('/:id', socialProgramController.getProgramById)
 
-// Protected routes (any authenticated user)
-router.post('/', protect, socialProgramController.createProgram)
-router.put('/:id', protect, socialProgramController.updateProgram)
-
 // Admin only
+router.post('/', protect, authorize('admin'), socialProgramController.createProgram)
+router.put('/:id', protect, authorize('admin'), socialProgramController.updateProgram)
 router.delete('/:id', protect, authorize('admin'), socialProgramController.deleteProgram)
 
 module.exports = router
