@@ -1,4 +1,4 @@
-const Region = require('../models/Region')
+const Region = require('../models/regionModel')
 
 // create region
 
