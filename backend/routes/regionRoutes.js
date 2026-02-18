@@ -17,13 +17,13 @@ const { create } = require('../models/userModel')
 
 //Public routes
 
-router.get('/', authorize('Public', 'Admin'), getRegions)
-router.get('/:id', authorize('Public', 'Admin'), getRegion)
+router.get('/',protect, authorize('Public', 'Admin'), getRegions)
+router.get('/:id',protect, authorize('Public', 'Admin'), getRegion)
 
 //Admin routes
 
-router.post('/', authorize('Admin'), createRegion)
-router.put('/:id', authorize('Admin'), updateRegion)
-router.delete('/:id', authorize('Admin'), deleteRegion)
+router.post('/',protect, authorize('Admin'), createRegion)
+router.put('/:id',protect, authorize('Admin'), updateRegion)
+router.delete('/:id', protect,authorize('Admin'), deleteRegion)
 
 module.exports = router

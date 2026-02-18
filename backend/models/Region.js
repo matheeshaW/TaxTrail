@@ -1,4 +1,4 @@
-const mongoose = require('mogoose')
+const mongoose = require('mongoose')
 
 const regionSchema = new mongoose.Schema({
     regionName : {
@@ -12,6 +12,6 @@ const regionSchema = new mongoose.Schema({
 
 // index for performace
 
-regionSchema.index({regionName: 1})
+//regionSchema.index({regionName: 1})   didn't need it cause the unique : true already creates an index for the regionName field
 
 module.exports = mongoose.model('Region' , regionSchema)
