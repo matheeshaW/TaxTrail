@@ -2,8 +2,15 @@ const User = require('../models/userModel')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
-const generateToken = (userId) => {
-    return jwt.sign({id: userId},process.env.JWT_SECRET, {expiresIn: '1d'})
+const generateToken = (user) => {
+    return jwt.sign(
+        {
+            id: user._id,
+            role: user.role
+        },
+        process.env.JWT_SECRET,
+         {expiresIn: '1d'}
+    )
 }
 
 const sanitizeUser = (user) => {
@@ -13,7 +20,7 @@ const sanitizeUser = (user) => {
 }
 
 const registerUser = async (userData) => {
-    const {name, email, password} = userData
+    const {name, email, password, role} = userData
 
     const userExists = await User.findOne({ email })
     if(userExists) {
@@ -27,10 +34,11 @@ const registerUser = async (userData) => {
     const user = await User.create({
         name,
         email,
-        password: hashedPassword
+        password: hashedPassword,
+        role
     })
 
-    const token = generateToken(user._id)
+    const token = generateToken(user)
 
     return {user: sanitizeUser(user), token}
 
@@ -49,7 +57,7 @@ const loginUser = async (email, password) => {
         throw new Error("invalid credentials")
     }
 
-    const token = generateToken(user._id)
+    const token = generateToken(user)
 
     return {user: sanitizeUser(user), token}
 }
