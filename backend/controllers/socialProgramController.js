@@ -22,10 +22,11 @@ exports.createProgram = async (req, res) => {
 exports.getAllPrograms = async (req, res) => {
     try {
         const programs = await SocialProgram.find()
-            .populate('region', 'name')
+            .populate('region', 'regionName')
             .populate('createdBy', 'name email');
         res.status(200).json(programs);
     } catch (error) {
+    console.log(error)
     if (error.name === 'CastError') {
         return res.status(400).json({ message: 'Invalid ID format' });
     }
