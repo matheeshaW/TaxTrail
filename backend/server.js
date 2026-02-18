@@ -8,6 +8,9 @@ const socialProgramRoutes = require('./routes/socialProgramRoutes')
 
 const protect = require('./middleware/authMiddleware')
 
+// Register models for populate
+require('./models/regionModel')
+
 const app = express()
 
 //middleware
