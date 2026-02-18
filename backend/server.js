@@ -2,12 +2,17 @@ require('dotenv').config()
 
 const express = require('express')
 const mongoose = require('mongoose')
+
+
 const testRoutes = require('./routes/testroutes')
 const authRoutes = require('./routes/authRoutes')
+const regionRoutes = require('./routes/regionDevRoutes')
 
 const protect = require('./middleware/authMiddleware')
 
 const app = express()
+
+
 
 //middleware
 app.use(express.json())
@@ -19,7 +24,7 @@ app.use((req, res, next) => {
 //routes
 app.use('/api/testroutes', protect, testRoutes)
 app.use('/api/auth', authRoutes)
-
+app.use('/api/region', regionRoutes)
 
 
 // connect to db and start server

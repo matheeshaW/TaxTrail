@@ -41,6 +41,6 @@ const regionalDevelopmentSchema = new mongoose.Schema({
     timestamps: true
 });
 
-RegionalDevelopmentSchema.index({ regionName: 1, year: 1 }, { unique: true });
+regionalDevelopmentSchema.index({ regionName: 1, year: 1 }, { unique: true });
 
 module.exports=mongoose.model('RegionalDevelopment', regionalDevelopmentSchema);
