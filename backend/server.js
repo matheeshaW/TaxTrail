@@ -2,8 +2,10 @@ require('dotenv').config()
 
 const express = require('express')
 const mongoose = require('mongoose')
+
 const testRoutes = require('./routes/testroutes')
 const authRoutes = require('./routes/authRoutes')
+const regionRoutes = require('./routes/regionRoutes')
 
 const protect = require('./middleware/authMiddleware')
 const authorize = require('./middleware/roleMiddleware')
@@ -20,6 +22,7 @@ app.use((req, res, next) => {
 //routes
 app.use('/api/testroutes', protect, authorize('Admin'), testRoutes)
 app.use('/api/auth', authRoutes)
+app.use('/api/v1/regions', regionRoutes)
 
 
 
