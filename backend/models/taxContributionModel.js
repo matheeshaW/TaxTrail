@@ -1,4 +1,4 @@
-const mongoose = requuire('mogoose')
+const mongoose = require('mongoose')
 
 const taxContributionSchema = new mongoose.Schema({
 

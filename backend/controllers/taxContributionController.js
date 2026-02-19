@@ -37,7 +37,7 @@ const createTaxContribution = async (req, res) => {
 const getTaxContributions = async (req, res) => {
     try{
 
-        const { reigion, year, incomeBracket } = req.quary
+        const { region, year, incomeBracket } = req.query
 
         let filter = {}
 
@@ -52,7 +52,7 @@ const getTaxContributions = async (req, res) => {
         }
 
         const taxes = await TaxContribution.find(filter)
-        populate('region', 'regionName')
+        .populate('region', 'regionName')
         .sort({createdAt: -1})
 
         res.status(200).json({
@@ -99,7 +99,7 @@ const getTaxContribution = async (req, res) => {
 
 // update tax contribution
 
-const updateTaxContriobution = async (req, res) => {
+const updateTaxContribution = async (req, res) => {
     try{
         const tax = await TaxContribution.findByIdAndUpdate(
             req.params.id,
@@ -205,7 +205,7 @@ module.exports = {
     createTaxContribution,
     getTaxContributions,
     getTaxContribution,
-    updateTaxContriobution,
+    updateTaxContribution,
     deleteTaxContribution,
     getTaxSummaryByRegion
 

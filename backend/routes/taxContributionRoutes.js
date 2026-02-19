@@ -9,7 +9,8 @@ const {
     getTaxContributions,
     getTaxContribution,
     deleteTaxContribution,
-    updateTaxContribution
+    updateTaxContribution,
+    getTaxSummaryByRegion
 } = require('../controllers/taxContributionController')
 
 
@@ -18,13 +19,14 @@ const {
 
 router.get('/', protect, authorize('Admin', 'Public'), getTaxContributions)
 router.get('/:id', protect, authorize('Admin', 'Public'), getTaxContribution)
+router.get('/summary/region', protect, authorize('Admin', 'Public'), getTaxSummaryByRegion)
 
 
 //Admin routes
 
-router.post('/', protect, authorrize('Admin'), createTaxContribution)
+router.post('/', protect, authorize('Admin'), createTaxContribution)
 router.delete('/:id', protect, authorize('Admin'), deleteTaxContribution)
-router.patch('/:id', protect, authorize('Admin'), updateTaxContribution)
+router.put('/:id', protect, authorize('Admin'), updateTaxContribution)
 
 module.exports = router
 
