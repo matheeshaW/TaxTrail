@@ -3,6 +3,8 @@ const router = express.Router()
 
 const protect = require('../middleware/authMiddleware')
 const authorize = require('../middleware/roleMiddleware')
+const validate = require('../middleware/validateMiddleware')
+const { createTaxValidator } = require('../validators/taxContributionValidator')
 
 const {
     createTaxContribution,
@@ -24,7 +26,7 @@ router.get('/summary/region', protect, authorize('Admin', 'Public'), getTaxSumma
 
 //Admin routes
 
-router.post('/', protect, authorize('Admin'), createTaxContribution)
+router.post('/', protect, authorize('Admin'), createTaxValidator, validate, createTaxContribution)
 router.delete('/:id', protect, authorize('Admin'), deleteTaxContribution)
 router.put('/:id', protect, authorize('Admin'), updateTaxContribution)
 
