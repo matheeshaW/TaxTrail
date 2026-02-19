@@ -97,11 +97,116 @@ const getTaxContribution = async (req, res) => {
     }
 }
 
+// update tax contribution
+
+const updateTaxContriobution = async (req, res) => {
+    try{
+        const tax = await TaxContribution.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            {new: true, runValidators: true}
+        )
+
+        if(!tax){
+            return res.status(404).json({
+                success: false,
+                message: "Tax record not found"
+            })
+        }
+
+        res.status(200).json({
+            success: true,
+            data: tax
+        })
+
+    }catch(error){
+        res.status(400).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
+
+//delete tax contribution
+
+
+const deleteTaxContribution = async (req, res) => {
+    try{
+
+        const tax = await TaxContribution.findByIdAndDelete(req.params.id)
+
+            if(!tax){
+            return res.status(404).json({
+                success: false,
+                message: "Tax record not found"
+            })
+        }
+
+        res.status(200).json({
+            success: true,
+            data: tax,
+            message: "Tax contribution deleted successfully"
+        })
+
+    }catch(error){
+        res.status(400).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
+
+// get summary by regiion
+
+const getTaxSummaryByRegion = async (req, res) => {
+  try {
+    const summary = await TaxContribution.aggregate([
+      {
+        $group: {
+          _id: "$region",
+          totalTax: { $sum: "$amount" }
+        }
+      },
+      {
+        $lookup: {
+          from: "regions",
+          localField: "_id",
+          foreignField: "_id",
+          as: "regionDetails"
+        }
+      },
+      { $unwind: "$regionDetails" },
+      {
+        $project: {
+          regionName: "$regionDetails.regionName",
+          totalTax: 1
+        }
+      }
+    ])
+
+    res.status(200).json({
+      success: true,
+      data: summary
+    })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    })
+  }
+}
+
 
 
 
 module.exports = {
     createTaxContribution,
-    getTaxContributions
+    getTaxContributions,
+    getTaxContribution,
+    updateTaxContriobution,
+    deleteTaxContribution,
+    getTaxSummaryByRegion
 
 }
