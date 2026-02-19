@@ -1,7 +1,7 @@
 const TaxContribution = require('../models/taxContributionModel')
 const Region = require('../models/regionModel')
 
-const { convertCurrency } = require('../services/exchangeRateService')
+const { getRatesFromBase } = require('../services/exchangeRateService')
 
 // create tax contribution
 
@@ -57,15 +57,38 @@ const getTaxContributions = async (req, res) => {
         .populate('region', 'regionName')
         .sort({createdAt: -1})
 
+
+        let formattedTaxes = taxes.map(tax => tax.toObject())
+
         //if currency conversion is requested
 
-        
+        if(currency){
+            const rates = await getRatesFromBase('LKR')
+
+            if(!rates[currency]){
+                return res.status(400).json({
+                    success: false,
+                    message: "Unsupported currency for conversion"
+                })
+            }
+
+            const rate = rates[currency]
+
+            formattedTaxes = formattedTaxes.map(tax => ({
+                ...tax,
+                originalAmount: tax.amount,
+                convertedAmount: Number((tax.amount * rate).toFixed(2)),
+                convertedCurrency: currency
+            }))
+        }
 
         res.status(200).json({
             success: true,
-            count: taxes.length,
-            data: taxes
+            count: formattedTaxes.length,
+            data: formattedTaxes
         })
+
+
     }catch(error){
         res.status(400).json({
             success: false,
