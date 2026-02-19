@@ -1,22 +1,32 @@
 const TaxContribution = require('../models/taxContributionModel')
 const Region = require('../models/regionModel')
+const mongoose = require('mongoose')
 
 const { getRatesFromBase } = require('../services/exchangeRateService')
 
 // create tax contribution
 
-const createTaxContribution = async (req, res) => {
+const createTaxContribution = async (req, res, next) => {
     try{
 
         const {region} = req.body
 
+        //validate object id format
+
+        if(!mongoose.Types.ObjectId.isValid(region)){
+            const error = new Error("Invalid region ID format")
+            error.statusCode = 400
+            return next(error)
+        }
+        
+        //check if region exists
+
         const existingRegion = await Region.findById(region)
 
         if(!existingRegion){
-            return res.status(404).json({
-                success: false,
-                message: "Region not found"
-            })
+            const error = new Error("Region not found")
+            error.statusCode = 404
+            return next(error)
         }
 
         const tax = await TaxContribution.create(req.body)
@@ -26,17 +36,13 @@ const createTaxContribution = async (req, res) => {
             data: tax
         })
     }catch(error){
-        res.status(400).json({
-            success: false,
-            message: error.message
-        })
-
+        return next(error)
     }
 }
 
 //get all tax contributions
 
-const getTaxContributions = async (req, res) => {
+const getTaxContributions = async (req, res, next) => {
     try{
 
         const { region, year, incomeBracket, currency } = req.query
@@ -66,10 +72,9 @@ const getTaxContributions = async (req, res) => {
             const rates = await getRatesFromBase('LKR')
 
             if(!rates[currency]){
-                return res.status(400).json({
-                    success: false,
-                    message: "Unsupported currency for conversion"
-                })
+                const error = new Error("Unsupported currency for conversion")
+                error.statusCode = 400
+                return next(error)
             }
 
             const rate = rates[currency]
@@ -90,26 +95,30 @@ const getTaxContributions = async (req, res) => {
 
 
     }catch(error){
-        res.status(400).json({
-            success: false,
-            message: error.message
-        })
+        return next(error)
     }
 }
 
 
 // get single tax contribution
 
-const getTaxContribution = async (req, res) => {
+const getTaxContribution = async (req, res, next) => {
     try{
+        //validate object id format
+
+        if(!mongoose.Types.ObjectId.isValid(req.params.id)){
+            const error = new Error("Invalid tax contribution ID format")
+            error.statusCode = 400
+            return next(error)
+        }
+
         const tax = await TaxContribution.findById(req.params.id)
         .populate('region', 'regionName')
 
         if(!tax){
-            return res.status(404).json({
-                success: false,
-                message: "Tax contribution not found"
-            })
+            const error = new Error("Tax contribution not found")
+            error.statusCode = 404
+            return next(error)
         }
 
         res.status(200).json({
@@ -119,17 +128,23 @@ const getTaxContribution = async (req, res) => {
 
 
     }catch(error){
-        res.status(400).json({
-            success: false,
-            message: error.message
-        })
+        return next(error)
     }
 }
 
 // update tax contribution
 
-const updateTaxContribution = async (req, res) => {
+const updateTaxContribution = async (req, res, next) => {
     try{
+
+        //validate object id format
+        
+        if(!mongoose.Types.ObjectId.isValid(req.params.id)){
+            const error = new Error("Invalid tax contribution ID format")
+            error.statusCode = 400
+            return next(error)
+        }
+
         const tax = await TaxContribution.findByIdAndUpdate(
             req.params.id,
             req.body,
@@ -137,10 +152,9 @@ const updateTaxContribution = async (req, res) => {
         )
 
         if(!tax){
-            return res.status(404).json({
-                success: false,
-                message: "Tax record not found"
-            })
+            const error = new Error("Tax contribution not found")
+            error.statusCode = 404
+            return next(error)
         }
 
         res.status(200).json({
@@ -149,10 +163,7 @@ const updateTaxContribution = async (req, res) => {
         })
 
     }catch(error){
-        res.status(400).json({
-            success: false,
-            message: error.message
-        })
+        return next(error)
     }
 }
 
@@ -160,16 +171,23 @@ const updateTaxContribution = async (req, res) => {
 //delete tax contribution
 
 
-const deleteTaxContribution = async (req, res) => {
+const deleteTaxContribution = async (req, res, next) => {
     try{
+
+        //validate object id format
+        
+        if(!mongoose.Types.ObjectId.isValid(req.params.id)){
+            const error = new Error("Invalid tax contribution ID format")
+            error.statusCode = 400
+            return next(error)
+        }
 
         const tax = await TaxContribution.findByIdAndDelete(req.params.id)
 
             if(!tax){
-            return res.status(404).json({
-                success: false,
-                message: "Tax record not found"
-            })
+            const error = new Error("Tax record not found")
+            error.statusCode = 404
+            return next(error)
         }
 
         res.status(200).json({
@@ -179,17 +197,14 @@ const deleteTaxContribution = async (req, res) => {
         })
 
     }catch(error){
-        res.status(400).json({
-            success: false,
-            message: error.message
-        })
+        return next(error)
     }
 }
 
 
 // get summary by regiion
 
-const getTaxSummaryByRegion = async (req, res) => {
+const getTaxSummaryByRegion = async (req, res, next) => {
   try {
     const summary = await TaxContribution.aggregate([
       {
@@ -220,10 +235,7 @@ const getTaxSummaryByRegion = async (req, res) => {
       data: summary
     })
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    })
+    return next(error)
   }
 }
 
