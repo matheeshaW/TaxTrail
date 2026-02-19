@@ -22,12 +22,14 @@ const createTaxContribution = async (req, res, next) => {
 const getTaxContributions = async (req, res, next) => {
     try{
 
-        const taxes = await taxService.getAllTax(req.query)
+        const result = await taxService.getAllTax(req.query)
 
         res.status(200).json({
             success: true,
-            count: taxes.length,
-            data: taxes
+            total: result.total,
+            page: result.page,
+            pages: result.pages,
+            data: result.data
         })
 
 

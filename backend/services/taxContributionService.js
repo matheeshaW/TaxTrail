@@ -34,7 +34,7 @@ const createTax = async(data) => {
 
 const getAllTax = async (queryParams) => {
 
-        const { region, year, incomeBracket, currency } = queryParams
+        const { region, year, incomeBracket, currency, page = 1, limit = 10 } = queryParams
 
         let filter = {}
 
@@ -48,10 +48,15 @@ const getAllTax = async (queryParams) => {
             filter.incomeBracket = incomeBracket
         }
 
+        const skip = (page - 1) * limit
+
         const taxes = await TaxContribution.find(filter)
         .populate('region', 'regionName')
         .sort({createdAt: -1})
+        .skip(Number(skip))
+        .limit(Number(limit))
 
+        const total = await TaxContribution.countDocuments(filter) //get total count of documets
 
         let formattedTaxes = taxes.map(tax => tax.toObject())
 
@@ -76,7 +81,12 @@ const getAllTax = async (queryParams) => {
             }))
         }
 
-        return formattedTaxes
+        return {
+            total,
+            page: Number(page),
+            pages: Math.ceil(total / limit),
+            data: formattedTaxes
+        }
 
 }
 
