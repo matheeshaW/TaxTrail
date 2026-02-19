@@ -17,7 +17,12 @@ const getGiniIndex = async (countryCode) => {
             throw new Error("No valid Gini data available")
         }
 
-        return filtered.slice(0, 5); // latest 5 records
+        const cleanedData = filtered.slice(0, 5).map(item => ({
+            year: item.date,
+            giniIndex: item.value
+        }))
+
+        return cleanedData
 
     } catch (error) {
         throw new Error("Failed to fetch Gini Index data")
