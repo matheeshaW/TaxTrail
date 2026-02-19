@@ -1,9 +1,18 @@
 const axios = require('axios')
 
-
+let cachedRates = null
+let lastFetched = null
+const CACHE_DURATION = 60 * 60 * 1000 // 1 hour
 
 const getRatesFromBase = async (baseCurrency) => {
     try{
+
+        const now = Date.now()
+
+        if(cachedRates && (now - lastFetched) < CACHE_DURATION){
+            return cachedRates
+        }
+
 
         const response = await axios.get(
             `${process.env.EXCHANGE_RATE_BASE_URL_ONE}/${baseCurrency}`
@@ -13,7 +22,10 @@ const getRatesFromBase = async (baseCurrency) => {
             throw new Error('Failed to fetch exchange rates')
         }
 
-        return response.data.rates
+        cachedRates = response.data.rates
+        lastFetched = now
+        
+        return cachedRates
 
     }catch(error){
         throw new Error(error.message || 'Error fetching exchange rates')
