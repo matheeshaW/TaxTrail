@@ -6,7 +6,7 @@ exports.createTaxValidator = [
     .withMessage('Invalid payer type'),
 
   body('incomeBracket')
-    .isIn(['Low', 'Middle', 'High'])
+    .isIn(['Low', 'Medium', 'High'])
     .withMessage('Invalid income bracket'),
 
   body('taxType')
