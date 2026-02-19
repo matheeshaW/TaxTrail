@@ -6,9 +6,11 @@ const mongoose = require('mongoose')
 const testRoutes = require('./routes/testroutes')
 const authRoutes = require('./routes/authRoutes')
 const regionRoutes = require('./routes/regionRoutes')
+const taxContributionRoutes = require('./routes/taxContributionRoutes')
 
 const protect = require('./middleware/authMiddleware')
 const authorize = require('./middleware/roleMiddleware')
+const errorHandler = require('./middleware/errorMiddleware')
 
 const app = express()
 
@@ -23,7 +25,10 @@ app.use((req, res, next) => {
 app.use('/api/testroutes', protect, authorize('Admin'), testRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/v1/regions', regionRoutes)
+app.use('/api/v1/tax-contributions', taxContributionRoutes)
 
+
+app.use(errorHandler) //keep at bottom
 
 
 // connect to db and start server
