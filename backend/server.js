@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 const testRoutes = require('./routes/testroutes')
 const authRoutes = require('./routes/authRoutes')
 const socialProgramRoutes = require('./routes/socialProgramRoutes')
+const inequalityRoutes = require('./routes/inequalityRoutes')
 
 
 
@@ -26,6 +27,7 @@ app.use((req, res, next) => {
 app.use('/api/testroutes', protect, testRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/socialprograms', socialProgramRoutes)
+app.use('/api/inequality', inequalityRoutes)
 
 
 
