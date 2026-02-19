@@ -20,8 +20,8 @@ const {
 
 
 router.get('/', protect, authorize('Admin', 'Public'), getTaxContributions)
-router.get('/:id', protect, authorize('Admin', 'Public'), getTaxContribution)
 router.get('/summary/region', protect, authorize('Admin', 'Public'), getTaxSummaryByRegion)
+router.get('/:id', protect, authorize('Admin', 'Public'), getTaxContribution)
 
 
 //Admin routes
