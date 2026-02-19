@@ -1,6 +1,8 @@
 const TaxContribution = require('../models/taxContributionModel')
 const Region = require('../models/regionModel')
 
+const { convertCurrency } = require('../services/exchangeRateService')
+
 // create tax contribution
 
 const createTaxContribution = async (req, res) => {
@@ -37,7 +39,7 @@ const createTaxContribution = async (req, res) => {
 const getTaxContributions = async (req, res) => {
     try{
 
-        const { region, year, incomeBracket } = req.query
+        const { region, year, incomeBracket, currency } = req.query
 
         let filter = {}
 
@@ -54,6 +56,10 @@ const getTaxContributions = async (req, res) => {
         const taxes = await TaxContribution.find(filter)
         .populate('region', 'regionName')
         .sort({createdAt: -1})
+
+        //if currency conversion is requested
+
+        
 
         res.status(200).json({
             success: true,
