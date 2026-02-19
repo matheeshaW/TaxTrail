@@ -10,6 +10,7 @@ const taxContributionRoutes = require('./routes/taxContributionRoutes')
 
 const protect = require('./middleware/authMiddleware')
 const authorize = require('./middleware/roleMiddleware')
+const errorHandler = require('./middleware/errorMiddleware')
 
 const app = express()
 
@@ -26,6 +27,8 @@ app.use('/api/auth', authRoutes)
 app.use('/api/v1/regions', regionRoutes)
 app.use('/api/v1/tax-contributions', taxContributionRoutes)
 
+
+app.use(errorHandler) //keep at bottom
 
 
 // connect to db and start server
