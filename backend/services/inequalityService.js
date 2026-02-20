@@ -1,6 +1,6 @@
 const axios = require('axios')
 
-const getGiniIndex = async (countryCode) => {
+const getLatestGini = async (countryCode) => {
     try {
         const response = await axios.get
         (`https://api.worldbank.org/v2/country/${countryCode}/indicator/SI.POV.GINI?format=json`)
@@ -29,4 +29,4 @@ const getGiniIndex = async (countryCode) => {
     }
 }
 
-module.exports = { getGiniIndex }
+module.exports = { getLatestGini }

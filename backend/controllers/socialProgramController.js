@@ -1,5 +1,6 @@
 const SocialProgram = require('../models/SocialProgram');
 const Region = require('../models/regionModel');
+const { getLatestGini } = require('../services/inequalityService');
 
 //Create a new social program
 
@@ -129,3 +130,39 @@ exports.deleteProgram = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 }
+
+exports.getInequalityAnalysis = async (req, res) => {
+    try {
+        const { country } = req.params
+
+        const giniData = await getLatestGini(country)
+
+        const programs = await SocialProgram.find()
+
+        const totalBudgetUsed = programs.reduce(
+            (sum, program) => sum + program.budgetUsed,
+            0
+        )
+
+        let analysisMessage
+
+        if (giniData.giniIndex > 45) {
+            analysisMessage = "High inequality detected. Increased social spending may be necessary.";
+        } else if (giniData.giniIndex > 35) {
+            analysisMessage = "Moderate inequality observed. Social programs play a key role in redistribution.";
+        } else {
+            analysisMessage = "Relatively low inequality. Current social programs may be effective.";
+        }
+
+        res.status(200).json({
+            country,
+            giniYear: giniData.year,
+            giniIndex: giniData.giniIndex,
+            totalPrograms: programs.length,
+            totalBudgetUsed,
+            analysis: analysisMessage
+        })
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+        }       
+    }

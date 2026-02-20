@@ -1,4 +1,4 @@
-const { getGiniIndex } = require('../services/inequalityService')
+const { getLatestGini } = require('../services/inequalityService')
 
 const fetchInequality = async (req, res) => {
     try {
@@ -8,7 +8,7 @@ const fetchInequality = async (req, res) => {
             return res.status(400).json({ message: 'Invalid or missing country parameter' })
         }
 
-        const data = await getGiniIndex(country)
+        const data = await getLatestGini(country)
 
         res.status(200).json({
             country,
