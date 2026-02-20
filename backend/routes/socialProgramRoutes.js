@@ -8,9 +8,14 @@ const protect = require('../middleware/authMiddleware')
 // Import the role middleware
 const authorize = require('../middleware/roleMiddleware')
 
+const { getInequalityAnalysis } = require("../controllers/socialProgramController");
+
+
 // Public routes
 router.get('/', socialProgramController.getAllPrograms)
 router.get('/:id', socialProgramController.getProgramById)
+
+router.get("/inequality-analysis/:country", getInequalityAnalysis);
 
 // Admin only
 router.post('/', protect, authorize('admin'), socialProgramController.createProgram)
