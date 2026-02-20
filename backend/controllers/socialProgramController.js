@@ -144,14 +144,14 @@ exports.getInequalityAnalysis = async (req, res) => {
             0
         )
 
-        let analysisMessage
+        let analysisMessage;
 
-        if (giniData.giniIndex > 45) {
-            analysisMessage = "High inequality detected. Increased social spending may be necessary."
-        } else if (giniData.giniIndex > 35) {
-            analysisMessage = "Moderate inequality observed. Social programs play a key role in redistribution."
+        if (giniData.giniIndex >= 45) {
+            analysisMessage = "High income inequality detected. Strong redistribution policies and expanded social welfare programs may be required."
+        } else if (giniData.giniIndex >= 35) {
+            analysisMessage = "Moderate income inequality observed. Social programs play an important role in wealth redistribution and poverty mitigation."
         } else {
-            analysisMessage = "Relatively low inequality. Current social programs may be effective."
+            analysisMessage = "Lower income inequality observed. Current social welfare initiatives appear relatively balanced."
         }
 
         res.status(200).json({
