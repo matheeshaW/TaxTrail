@@ -21,7 +21,7 @@ const getLatestGini = async (countryCode) => {
 
         return {
             year: latest.date,
-            getGiniIndex: latest.value
+            giniIndex: latest.value
         }
 
     } catch (error) {
