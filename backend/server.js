@@ -3,12 +3,19 @@ require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
 
-
 const testRoutes = require('./routes/testroutes')
 const authRoutes = require('./routes/authRoutes')
-const regionRoutes = require('./routes/regionDevRoutes')
+
+// --- My routes(Randima) Route (Renamed to avoid crashing with your team) ---
+const regionalDevelopmentRoutes = require('./routes/regionDevRoutes')
+
+
+const regionRoutes = require('./routes/regionRoutes')
+const taxContributionRoutes = require('./routes/taxContributionRoutes')
 
 const protect = require('./middleware/authMiddleware')
+const authorize = require('./middleware/roleMiddleware')
+const errorHandler = require('./middleware/errorMiddleware')
 
 const app = express()
 
@@ -22,9 +29,17 @@ app.use((req, res, next) => {
 })
 
 //routes
-app.use('/api/testroutes', protect, testRoutes)
+app.use('/api/testroutes', protect, authorize('Admin'), testRoutes)
 app.use('/api/auth', authRoutes)
-app.use('/api/region', regionRoutes)
+
+// --- My Rotes(Randima)---
+app.use('/api/v1/regional-development', regionalDevelopmentRoutes)
+
+
+app.use('/api/v1/regions', regionRoutes)
+app.use('/api/v1/tax-contributions', taxContributionRoutes)
+
+app.use(errorHandler) //keep at bottom
 
 
 // connect to db and start server
