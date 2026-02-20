@@ -1,12 +1,23 @@
 const express = require('express');
 const router = express.Router();
-const { createRegionData, getRegions, getRegionSDGAnalysis } = require('../controllers/regionDevController'); 
 
-// Public Routes 
-router.get('/', getRegions);
-router.get('/sdg-metrics/:regionName', getRegionSDGAnalysis);
+const protect = require('../middleware/authMiddleware');
+const authorize = require('../middleware/roleMiddleware');
 
-// Protected Routes (Simulated for now - we will add auth middleware later)
-router.post('/', createRegionData);
+const {
+  createRegionData,
+  getRegions,
+  getInequalityIndex,
+  getRegionSDGAnalysis
+} = require('../controllers/regionDevController');
+
+
+// --- Public/Shared Routes ---
+router.get('/', protect, authorize('Public', 'Admin'), getRegions);
+router.get('/inequality-index', protect, authorize('Public', 'Admin'), getInequalityIndex);
+router.get('/sdg-metrics/:id', protect, authorize('Public', 'Admin'), getRegionSDGAnalysis);
+
+// --- Admin Only Routes ---
+router.post('/', protect, authorize('Admin'), createRegionData);
 
 module.exports = router;
