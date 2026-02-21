@@ -13,17 +13,13 @@ exports.createProgram = async (req, res) => {
             return res.status(400).json({ message: 'Beneficiaries count must be greater than zero for Low Income target group' })
         }
 
-        // Rule 3 — Year must not exceed latest inequality data year
+        // Rule 3 — Year must not be in the future
         if (year) {
-            try {
-                const giniData = await getLatestGini('LKA')
-                if (giniData && year > parseInt(giniData.year)) {
-                    return res.status(400).json({
-                        message: `Program year cannot exceed latest inequality data year (${giniData.year})`
-                    })
-                }
-            } catch (giniError) {
-                console.log('Gini API unavailable, skipping year validation')
+            const currentYear = new Date().getFullYear()
+            if (year > currentYear) {
+                return res.status(400).json({
+                    message: `Program year cannot exceed current year (${currentYear})`
+                })
             }
         }
 
@@ -109,28 +105,34 @@ exports.updateProgram = async (req, res) => {
             }
         }
 
+        // Fetch existing program to merge with updates for validation
+        const existingProgram = await SocialProgram.findById(req.params.id)
+        if (!existingProgram) {
+            return res.status(404).json({ message: 'Program not found' })
+        }
+
+        const finalTargetGroup = updates.targetGroup || existingProgram.targetGroup
+        const finalBeneficiaries = updates.beneficiariesCount !== undefined ? updates.beneficiariesCount : existingProgram.beneficiariesCount
+        const finalBudget = updates.budgetUsed !== undefined ? updates.budgetUsed : existingProgram.budgetUsed
+
         // Rule 2 — Beneficiaries must be > 0 for Low Income
-        if (updates.targetGroup === 'Low Income' && (updates.beneficiariesCount !== undefined && updates.beneficiariesCount <= 0)) {
+        if (finalTargetGroup === 'Low Income' && (!finalBeneficiaries || finalBeneficiaries <= 0)) {
             return res.status(400).json({ message: 'Beneficiaries count must be greater than zero for Low Income target group' })
         }
 
-        // Rule 3 — Year must not exceed latest inequality data year
+        // Rule 3 — Year must not be in the future
         if (updates.year) {
-            try {
-                const giniData = await getLatestGini('LKA')
-                if (giniData && updates.year > parseInt(giniData.year)) {
-                    return res.status(400).json({
-                        message: `Program year cannot exceed latest inequality data year (${giniData.year})`
-                    })
-                }
-            } catch (giniError) {
-                console.log('Gini API unavailable, skipping year validation')
+            const currentYear = new Date().getFullYear()
+            if (updates.year > currentYear) {
+                return res.status(400).json({
+                    message: `Program year cannot exceed current year (${currentYear})`
+                })
             }
         }
 
         // Rule 4 — Budget per beneficiary check
-        if (updates.beneficiariesCount && updates.beneficiariesCount > 0 && updates.budgetUsed) {
-            const budgetPerPerson = updates.budgetUsed / updates.beneficiariesCount
+        if (finalBeneficiaries && finalBeneficiaries > 0 && finalBudget) {
+            const budgetPerPerson = finalBudget / finalBeneficiaries
             if (budgetPerPerson > 1000000) {
                 return res.status(400).json({ message: 'Budget per beneficiary exceeds realistic threshold (1,000,000 per person)' })
             }
@@ -149,10 +151,6 @@ exports.updateProgram = async (req, res) => {
             updates,
             { new: true, runValidators: true }
         )
-
-        if (!programUpdated) {
-            return res.status(404).json({ message: 'Program not found' })
-        }
 
         res.status(200).json(programUpdated)
 
