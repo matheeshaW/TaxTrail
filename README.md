@@ -42,13 +42,18 @@ cd backend
 npm run dev
 ```
 
-## API
+## Tech stack
 
-### Base URL
+- Node.js
+- Express.js
+- MongoDB Atlas
+- Mongoose
+- JWT Authentication
+- express-validator
+- Axios (Exchange API)
+- Postman (API testing)
 
-```text
-http://localhost:4000/api
-```
+
 
 ## Architecture
 
@@ -71,16 +76,34 @@ Routes → Controllers → Services → Models
 - Pagination
 - In-memory caching for exchange rates
 
-## Tech stack
 
-- Node.js
-- Express.js
-- MongoDB Atlas
-- Mongoose
-- JWT Authentication
-- express-validator
-- Axios (Exchange API)
-- Postman (API testing)
+## Project breakdown (team components)
+
+
+
+This project was done by 4 members, splitting the system into 4 major components:
+
+| Member | Real Entity | Real CRUD | Real Third-Party API | Clear Topic Alignment |
+| ------ | ----------- | --------- | -------------------- | --------------------- |
+| 1 | TaxContributions | ✅ | Exchange Rate | Revenue inequality |
+| 2 | BudgetAllocations | ✅ | Inflation API | Spending fairness |
+| 3 | SocialPrograms | ✅ | World Bank API | Poverty reduction |
+| 4 | RegionalDevelopmentData | ✅ | UN SDG API | Regional disparity |
+
+## Core entities
+
+The 2 core entities connecting those components:
+
+1. JWT auth (registration and login)
+2. Region component
+
+## API
+
+### Base URL
+
+```text
+http://localhost:4000/api
+```
 
 ## Authentication & roles
 
@@ -91,16 +114,120 @@ JWT-based authentication.
 
 All routes are protected.
 
-## Project breakdown (team components)
+### Request flow example
 
-This project was done by 4 members, splitting the system into 4 major components:
+1. Register or login → receive JWT
+2. Create region (Admin)
+3. Create tax contribution referencing region ID
+4. Retrieve tax contributions (optional currency conversion)
 
-| Member | Real Entity | Real CRUD | Real Third-Party API | Clear Topic Alignment |
-| ------ | ----------- | --------- | -------------------- | --------------------- |
-| 1 | TaxContributions | ✅ | Exchange Rate | Revenue inequality |
-| 2 | BudgetAllocations | ✅ | Inflation API | Spending fairness |
-| 3 | SocialPrograms | ✅ | World Bank API | Poverty reduction |
-| 4 | RegionalDevelopmentData | ✅ | UN SDG API | Regional disparity |
+### Authentication API
+
+These endpoints manage user registration and login using JWT.
+
+#### Register
+
+- **POST** `/api/auth/register`
+
+Request body:
+
+```json
+{
+  "name": "Admin User",
+  "email": "admin@email.com",
+  "password": "123456",
+  "role": "Admin"
+}
+```
+
+Response:
+
+```json
+{
+  "success": true,
+  "token": "JWT_TOKEN"
+}
+```
+
+#### Login
+
+- **POST** `/api/auth/login`
+
+Request body:
+
+```json
+{
+  "email": "admin@email.com",
+  "password": "123456"
+}
+```
+
+Response:
+
+```json
+{
+  "success": true,
+  "token": "JWT_TOKEN"
+}
+```
+
+#### Get current logged-in user
+
+- **GET** `/api/auth/me`
+
+Headers:
+
+```text
+Authorization: Bearer <JWT_TOKEN>
+```
+
+Returns the currently authenticated user's details.
+
+### How to use JWT
+
+After login, include the token in request headers:
+
+```text
+Authorization: Bearer <your_token_here>
+```
+
+All protected routes require a valid JWT.
+
+## Region component (core entity)
+
+Region is the central entity connecting all other components.
+
+TaxContribution references Region via ObjectId.
+
+### Endpoints
+
+#### Create region (Admin only)
+
+- **POST** `/api/regions`
+
+Request body:
+
+```json
+{
+  "regionName": "Southern Province"
+}
+```
+
+#### Get all regions (Public & Admin)
+
+- **GET** `/api/regions`
+
+#### Get single region
+
+- **GET** `/api/regions/:id`
+
+#### Update region (Admin only)
+
+- **PUT** `/api/regions/:id`
+
+#### Delete region (Admin only)
+
+- **DELETE** `/api/regions/:id`
 
 ## Member 1 — TaxContribution component
 
