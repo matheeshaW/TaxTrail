@@ -13,9 +13,8 @@ const { getInequalityAnalysis } = require("../controllers/socialProgramControlle
 
 // Public routes
 router.get('/', socialProgramController.getAllPrograms)
-router.get('/:id', socialProgramController.getProgramById)
-
 router.get("/inequality-analysis/:country", getInequalityAnalysis);
+router.get('/:id', socialProgramController.getProgramById)
 
 // Admin only
 router.post('/', protect, authorize('admin'), socialProgramController.createProgram)
