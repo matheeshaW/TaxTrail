@@ -121,7 +121,7 @@ All routes are protected.
 3. Create tax contribution referencing region ID
 4. Retrieve tax contributions (optional currency conversion)
 
-### Authentication API
+## Authentication API
 
 These endpoints manage user registration and login using JWT.
 
@@ -170,18 +170,6 @@ Response:
   "token": "JWT_TOKEN"
 }
 ```
-
-#### Get current logged-in user
-
-- **GET** `/api/auth/me`
-
-Headers:
-
-```text
-Authorization: Bearer <JWT_TOKEN>
-```
-
-Returns the currently authenticated user's details.
 
 ### How to use JWT
 
@@ -311,20 +299,6 @@ Optimization:
 - Only one API call per cache cycle
 - Conversion is calculated locally
 
-## Validation & error handling
-
-- Request validation via `express-validator`
-- Centralized error middleware
-- Standardized error response format
-
-Example error response:
-
-```json
-{
-  "success": false,
-  "message": "Invalid region ID format"
-}
-```
 
 ## Pagination
 
@@ -337,5 +311,20 @@ Example response:
   "page": 1,
   "pages": 5,
   "data": []
+}
+```
+
+## Validation & error handling
+
+- Request validation via `express-validator`
+- Centralized error middleware
+- Standardized error response format
+
+Example error response:
+
+```json
+{
+  "success": false,
+  "message": "Invalid region ID format"
 }
 ```
