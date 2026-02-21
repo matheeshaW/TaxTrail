@@ -8,7 +8,9 @@ const {
   createRegionData,
   getRegions,
   getInequalityIndex,
-  getRegionSDGAnalysis
+  getRegionSDGAnalysis,
+  updateRegionData
+  
 } = require('../controllers/regionDevController');
 
 
@@ -19,5 +21,5 @@ router.get('/sdg-metrics/:id', protect, authorize('Public', 'Admin'), getRegionS
 
 // --- Admin Only Routes ---
 router.post('/', protect, authorize('Admin'), createRegionData);
-
+router.put('/:id', protect, authorize('Admin'), updateRegionData);
 module.exports = router;

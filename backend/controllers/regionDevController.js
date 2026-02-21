@@ -48,7 +48,7 @@ exports.getRegions = async (req, res) => {
 // @route   GET /api/v1/regional-development/inequality-index
 exports.getInequalityIndex = async (req, res) => {
   try {
-    const year = req.query.year || 2026; // Default to current project year
+    const year = req.query.year || 2026; 
 
     // Find the region with the highest poverty rate
     const highestPoverty = await RegionalDevelopment.findOne({ year })
@@ -124,5 +124,26 @@ exports.getRegionSDGAnalysis = async (req, res) => {
 
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
+  }
+
+};
+
+// @desc    Update regional data
+// @route   PUT /api/v1/regional-development/:id
+exports.updateRegionData = async (req, res) => {
+  try {
+    const data = await RegionalDevelopment.findByIdAndUpdate(
+      req.params.id, 
+      req.body, 
+      { new: true, runValidators: true }
+    );
+
+    if (!data) {
+      return res.status(404).json({ success: false, message: 'Data not found' });
+    }
+
+    res.status(200).json({ success: true, data: data });
+  } catch (error) {
+    res.status(400).json({ success: false, error: error.message });
   }
 };
