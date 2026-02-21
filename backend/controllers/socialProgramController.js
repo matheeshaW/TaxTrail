@@ -6,6 +6,35 @@ const { getLatestGini } = require('../services/inequalityService')
 
 exports.createProgram = async (req, res) => {
     try {
+        const { beneficiariesCount, budgetUsed, targetGroup, year } = req.body
+
+        // Rule 2 — Beneficiaries must be > 0 for Low Income
+        if (targetGroup === 'Low Income' && (!beneficiariesCount || beneficiariesCount <= 0)) {
+            return res.status(400).json({ message: 'Beneficiaries count must be greater than zero for Low Income target group' })
+        }
+
+        // Rule 3 — Year must not exceed latest inequality data year
+        if (year) {
+            try {
+                const giniData = await getLatestGini('LKA')
+                if (giniData && year > parseInt(giniData.year)) {
+                    return res.status(400).json({
+                        message: `Program year cannot exceed latest inequality data year (${giniData.year})`
+                    })
+                }
+            } catch (giniError) {
+                console.log('Gini API unavailable, skipping year validation')
+            }
+        }
+
+        // Rule 4 — Budget per beneficiary check
+        if (beneficiariesCount && beneficiariesCount > 0 && budgetUsed) {
+            const budgetPerPerson = budgetUsed / beneficiariesCount
+            if (budgetPerPerson > 1000000) {
+                return res.status(400).json({ message: 'Budget per beneficiary exceeds realistic threshold (1,000,000 per person)' })
+            }
+        }
+
         // Check if region exists
         const regionExists = await Region.findById(req.body.region)
         if (!regionExists) {
@@ -80,6 +109,33 @@ exports.updateProgram = async (req, res) => {
             }
         }
 
+        // Rule 2 — Beneficiaries must be > 0 for Low Income
+        if (updates.targetGroup === 'Low Income' && (updates.beneficiariesCount !== undefined && updates.beneficiariesCount <= 0)) {
+            return res.status(400).json({ message: 'Beneficiaries count must be greater than zero for Low Income target group' })
+        }
+
+        // Rule 3 — Year must not exceed latest inequality data year
+        if (updates.year) {
+            try {
+                const giniData = await getLatestGini('LKA')
+                if (giniData && updates.year > parseInt(giniData.year)) {
+                    return res.status(400).json({
+                        message: `Program year cannot exceed latest inequality data year (${giniData.year})`
+                    })
+                }
+            } catch (giniError) {
+                console.log('Gini API unavailable, skipping year validation')
+            }
+        }
+
+        // Rule 4 — Budget per beneficiary check
+        if (updates.beneficiariesCount && updates.beneficiariesCount > 0 && updates.budgetUsed) {
+            const budgetPerPerson = updates.budgetUsed / updates.beneficiariesCount
+            if (budgetPerPerson > 1000000) {
+                return res.status(400).json({ message: 'Budget per beneficiary exceeds realistic threshold (1,000,000 per person)' })
+            }
+        }
+
         // If region is being updated, check it exists
         if (updates.region) {
             const regionExists = await Region.findById(updates.region)
@@ -139,15 +195,27 @@ exports.getInequalityAnalysis = async (req, res) => {
 
         const programs = await SocialProgram.find()
 
+        const totalPrograms = programs.length
+
         const totalBudgetUsed = programs.reduce(
             (sum, program) => sum + program.budgetUsed,
+            0
+        )
+
+        const totalBeneficiaries = programs.reduce(
+            (sum, program) => sum + (program.beneficiariesCount || 0),
             0
         )
 
         let analysisMessage;
 
         if (giniData.giniIndex >= 45) {
-            analysisMessage = "High income inequality detected. Strong redistribution policies and expanded social welfare programs may be required."
+            // Rule 5 — High inequality + few programs = policy gap
+            if (totalPrograms < 3) {
+                analysisMessage = "High inequality detected but limited social programs found. Policy gap identified."
+            } else {
+                analysisMessage = "High income inequality detected. Strong redistribution policies and expanded social welfare programs may be required."
+            }
         } else if (giniData.giniIndex >= 35) {
             analysisMessage = "Moderate income inequality observed. Social programs play an important role in wealth redistribution and poverty mitigation."
         } else {
@@ -158,9 +226,11 @@ exports.getInequalityAnalysis = async (req, res) => {
             country,
             giniYear: giniData.year,
             giniIndex: giniData.giniIndex,
-            totalPrograms: programs.length,
+            totalPrograms,
             totalBudgetUsed,
-            analysis: analysisMessage
+            totalBeneficiaries,
+            analysis: analysisMessage,
+            sdgAlignment: 'SDG 10 - Reduced Inequalities'
         })
     } catch (error) {
         res.status(500).json({ message: error.message })

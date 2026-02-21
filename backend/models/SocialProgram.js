@@ -24,7 +24,8 @@ const socialProgramSchema = new mongoose.Schema({
     budgetUsed : {
         type : Number,
         required : true,
-        min : 0
+        min : [0, 'Budget cannot be negative'],
+        max : [1000000000, 'Budget cannot exceed 1 billion']
     },
     year : {
         type : Number,
