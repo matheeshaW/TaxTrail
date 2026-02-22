@@ -6,7 +6,7 @@ const BUDGET_PER_PERSON_THRESHOLD = 1_000_000
 const VALID_SECTORS = ['Welfare', 'Education', 'Health', 'Housing', 'Food Assistance']
 const VALID_TARGET_GROUPS = ['Low Income', 'Middle Income', 'Rural', 'Urban Poor', 'Disabled']
 
-exports.createProgramValidator = [
+const createProgramValidator = [
   body('programName')
     .isString().trim().notEmpty().withMessage('Program name is required')
     .isLength({ max: 100 }).withMessage('Program name must not exceed 100 characters'),
@@ -107,7 +107,7 @@ const validateProgramId = (req, res, next) => {
 }
 
 // Update program validator using express-validator
-exports.updateProgramValidator = [
+const updateProgramValidator = [
   body('programName')
     .optional()
     .isString().trim().notEmpty().withMessage('Program name cannot be empty')
@@ -153,4 +153,10 @@ exports.updateProgramValidator = [
   })
 ]
 
-module.exports = { validateCreateProgram, validateUpdateProgram, validateProgramId }
+module.exports = {
+  createProgramValidator,
+  updateProgramValidator,
+  validateProgramId,
+  validateCreateProgram: createProgramValidator,
+  validateUpdateProgram: updateProgramValidator
+}
