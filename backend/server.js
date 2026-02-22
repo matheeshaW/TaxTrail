@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const testRoutes = require("./routes/testroutes");
 const authRoutes = require("./routes/authRoutes");
 const regionRoutes = require("./routes/regionRoutes");
+const budgetAllocationRoutes = require("./routes/budgetAllocationRoutes");
 
 const protect = require("./middleware/authMiddleware");
 const authorize = require("./middleware/roleMiddleware");
@@ -23,6 +24,7 @@ app.use((req, res, next) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/testroutes", protect, authorize("Admin"), testRoutes);
 app.use("/api/v1/regions", regionRoutes);
+app.use("/api/v1/budget-allocations", budgetAllocationRoutes);
 
 app.get("/", (req, res) => {
   res.json({ msg: "Welcome to the app" });
