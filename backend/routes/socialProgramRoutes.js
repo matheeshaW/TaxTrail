@@ -7,6 +7,8 @@ const socialProgramController = require('../controllers/socialProgramController'
 const protect = require('../middleware/authMiddleware')
 // Import the role middleware
 const authorize = require('../middleware/roleMiddleware')
+// Import validators
+const { validateCreateProgram, validateUpdateProgram, validateProgramId } = require('../validators/socialProgramValidator')
 
 const { getInequalityAnalysis } = require("../controllers/socialProgramController");
 
@@ -14,11 +16,11 @@ const { getInequalityAnalysis } = require("../controllers/socialProgramControlle
 // Public routes
 router.get('/', socialProgramController.getAllPrograms)
 router.get("/inequality-analysis/:country", getInequalityAnalysis);
-router.get('/:id', socialProgramController.getProgramById)
+router.get('/:id', validateProgramId, socialProgramController.getProgramById)
 
 // Admin only
-router.post('/', protect, authorize('admin'), socialProgramController.createProgram)
-router.put('/:id', protect, authorize('admin'), socialProgramController.updateProgram)
-router.delete('/:id', protect, authorize('admin'), socialProgramController.deleteProgram)
+router.post('/', protect, authorize('admin'), validateCreateProgram, socialProgramController.createProgram)
+router.put('/:id', protect, authorize('admin'), validateProgramId, validateUpdateProgram, socialProgramController.updateProgram)
+router.delete('/:id', protect, authorize('admin'), validateProgramId, socialProgramController.deleteProgram)
 
 module.exports = router
