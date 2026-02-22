@@ -1,85 +1,49 @@
 const mongoose = require('mongoose')
+const { body } = require('express-validator')
 
 // Constants
 const BUDGET_PER_PERSON_THRESHOLD = 1_000_000
 const VALID_SECTORS = ['Welfare', 'Education', 'Health', 'Housing', 'Food Assistance']
 const VALID_TARGET_GROUPS = ['Low Income', 'Middle Income', 'Rural', 'Urban Poor', 'Disabled']
 
-// Validate create program request
-const validateCreateProgram = (req, res, next) => {
-    const { programName, sector, targetGroup, beneficiariesCount, budgetUsed, year, region } = req.body
-    const errors = []
+exports.createProgramValidator = [
+  body('programName')
+    .isString().trim().notEmpty().withMessage('Program name is required')
+    .isLength({ max: 100 }).withMessage('Program name must not exceed 100 characters'),
 
-    // Required fields
-    if (!programName || programName.trim().length === 0) {
-        errors.push('Program name is required')
-    } else if (programName.trim().length > 100) {
-        errors.push('Program name must not exceed 100 characters')
+  body('sector')
+    .isIn(VALID_SECTORS).withMessage(`Sector must be one of: ${VALID_SECTORS.join(', ')}`),
+
+  body('targetGroup')
+    .isIn(VALID_TARGET_GROUPS).withMessage(`Target group must be one of: ${VALID_TARGET_GROUPS.join(', ')}`),
+
+  body('beneficiariesCount')
+    .isInt({ min: 0 }).withMessage('Beneficiaries count must be a positive integer'),
+
+  body('budgetUsed')
+    .isFloat({ min: 0 }).withMessage('Budget must be a positive number'),
+
+  body('year')
+    .isInt({ min: 1900, max: new Date().getFullYear() })
+    .withMessage(`Year must be between 1900 and ${new Date().getFullYear()}`),
+
+  body('region')
+    .notEmpty().withMessage('Region is required'),
+
+  // Custom validation for business rules
+  body().custom(({ targetGroup, beneficiariesCount, budgetUsed }) => {
+    if (targetGroup === 'Low Income' && beneficiariesCount <= 0) {
+      throw new Error('Beneficiaries count must be greater than zero for Low Income target group')
     }
-
-    if (!sector) {
-        errors.push('Sector is required')
-    } else if (!VALID_SECTORS.includes(sector)) {
-        errors.push(`Sector must be one of: ${VALID_SECTORS.join(', ')}`)
-    }
-
-    if (!targetGroup) {
-        errors.push('Target group is required')
-    } else if (!VALID_TARGET_GROUPS.includes(targetGroup)) {
-        errors.push(`Target group must be one of: ${VALID_TARGET_GROUPS.join(', ')}`)
-    }
-
-    if (beneficiariesCount === undefined || beneficiariesCount === null) {
-        errors.push('Beneficiaries count is required')
-    } else if (!Number.isInteger(beneficiariesCount) || beneficiariesCount < 0) {
-        errors.push('Beneficiaries count must be a positive integer')
-    }
-
-    if (budgetUsed === undefined || budgetUsed === null) {
-        errors.push('Budget used is required')
-    } else if (typeof budgetUsed !== 'number' || budgetUsed < 0) {
-        errors.push('Budget must be a positive number')
-    }
-
-    if (!year) {
-        errors.push('Year is required')
-    } else if (!Number.isInteger(year) || year < 1900) {
-        errors.push('Year must be a valid integer (1900 or later)')
-    }
-
-    if (!region) {
-        errors.push('Region is required')
-    } else if (!mongoose.Types.ObjectId.isValid(region)) {
-        errors.push('Invalid region ID format')
-    }
-
-    // Business Rule 2 — Low Income must have beneficiaries > 0
-    if (targetGroup === 'Low Income' && beneficiariesCount !== undefined && beneficiariesCount <= 0) {
-        errors.push('Beneficiaries count must be greater than zero for Low Income target group')
-    }
-
-    // Business Rule 3 — Year cannot exceed current year
-    if (year) {
-        const currentYear = new Date().getFullYear()
-        if (year > currentYear) {
-            errors.push(`Program year cannot exceed current year (${currentYear})`)
-        }
-    }
-
-    // Business Rule 4 — Budget per beneficiary threshold
     if (beneficiariesCount > 0 && budgetUsed) {
-        const budgetPerPerson = budgetUsed / beneficiariesCount
-        if (budgetPerPerson > BUDGET_PER_PERSON_THRESHOLD) {
-            errors.push(`Budget per beneficiary exceeds threshold (${BUDGET_PER_PERSON_THRESHOLD.toLocaleString()} per person)`)
-        }
+      const budgetPerPerson = budgetUsed / beneficiariesCount
+      if (budgetPerPerson > BUDGET_PER_PERSON_THRESHOLD) {
+        throw new Error(`Budget per beneficiary exceeds threshold (${BUDGET_PER_PERSON_THRESHOLD.toLocaleString()} per person)`)
+      }
     }
-
-    if (errors.length > 0) {
-        return res.status(400).json({ errors })
-    }
-
-    next()
-}
+    return true
+  })
+]
 
 // Validate update program request (only validates fields that are present)
 const validateUpdateProgram = (req, res, next) => {
@@ -141,5 +105,52 @@ const validateProgramId = (req, res, next) => {
     }
     next()
 }
+
+// Update program validator using express-validator
+exports.updateProgramValidator = [
+  body('programName')
+    .optional()
+    .isString().trim().notEmpty().withMessage('Program name cannot be empty')
+    .isLength({ max: 100 }).withMessage('Program name must not exceed 100 characters'),
+
+  body('sector')
+    .optional()
+    .isIn(VALID_SECTORS).withMessage(`Sector must be one of: ${VALID_SECTORS.join(', ')}`),
+
+  body('targetGroup')
+    .optional()
+    .isIn(VALID_TARGET_GROUPS).withMessage(`Target group must be one of: ${VALID_TARGET_GROUPS.join(', ')}`),
+
+  body('beneficiariesCount')
+    .optional()
+    .isInt({ min: 0 }).withMessage('Beneficiaries count must be a positive integer'),
+
+  body('budgetUsed')
+    .optional()
+    .isFloat({ min: 0 }).withMessage('Budget must be a positive number'),
+
+  body('year')
+    .optional()
+    .isInt({ min: 1900, max: new Date().getFullYear() })
+    .withMessage(`Year must be between 1900 and ${new Date().getFullYear()}`),
+
+  body('region')
+    .optional()
+    .notEmpty().withMessage('Region cannot be empty'),
+
+  // Custom validation for business rules
+  body().custom(({ targetGroup, beneficiariesCount, budgetUsed }) => {
+    if (targetGroup === 'Low Income' && beneficiariesCount !== undefined && beneficiariesCount <= 0) {
+      throw new Error('Beneficiaries count must be greater than zero for Low Income target group')
+    }
+    if (beneficiariesCount > 0 && budgetUsed) {
+      const budgetPerPerson = budgetUsed / beneficiariesCount
+      if (budgetPerPerson > BUDGET_PER_PERSON_THRESHOLD) {
+        throw new Error(`Budget per beneficiary exceeds threshold (${BUDGET_PER_PERSON_THRESHOLD.toLocaleString()} per person)`)
+      }
+    }
+    return true
+  })
+]
 
 module.exports = { validateCreateProgram, validateUpdateProgram, validateProgramId }
