@@ -32,6 +32,7 @@ app.use(errorHandler) //keep at bottom
 
 
 // connect to db and start server
+if(process.env.NODE_ENV !== 'test') {
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         //listen for requests
@@ -42,8 +43,8 @@ mongoose.connect(process.env.MONGO_URI)
     .catch((error) => {
         console.log(error)
     })
+}
 
 
 
-
-
+module.exports = app
