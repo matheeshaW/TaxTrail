@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 const authRoutes = require('./routes/authRoutes')
 const socialProgramRoutes = require('./routes/socialProgramRoutes')
 const inequalityRoutes = require('./routes/inequalityRoutes')
+const testRoutes = require('./routes/testroutes');
 
 
 
