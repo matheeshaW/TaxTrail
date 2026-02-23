@@ -5,11 +5,11 @@ const mongoose = require('mongoose')
 const authRoutes = require('./routes/authRoutes')
 const socialProgramRoutes = require('./routes/socialProgramRoutes')
 const inequalityRoutes = require('./routes/inequalityRoutes')
-const testRoutes = require('./routes/testroutes');
 
 
 
-const testRoutes = require('./routes/testroutes')
+
+
 const regionRoutes = require('./routes/regionRoutes')
 const taxContributionRoutes = require('./routes/taxContributionRoutes')
 
@@ -34,7 +34,7 @@ app.use((req, res, next) => {
 app.use('/api/auth', authRoutes)
 app.use('/api/socialprograms', socialProgramRoutes)
 app.use('/api/inequality', inequalityRoutes)
-app.use('/api/testroutes', protect, authorize('Admin'), testRoutes)
+
 
 app.use('/api/v1/regions', regionRoutes)
 app.use('/api/v1/tax-contributions', taxContributionRoutes)
