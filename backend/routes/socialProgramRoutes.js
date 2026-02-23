@@ -19,8 +19,8 @@ router.get("/inequality-analysis/:country", getInequalityAnalysis);
 router.get('/:id', validateProgramId, socialProgramController.getProgramById)
 
 // Admin only
-router.post('/', protect, authorize('admin'), validateCreateProgram, socialProgramController.createProgram)
-router.put('/:id', protect, authorize('admin'), validateProgramId, validateUpdateProgram, socialProgramController.updateProgram)
-router.delete('/:id', protect, authorize('admin'), validateProgramId, socialProgramController.deleteProgram)
+router.post('/', protect, authorize('Admin'), validateCreateProgram, socialProgramController.createProgram)
+router.put('/:id', protect, authorize('Admin'), validateProgramId, validateUpdateProgram, socialProgramController.updateProgram)
+router.delete('/:id', protect, authorize('Admin'), validateProgramId, socialProgramController.deleteProgram)
 
 module.exports = router
