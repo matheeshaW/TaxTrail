@@ -8,7 +8,13 @@ const inequalityRoutes = require('./routes/inequalityRoutes')
 
 
 
+const testRoutes = require('./routes/testroutes')
+const regionRoutes = require('./routes/regionRoutes')
+const taxContributionRoutes = require('./routes/taxContributionRoutes')
+
 const protect = require('./middleware/authMiddleware')
+const authorize = require('./middleware/roleMiddleware')
+const errorHandler = require('./middleware/errorMiddleware')
 
 // Register models for populate
 require('./models/regionModel')
@@ -27,10 +33,17 @@ app.use((req, res, next) => {
 app.use('/api/auth', authRoutes)
 app.use('/api/socialprograms', socialProgramRoutes)
 app.use('/api/inequality', inequalityRoutes)
+app.use('/api/testroutes', protect, authorize('Admin'), testRoutes)
 
+app.use('/api/v1/regions', regionRoutes)
+app.use('/api/v1/tax-contributions', taxContributionRoutes)
+
+
+app.use(errorHandler) //keep at bottom
 
 
 // connect to db and start server
+if(process.env.NODE_ENV !== 'test') {
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         //listen for requests
@@ -41,8 +54,8 @@ mongoose.connect(process.env.MONGO_URI)
     .catch((error) => {
         console.log(error)
     })
+}
 
 
 
-
-
+module.exports = app
