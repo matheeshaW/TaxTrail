@@ -427,8 +427,141 @@ Example response:
 ---
 
 # Member 4 — RegionalDevelopmentData Component
+## Purpose
+
+The RegionalDevelopmentData component manages regional economic and social metrics, enabling the tracking of development progress across different provinces.
+It supports the analysis of wealth distribution, poverty, and unemployment to ensure equitable tax distribution aligned with **SDG 10 – Reduced Inequalities**.
 
 ---
+
+## Functional Requirements
+
+1. Admin users must be able to create regional development records.
+2. Admin users must be able to update and delete regional development records.
+3. Public and Admin users must be able to view regional development records.
+4. Users must be able to access advanced analytics to calculate a regional Inequality Index.
+5. Users must be able to retrieve specific SDG metrics for regions.
+6. All routes must be protected via JWT authentication.
+7. All admin routes must be protected via Role-Based Access Control (RBAC).
+8. All requests must be validated before processing.
+9. All errors must be handled via centralized error middleware.
+10. The component must be fully unit, integration, and performance tested.
+
+---
+
+## Endpoints
+
+### Create Regional Data (Admin only)
+
+- **POST** `/api/v1/regional-development`
+
+```json
+{
+  "region": "65fa1b2c1234567890abcdef",
+  "year": 2026,
+  "averageIncome": 45000,
+  "unemploymentRate": 8.1,
+  "povertyRate": 8.5
+}
+```
+
+---
+
+### Get All Regional Data
+
+- **GET** `/api/v1/regional-development`
+
+---
+
+### Get Regional Inequality Index Analytics
+
+- **GET** `/api/v1/regional-development/inequality-index`
+
+Returns a calculated analysis of wealth and development disparities across regions using historical data.
+
+---
+
+### Get Region SDG Metrics
+
+- **GET** `/api/v1/regional-development/sdg-metrics/:id`
+
+---
+
+### Update Regional Data (Admin only)
+
+- **PUT** `/api/v1/regional-development/:id`
+
+---
+
+### Delete Regional Data (Admin only)
+
+- **DELETE** `/api/v1/regional-development/:id`
+
+---
+
+## Database Schema (RegionalDevelopment)
+
+```js
+{
+  region: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Region',
+    required: true
+  },
+  year: {
+    type: Number,
+    required: true,
+    min: 2000
+  },
+  averageIncome: {
+    type: Number,
+    required: true,
+    min: 0
+  },
+  unemploymentRate: {
+    type: Number,
+    required: true,
+    min: 0,
+    max: 100
+  },
+  povertyRate: {
+    type: Number,
+    required: true,
+    min: 0,
+    max: 100
+  }
+}
+```
+
+Indexes:
+- Compound index on `{ region, year }` to prevent duplicate regional entries for the same year.
+
+Optimization strategy:
+- Advanced `/inequality-index` calculations are handled using MongoDB aggregation pipelines to minimize data transfer and memory usage on the Node.js server.
+
+---
+
+## Role Access Rules
+
+| Endpoint | Public | Admin |
+|----------|--------|--------|
+| GET all | ✅ | ✅ |
+| GET inequality-index | ✅ | ✅ |
+| GET sdg-metrics | ✅ | ✅ |
+| POST | ❌ | ✅ |
+| PUT | ❌ | ✅ |
+| DELETE | ❌ | ✅ |
+
+---
+
+## Testing & Quality Assurance
+
+- **Unit & Integration Testing:** Implemented using `Jest`, `Supertest`, and `mongodb-memory-server`. Achieved 100% pass rate across core controller operations.
+- **Performance Testing:** Evaluated using `Artillery.io`. Successfully handled sustained loads of 1,000 requests via 50 concurrent users over 20 seconds, yielding a 0% failure rate and a median response time of 1ms.
+
+---
+
+
 
 ## Validation & Error Handling
 
