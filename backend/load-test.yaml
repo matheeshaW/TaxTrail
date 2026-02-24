@@ -1,0 +1,10 @@
+config:
+  target: "http://localhost:4000"
+  phases:
+    - duration: 20
+      arrivalRate: 50
+      name: "Sustained load"
+scenarios:
+  - flow:
+      - get:
+          url: "/api/v1/regional-development/inequality-index"
