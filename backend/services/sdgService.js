@@ -6,7 +6,7 @@ const UN_API_URL = 'https://unstats.un.org/SDGAPI/v1/sdg/Series/Data?seriesCode=
 
 exports.getGlobalInequalityData = async () => {
   try {
-    console.log("Fetching live data from UN SDG Database...".yellow);
+    console.log("Fetching live data from UN SDG Database...");
     
     // Attempt to fetch real data with a 3-second timeout
     const response = await axios.get(UN_API_URL, { timeout: 3000 });
@@ -20,7 +20,7 @@ exports.getGlobalInequalityData = async () => {
     };
 
   } catch (error) {
-    console.log("⚠️ UN API request failed or timed out. Switching to Fallback Data.".red);
+    console.log("UN API request failed or timed out. Switching to Fallback Data.");
     
     return {
       source: "UN SDG Database (Offline Mode)",
