@@ -4,7 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "jest --watchAll --detectOpenHandles",
+    "test": "jest --detectOpenHandles",
+    "test:watch": "jest --watchAll --detectOpenHandles",
     "start": "node server.js",
     "dev": "nodemon server.js",
     "env:gen": "cp .env .env.example",
