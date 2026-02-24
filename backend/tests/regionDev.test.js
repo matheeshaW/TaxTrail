@@ -4,76 +4,119 @@ const { MongoMemoryServer } = require('mongodb-memory-server');
 const app = require('../server'); 
 
 let mongoServer;
+let adminToken; 
+let createdDataId; 
+let validRegionId; 
 
-//Create the fake in-memory database before running tests
+//Create fake DB, register Admin, and create a Region
 beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();
   const mongoUri = mongoServer.getUri();
   
-  // Close the real database connection if it's open, then connect to the fake one
   if (mongoose.connection.readyState !== 0) {
     await mongoose.disconnect();
   }
   await mongoose.connect(mongoUri);
+
+  // Register an Admin user immediately
+  const authResponse = await request(app)
+    .post('/api/auth/register')
+    .send({
+      name: "Admin Test",
+      email: "admin_test@taxtrail.com",
+      password: "password123",
+      role: "Admin"
+    });
+  adminToken = authResponse.body.token;
+
+  const regionResponse = await request(app)
+    .post('/api/v1/regions')
+    .set('Authorization', `Bearer ${adminToken}`)
+    .send({
+      regionName: "Test Province"
+    });
+    
+ 
+  validRegionId = regionResponse.body.data ? regionResponse.body.data._id : regionResponse.body._id;
 });
 
-// Destroy the fake database after tests are done
+//delete the fake database
 afterAll(async () => {
   await mongoose.disconnect();
   await mongoServer.stop();
 });
 
-//THE ACTUAL TESTS
-describe('Regional Development API Tests', () => {
+// THE TESTS (Full CRUD Coverage)
+describe('Regional Development API - Full CRUD Tests', () => {
 
-  describe('POST /api/v1/regional-development', () => {
-    
-    it('Should return 401 Unauthorized if no Admin token is provided', async () => {
-      //Try to create data WITHOUT logging in
-      const res = await request(app)
-        .post('/api/v1/regional-development')
-        .send({
-          region: "65fa1b2c1234567890abcdef",
-          year: 2026,
-          averageIncome: 50000,
-          povertyRate: 5.5
-        });
-
-      //Check if the server successfully blocked us
-      expect(res.statusCode).toBe(401);
+ 
+  it('Should return 401 Unauthorized if no token is provided', async () => {
+    const res = await request(app).post('/api/v1/regional-development').send({
+      region: validRegionId, year: 2026, averageIncome: 50000, povertyRate: 5.5
     });
-
-  describe('GET /api/v1/regional-development', () => {
-    
-    it('Should fetch all regional data and return 200 OK when authenticated', async () => {
-      
-      //Register a fake user to get a token!
-      const authResponse = await request(app)
-        .post('/api/auth/register') 
-        .send({
-          name: "Test User",
-          email: "test@taxtrail.com",
-          password: "password123",
-          role: "Public"
-        });
-
-      // Grab the token from the response
-      const token = authResponse.body.token;
-
-      // 2. Send the GET request WITH the token in the header
-      const res = await request(app)
-        .get('/api/v1/regional-development')
-        .set('Authorization', `Bearer ${token}`); 
-
-      // 3. Check if it succeeded and returned an empty array
-      expect(res.statusCode).toBe(200);
-      expect(res.body.success).toBe(true);
-      expect(Array.isArray(res.body.data)).toBe(true);
-      expect(res.body.data.length).toBe(0);
-    });
-
+    expect(res.statusCode).toBe(401);
   });
 
+  //CREATE (POST)
+  it('Should create new regional data when Admin is logged in', async () => {
+    const res = await request(app)
+      .post('/api/v1/regional-development')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({
+        region: validRegionId,
+        year: 2026,
+        averageIncome: 45000,
+        unemploymentRate: 8.1,
+        povertyRate: 8.5
+      });
+    
+    expect(res.statusCode).toBe(201); 
+    expect(res.body.success).toBe(true);
+    createdDataId = res.body.data._id; 
+  });
+
+  //READ (GET)
+  it('Should fetch all regional data', async () => {
+    const res = await request(app)
+      .get('/api/v1/regional-development')
+      .set('Authorization', `Bearer ${adminToken}`);
+      
+    expect(res.statusCode).toBe(200);
+    expect(res.body.data.length).toBe(1); 
+  });
+
+  // UPDATE (PUT)
+  it('Should update existing regional data', async () => {
+    const res = await request(app)
+      .put(`/api/v1/regional-development/${createdDataId}`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({
+        averageIncome: 55000 
+      });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.data.averageIncome).toBe(55000); 
+  });
+
+  //ANALYTICS (GET Inequality Index)
+  it('Should calculate the inequality index', async () => {
+    const res = await request(app)
+      .get('/api/v1/regional-development/inequality-index')
+      .set('Authorization', `Bearer ${adminToken}`);
+      
+    expect(res.statusCode).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.analysis).toBeDefined();
+  });
+
+  //DELETE
+  it('Should delete the regional data', async () => {
+    const res = await request(app)
+      .delete(`/api/v1/regional-development/${createdDataId}`)
+      .set('Authorization', `Bearer ${adminToken}`);
+      
+    expect(res.statusCode).toBe(200);
+    expect(res.body.message).toBe('Data deleted successfully');
   });
 
 });
