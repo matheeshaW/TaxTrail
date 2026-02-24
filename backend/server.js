@@ -6,7 +6,7 @@ const mongoose = require('mongoose')
 const testRoutes = require('./routes/testroutes')
 const authRoutes = require('./routes/authRoutes')
 
-// --- My routes(Randima) Route (Renamed to avoid crashing with your team) ---
+// --- My routes(Randima) Route  ---
 const regionalDevelopmentRoutes = require('./routes/regionDevRoutes')
 
 
