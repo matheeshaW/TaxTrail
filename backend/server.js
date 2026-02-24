@@ -32,7 +32,7 @@ app.use((req, res, next) => {
 app.use('/api/testroutes', protect, authorize('Admin'), testRoutes)
 app.use('/api/auth', authRoutes)
 
-// --- My Rotes(Randima)---
+// Regional Development routes
 app.use('/api/v1/regional-development', regionalDevelopmentRoutes)
 
 
@@ -43,6 +43,7 @@ app.use(errorHandler) //keep at bottom
 
 
 // connect to db and start server
+if(process.env.NODE_ENV !== 'test') {
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         //listen for requests
@@ -54,7 +55,3 @@ mongoose.connect(process.env.MONGO_URI)
         console.log(error)
     })
 module.exports = app;
-
-
-
-

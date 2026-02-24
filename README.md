@@ -2,6 +2,8 @@
 
 TaxTrail is a web-based public budget transparency system aligned with **SDG 10 – Reduced Inequalities**.
 
+---
+
 ## Quick start (local)
 
 ### Prerequisites
@@ -42,6 +44,8 @@ cd backend
 npm run dev
 ```
 
+---
+
 ## Tech stack
 
 - Node.js
@@ -53,13 +57,13 @@ npm run dev
 - Axios (Exchange API)
 - Postman (API testing)
 
-
+---
 
 ## Architecture
 
 The backend follows a layered architecture:
 
-```text
+```
 Routes → Controllers → Services → Models
 ```
 
@@ -76,60 +80,58 @@ Routes → Controllers → Services → Models
 - Pagination
 - In-memory caching for exchange rates
 
+---
 
 ## Project breakdown (team components)
-
-
 
 This project was done by 4 members, splitting the system into 4 major components:
 
 | Member | Real Entity | Real CRUD | Real Third-Party API | Clear Topic Alignment |
-| ------ | ----------- | --------- | -------------------- | --------------------- |
+|--------|------------|-----------|----------------------|-----------------------|
 | 1 | TaxContributions | ✅ | Exchange Rate | Revenue inequality |
 | 2 | BudgetAllocations | ✅ | Inflation API | Spending fairness |
 | 3 | SocialPrograms | ✅ | World Bank API | Poverty reduction |
 | 4 | RegionalDevelopmentData | ✅ | UN SDG API | Regional disparity |
 
+---
+
 ## Core entities
 
-The 2 core entities connecting those components:
+The 2 core entities connecting all components:
 
-1. JWT auth (registration and login)
-2. Region component
+1. JWT Authentication (Registration & Login)
+2. Region Component
+
+---
 
 ## API
 
 ### Base URL
 
-```text
+```
 http://localhost:4000/api
 ```
 
-## Authentication & roles
+---
+
+# Authentication & Roles
 
 JWT-based authentication.
+
+### Roles
 
 - **Admin** → Full CRUD access
 - **Public** → Read-only access
 
 All routes are protected.
 
-### Request flow example
-
-1. Register or login → receive JWT
-2. Create region (Admin)
-3. Create tax contribution referencing region ID
-4. Retrieve tax contributions (optional currency conversion)
+---
 
 ## Authentication API
 
-These endpoints manage user registration and login using JWT.
-
-#### Register
+### Register
 
 - **POST** `/api/auth/register`
-
-Request body:
 
 ```json
 {
@@ -140,20 +142,11 @@ Request body:
 }
 ```
 
-Response:
+---
 
-```json
-{
-  "success": true,
-  "token": "JWT_TOKEN"
-}
-```
-
-#### Login
+### Login
 
 - **POST** `/api/auth/login`
-
-Request body:
 
 ```json
 {
@@ -171,19 +164,23 @@ Response:
 }
 ```
 
-### How to use JWT
+---
+
+## How to Use JWT
 
 After login, include the token in request headers:
 
-```text
+```
 Authorization: Bearer <your_token_here>
 ```
 
 All protected routes require a valid JWT.
 
-## Region component (core entity)
+---
 
-Region is the central entity connecting all other components.
+# Region Component (Core Entity)
+
+Region acts as the central relational entity connecting all system components.
 
 TaxContribution references Region via ObjectId.
 
@@ -217,23 +214,43 @@ Request body:
 
 - **DELETE** `/api/regions/:id`
 
-## Member 1 — TaxContribution component
+---
 
-This backend component manages:
+# Member 1 — TaxContribution Component
 
-- Tax contributions
-- Region-based filtering
-- Currency conversion
-- Revenue aggregation
-- Pagination & caching
+---
 
-### Endpoints
+## Purpose
 
-#### Create tax contribution (Admin only)
+The TaxContribution component manages government revenue data, enabling transparency in tax collection across different income groups and regions.  
+
+It supports analysis of wealth distribution and revenue patterns aligned with **SDG 10 – Reduced Inequalities**.
+
+---
+
+## Functional Requirements
+
+1. Admin users must be able to create tax contribution records.
+2. Admin users must be able to update and delete tax contribution records.
+3. Public and Admin users must be able to view tax contribution records.
+4. Users must be able to filter tax contributions by:
+   - Region
+   - Year
+   - Income bracket
+5. Users must be able to retrieve tax data with pagination.
+6. Users must be able to convert tax amounts to a different currency.
+7. The system must provide aggregated revenue summaries by region.
+8. All routes must be protected via JWT authentication.
+9. All requests must be validated before processing.
+10. All errors must be handled via centralized error middleware.
+
+---
+
+## Endpoints
+
+### Create Tax Contribution (Admin only)
 
 - **POST** `/api/tax-contributions`
-
-Request body:
 
 ```json
 {
@@ -246,59 +263,144 @@ Request body:
 }
 ```
 
-#### Get all tax contributions (Public & Admin)
+---
+
+### Get All Tax Contributions
 
 - **GET** `/api/tax-contributions`
 
 Query parameters:
 
 | Parameter | Description |
-| --------- | ----------- |
-| `region` | Filter by region ID |
-| `year` | Filter by year |
-| `incomeBracket` | Filter by income group |
-| `currency` | Convert amount (e.g., USD) |
-| `page` | Pagination page number |
-| `limit` | Records per page |
+|-----------|------------|
+| region | Filter by region ID |
+| year | Filter by year |
+| incomeBracket | Filter by income group |
+| currency | Convert amount (e.g., USD) |
+| page | Pagination page |
+| limit | Records per page |
 
 Example:
 
-```text
+```
 /api/tax-contributions?currency=USD&page=1&limit=5
 ```
 
-#### Get single tax contribution
+---
+
+### Get Single Tax Contribution
 
 - **GET** `/api/tax-contributions/:id`
 
-#### Update tax contribution (Admin only)
+---
+
+### Update Tax Contribution (Admin only)
 
 - **PUT** `/api/tax-contributions/:id`
 
-#### Delete tax contribution (Admin only)
+---
+
+### Delete Tax Contribution (Admin only)
 
 - **DELETE** `/api/tax-contributions/:id`
 
-#### Revenue summary by region
+---
+
+### Revenue Summary by Region
 
 - **GET** `/api/tax-contributions/summary/by-region`
 
-Returns aggregated total tax per region.
+Returns total tax revenue grouped by region.
 
-## Third-party API integration
+---
 
-Currency conversion is implemented using:
+## Database Schema (TaxContribution)
 
-```text
+```js
+{
+  payerType: {
+    type: String,
+    enum: ['Individual', 'Corporate'],
+    required: true
+  },
+  incomeBracket: {
+    type: String,
+    enum: ['Low', 'Middle', 'High'],
+    required: true
+  },
+  taxType: {
+    type: String,
+    enum: ['Income', 'VAT', 'Corporate'],
+    required: true
+  },
+  amount: {
+    type: Number,
+    required: true,
+    min: 0
+  },
+  year: {
+    type: Number,
+    required: true,
+    min: 2000
+  },
+  region: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Region',
+    required: true
+  }
+}
+```
+
+Indexes:
+- Compound index on `{ region, year }`
+- Index on `incomeBracket`
+
+---
+
+## Third-Party API
+
+Exchange rate conversion is implemented using:
+
+```
 https://open.er-api.com/v6/latest/LKR
 ```
 
-Optimization:
+Optimization strategy:
+- Exchange rates cached in memory for 1 hour
+- Single API call per cache cycle
+- Local multiplication for conversion
+- No API key required
 
-- Exchange rates are cached in memory for 1 hour
-- Only one API call per cache cycle
-- Conversion is calculated locally
+---
 
+## Role Access Rules
+
+| Endpoint | Public | Admin |
+|----------|--------|--------|
+| GET all | ✅ | ✅ |
+| GET single | ✅ | ✅ |
+| POST | ❌ | ✅ |
+| PUT | ❌ | ✅ |
+| DELETE | ❌ | ✅ |
+| Summary | ✅ | ✅ |
+
+---
+
+## Validation Rules
+
+Validation implemented using `express-validator`.
+
+Rules include:
+
+- payerType must be either Individual or Corporate
+- incomeBracket must be Low, Middle, or High
+- taxType must be Income, VAT, or Corporate
+- amount must be a positive number
+- year must be ≥ 2000
+- region must be a valid MongoDB ObjectId
+- All required fields must be present
+
+---
 
 ## Pagination
 
@@ -314,13 +416,27 @@ Example response:
 }
 ```
 
-## Validation & error handling
+---
 
-- Request validation via `express-validator`
+# Member 2 — BudgetAllocations Component
+
+---
+
+# Member 3 — SocialPrograms Component
+
+---
+
+# Member 4 — RegionalDevelopmentData Component
+
+---
+
+## Validation & Error Handling
+
+- Request validation middleware
 - Centralized error middleware
-- Standardized error response format
+- Standardized error responses
 
-Example error response:
+Example:
 
 ```json
 {
@@ -328,3 +444,5 @@ Example error response:
   "message": "Invalid region ID format"
 }
 ```
+
+---
