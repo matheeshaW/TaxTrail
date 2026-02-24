@@ -5,10 +5,7 @@ const mongoose = require("mongoose");
 
 const testRoutes = require("./routes/testroutes");
 const authRoutes = require("./routes/authRoutes");
-
-// --- My routes(Randima) Route  ---
 const regionalDevelopmentRoutes = require("./routes/regionDevRoutes");
-
 const regionRoutes = require("./routes/regionRoutes");
 const budgetAllocationRoutes = require("./routes/budgetAllocationRoutes");
 const taxContributionRoutes = require("./routes/taxContributionRoutes");
@@ -29,16 +26,12 @@ app.use((req, res, next) => {
 //routes
 app.use("/api/testroutes", protect, authorize("Admin"), testRoutes);
 app.use("/api/auth", authRoutes);
-
-// Regional Development routes
 app.use("/api/v1/regional-development", regionalDevelopmentRoutes);
-
 app.use("/api/v1/regions", regionRoutes);
 app.use("/api/v1/tax-contributions", taxContributionRoutes);
+app.use("/api/v1/budget-allocations", budgetAllocationRoutes);
 
 app.use(errorHandler); //keep at bottom
-
-app.use("/api/v1/budget-allocations", budgetAllocationRoutes);
 
 app.get("/", (req, res) => {
   res.json({ msg: "Welcome to the app" });
