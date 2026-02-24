@@ -5,6 +5,11 @@ const mongoose = require('mongoose')
 
 const testRoutes = require('./routes/testroutes')
 const authRoutes = require('./routes/authRoutes')
+
+// --- My routes(Randima) Route  ---
+const regionalDevelopmentRoutes = require('./routes/regionDevRoutes')
+
+
 const regionRoutes = require('./routes/regionRoutes')
 const taxContributionRoutes = require('./routes/taxContributionRoutes')
 
@@ -13,6 +18,8 @@ const authorize = require('./middleware/roleMiddleware')
 const errorHandler = require('./middleware/errorMiddleware')
 
 const app = express()
+
+
 
 //middleware
 app.use(express.json())
@@ -24,9 +31,13 @@ app.use((req, res, next) => {
 //routes
 app.use('/api/testroutes', protect, authorize('Admin'), testRoutes)
 app.use('/api/auth', authRoutes)
+
+// Regional Development routes
+app.use('/api/v1/regional-development', regionalDevelopmentRoutes)
+
+
 app.use('/api/v1/regions', regionRoutes)
 app.use('/api/v1/tax-contributions', taxContributionRoutes)
-
 
 app.use(errorHandler) //keep at bottom
 
@@ -44,7 +55,4 @@ mongoose.connect(process.env.MONGO_URI)
         console.log(error)
     })
 }
-
-
-
-module.exports = app
+module.exports = app;
