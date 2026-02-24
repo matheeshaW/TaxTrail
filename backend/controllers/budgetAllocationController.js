@@ -34,7 +34,7 @@ exports.getAllAllocations = async (req, res, next) => {
 
     const allocations = await BudgetAllocation.find(filter).populate("region");
 
-    res.status(201).json({
+    res.status(200).json({
       success: true,
       count: allocations.length,
       data: allocations,
@@ -60,7 +60,7 @@ exports.getSingleAllocation = async (req, res, next) => {
       });
     }
 
-    res.status(201).json({
+    res.status(200).json({
       success: true,
       data: allocation,
     });
