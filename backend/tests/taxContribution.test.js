@@ -187,5 +187,14 @@ describe('Tax Contribution API', () => {
         expect(res.statusCode).toBe(404)
     })
 
-    
+        // SUMMARY BY REGION
+    it('should get tax contribution summary by region', async () => {
+        const res = await request(app)
+        .get('/api/v1/tax-contributions/summary/region')
+        .set('Authorization', `Bearer ${adminToken}`)
+
+        expect(res.statusCode).toBe(200)
+        expect(res.body).toBeDefined()
+        expect(res.body.data).toBeDefined()
+    })
 })
