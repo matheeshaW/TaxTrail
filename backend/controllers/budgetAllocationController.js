@@ -193,10 +193,6 @@ exports.getAdjustedAllocations = async (req, res, next) => {
       data: adjustedAllocations,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch inflation data",
-    });
+    next(error);
   }
 };
