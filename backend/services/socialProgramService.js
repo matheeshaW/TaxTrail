@@ -4,12 +4,12 @@ const { getLatestGini } = require('./inequalityService')
 
 // Shared validation rules for create and update
 const validateProgramRules = ({ targetGroup, beneficiariesCount, budgetUsed, year }) => {
-    // Rule 2 — Beneficiaries must be > 0 for Low Income
+    // R2 — Beneficiaries must be > 0 for Low Income
     if (targetGroup === 'Low Income' && (!beneficiariesCount || beneficiariesCount <= 0)) {
         throw { status: 400, message: 'Beneficiaries count must be greater than zero for Low Income target group' }
     }
 
-    // Rule 3 — Year must not be in the future
+    // R3 — Year must not be in the future
     if (year) {
         const currentYear = new Date().getFullYear()
         if (year > currentYear) {
@@ -17,7 +17,7 @@ const validateProgramRules = ({ targetGroup, beneficiariesCount, budgetUsed, yea
         }
     }
 
-    // Rule 4 — Budget per beneficiary check
+    // R4 — Budget per beneficiary check
     if (beneficiariesCount && beneficiariesCount > 0 && budgetUsed) {
         const budgetPerPerson = budgetUsed / beneficiariesCount
         if (budgetPerPerson > 1000000) {
@@ -138,7 +138,7 @@ const getInequalityAnalysis = async (country) => {
     let analysisMessage
 
     if (giniData.giniIndex >= 45) {
-        // Rule 5 — High inequality + few programs = policy gap
+        // R5 — High inequality + few programs = policy gap
         if (totalPrograms < 3) {
             analysisMessage = "High inequality detected but limited social programs found. Policy gap identified."
         } else {
