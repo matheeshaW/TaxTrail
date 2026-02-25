@@ -831,6 +831,46 @@ Rules include:
 
 ---
 
+## Validation & Error Handling
+
+Validation and error handling are implemented at multiple layers:
+
+- Route-level validation via `express-validator` and validation middleware
+- ObjectId format validation for `:id` route params
+- Service-layer business rule validation (region existence, year, budget-per-beneficiary, target-group logic)
+- Controller-level error mapping to HTTP status codes
+
+Current error response shapes:
+
+- Validation failures:
+
+```json
+{
+  "success": false,
+  "errors": [
+    {
+      "msg": "Program name is required",
+      "path": "programName"
+    }
+  ]
+}
+```
+
+- Service/controller errors:
+
+```json
+{
+  "message": "Program not found"
+}
+```
+
+Status code mapping:
+- `400` for validation/business rule failures and invalid ObjectId format
+- `404` for missing resources
+- `500` for unexpected server errors
+
+---
+
 ## Third-Party API
 
 Inequality analytics uses the World Bank indicator endpoint:
@@ -859,7 +899,7 @@ Service behavior:
 
 ---
 
-## Testing and QA
+## Testing & Quality Assurance
 
 Integration tests are implemented in:
 
