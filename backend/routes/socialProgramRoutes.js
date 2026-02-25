@@ -1,15 +1,12 @@
 const express = require('express')
 const router = express.Router()
 
-// Import the social program controller
-const socialProgramController = require('../controllers/socialProgramController')
-// Import the authentication middleware
-const protect = require('../middleware/authMiddleware')
-// Import the role middleware
-const authorize = require('../middleware/roleMiddleware')
-// Import validators
-const { validateCreateProgram, validateUpdateProgram, validateProgramId } = require('../validators/socialProgramValidator')
 
+const socialProgramController = require('../controllers/socialProgramController')
+const protect = require('../middleware/authMiddleware')
+const authorize = require('../middleware/roleMiddleware')
+
+const { validateCreateProgram, validateUpdateProgram, validateProgramId } = require('../validators/socialProgramValidator')
 const { getInequalityAnalysis } = require("../controllers/socialProgramController");
 
 
