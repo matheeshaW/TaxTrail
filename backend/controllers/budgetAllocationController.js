@@ -182,7 +182,7 @@ exports.getAdjustedAllocations = async (req, res, next) => {
       return {
         ...allocation.toObject(),
         inflationRate,
-        adjustedAmount: adjustedAmount.toFixed(2),
+        adjustedAmount: Number(adjustedAmount.toFixed(2)),
       };
     });
 
