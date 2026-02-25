@@ -39,9 +39,9 @@ describe('Social Programs API', () => {
         role: 'Admin'
       })
 
-    expect(res.statusCode).toBe(200)
-    expect(res.body.token).toBeDefined()
     adminToken = res.body.token
+    expect(res.statusCode).toBe(201)
+    expect(adminToken).toBeDefined()
   })
 
   it('should register public user', async () => {
@@ -54,9 +54,9 @@ describe('Social Programs API', () => {
         role: 'Public'
       })
 
-    expect(res.statusCode).toBe(200)
-    expect(res.body.token).toBeDefined()
     publicToken = res.body.token
+    expect(res.statusCode).toBe(201)
+    expect(publicToken).toBeDefined()
   })
 
   it('should create region (admin only)', async () => {
