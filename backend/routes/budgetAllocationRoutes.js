@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const validate = require("../middleware/validateMiddleware");
 
 const protect = require("../middleware/authMiddleware");
 const authorize = require("../middleware/roleMiddleware");
@@ -14,6 +15,11 @@ const {
   getAdjustedAllocations,
 } = require("../controllers/budgetAllocationController");
 
+const {
+  createBudgetValidator,
+  updateBudgetValidator,
+} = require("../validators/budgetAllocationValidator");
+
 router.get(
   "/summary/by-sector",
   protect,
@@ -23,7 +29,13 @@ router.get(
 
 router
   .route("/")
-  .post(protect, authorize("Admin"), createAllocation)
+  .post(
+    protect,
+    authorize("Admin"),
+    createBudgetValidator,
+    validate,
+    createAllocation,
+  )
   .get(protect, authorize("Admin", "Public"), getAllAllocations);
 
 router
@@ -33,7 +45,13 @@ router
 router
   .route("/:id")
   .get(protect, authorize("Admin", "Public"), getSingleAllocation)
-  .put(protect, authorize("Admin"), updateAllocation)
+  .put(
+    protect,
+    authorize("Admin"),
+    updateBudgetValidator,
+    validate,
+    updateAllocation,
+  )
   .delete(protect, authorize("Admin"), deleteAllocation);
 
 module.exports = router;
