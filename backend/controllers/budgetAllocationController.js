@@ -1,4 +1,5 @@
 const BudgetAllocation = require("../models/budgetAllocationModel");
+const axios = require("axios");
 
 // @desc  create new budget allocation
 // @route  POST /api/v1/budget-allocations
@@ -142,5 +143,60 @@ exports.getSummaryBySector = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
+  }
+};
+
+// @desc  Get Inflation-adjusted allocations by year
+// @route GET /api/v1/budget-allocations/adjusted/:year
+// @access Public
+exports.getAdjustedAllocations = async (req, res, next) => {
+  try {
+    const { year } = req.params;
+
+    const allocations = await BudgetAllocation.find({ year });
+
+    if (allocations.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No allocations found for this year",
+      });
+    }
+
+    const response = await axios.get(
+      "https://api.worldbank.org/v2/country/LKA/indicator/FP.CPI.TOTL.ZG?format=json",
+    );
+
+    const inflationData = response.data[1];
+
+    const yearData = inflationData.find(
+      (item) => item.date === year && item.value !== null,
+    );
+
+    const inflationRate = yearData ? yearData.value : 0;
+
+    // 3️⃣ Adjust allocations
+    const adjustedAllocations = allocations.map((allocation) => {
+      const adjustedAmount =
+        allocation.allocatedAmount * (1 + inflationRate / 100);
+
+      return {
+        ...allocation.toObject(),
+        inflationRate,
+        adjustedAmount: adjustedAmount.toFixed(2),
+      };
+    });
+
+    res.status(200).json({
+      success: true,
+      year,
+      inflationRate,
+      data: adjustedAllocations,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch inflation data",
+    });
   }
 };
