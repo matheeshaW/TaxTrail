@@ -1,4 +1,4 @@
-# TaxTrail (Backend)
+﻿# TaxTrail (Backend)
 
 TaxTrail is a web-based public budget transparency system aligned with **SDG 10 – Reduced Inequalities**.
 
@@ -423,6 +423,212 @@ Example response:
 ---
 
 # Member 3 — SocialPrograms Component
+
+## Purpose
+
+The SocialPrograms component manages government welfare initiatives across sectors and target groups.
+It supports transparency on program reach and budget utilization, and adds inequality analysis aligned with **SDG 10 - Reduced Inequalities**.
+
+---
+
+## Functional Requirements
+
+1. Admin users must be able to create social program records.
+2. Admin users must be able to update and delete social program records.
+3. Public and Admin users must be able to view social program records.
+4. Users must be able to retrieve an inequality analysis report by country code.
+5. All create, update, and delete routes must be protected via JWT authentication and RBAC.
+6. Program payloads must be validated before processing.
+7. Region references must be validated against existing Region records.
+8. Domain rules must be enforced (year, budget-per-beneficiary, target-group logic).
+9. Errors must return standardized HTTP status responses.
+10. The component must be integration tested with authentication and role checks.
+
+---
+
+## Endpoints
+
+### Create Social Program (Admin only)
+
+- **POST** `/api/socialprograms`
+
+```json
+{
+  "programName": "School Meals",
+  "sector": "Education",
+  "targetGroup": "Low Income",
+  "beneficiariesCount": 100,
+  "budgetUsed": 50000,
+  "year": 2024,
+  "region": "regionId"
+}
+```
+
+---
+
+### Get All Social Programs
+
+- **GET** `/api/socialprograms`
+
+Returns all social programs with populated `region` and `createdBy`.
+
+---
+
+### Get Single Social Program
+
+- **GET** `/api/socialprograms/:id`
+
+---
+
+### Update Social Program (Admin only)
+
+- **PUT** `/api/socialprograms/:id`
+
+---
+
+### Delete Social Program (Admin only)
+
+- **DELETE** `/api/socialprograms/:id`
+
+Returns `204 No Content` on successful deletion.
+
+---
+
+### Inequality Analysis
+
+- **GET** `/api/socialprograms/inequality-analysis/:country`
+
+Example:
+
+```
+/api/socialprograms/inequality-analysis/LKA
+```
+
+Returns:
+- Latest Gini index and year from the World Bank indicator API
+- Total program count
+- Total budget used
+- Total beneficiaries
+- Interpreted inequality analysis message
+- SDG alignment metadata
+
+---
+
+## Database Schema (SocialProgram)
+
+```js
+{
+  programName: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  sector: {
+    type: String,
+    enum: ['Welfare', 'Education', 'Health', 'Housing', 'Food Assistance'],
+    required: true
+  },
+  targetGroup: {
+    type: String,
+    enum: ['Low Income', 'Middle Income', 'Rural', 'Urban Poor', 'Disabled'],
+    required: true
+  },
+  beneficiariesCount: {
+    type: Number,
+    required: true,
+    min: 0
+  },
+  budgetUsed: {
+    type: Number,
+    required: true,
+    min: 0,
+    max: 1000000000
+  },
+  year: {
+    type: Number,
+    required: true
+  },
+  region: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Region',
+    required: true
+  },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  }
+}
+```
+
+Model options:
+- `timestamps: true`
+
+---
+
+## Validation and Business Rules
+
+Validation is enforced through `express-validator`, ObjectId checks, and service-layer rules.
+
+Rules include:
+- `programName` is required, non-empty, max 100 chars
+- `sector` must be one of: Welfare, Education, Health, Housing, Food Assistance
+- `targetGroup` must be one of: Low Income, Middle Income, Rural, Urban Poor, Disabled
+- `beneficiariesCount` must be an integer >= 0
+- `budgetUsed` must be a number >= 0
+- `year` must be an integer from 1900 up to current year
+- `region` must be a valid MongoDB ObjectId
+- Referenced `region` must exist in Region collection
+- If `targetGroup = Low Income`, `beneficiariesCount` must be > 0
+- Budget per beneficiary must not exceed `1,000,000`
+
+---
+
+## Third-Party API
+
+Inequality analytics uses the World Bank indicator endpoint:
+
+```
+https://api.worldbank.org/v2/country/{countryCode}/indicator/SI.POV.GINI?format=json
+```
+
+Service behavior:
+- Fetches latest available non-null Gini value
+- Maps response to `{ year, giniIndex }`
+- Returns a normalized analysis payload with local SocialPrograms aggregates
+
+---
+
+## Role Access Rules
+
+| Endpoint | Public | Admin |
+|----------|--------|--------|
+| GET all | Yes | Yes |
+| GET single | Yes | Yes |
+| GET inequality-analysis | Yes | Yes |
+| POST | No | Yes |
+| PUT | No | Yes |
+| DELETE | No | Yes |
+
+---
+
+## Testing and QA
+
+Integration tests are implemented in:
+
+- `backend/tests/socialPrograms.int.test.js`
+
+Covered scenarios:
+- Admin and Public registration
+- Auth and RBAC enforcement (`401` and `403` cases)
+- Create with valid and invalid payloads
+- Read all and read by ID
+- Invalid ID format handling (`400`)
+- Update and delete flows
+- Post-delete `404` behavior
+- Inequality analysis endpoint response
+
+---
 
 ---
 
