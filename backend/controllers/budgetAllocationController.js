@@ -25,7 +25,7 @@ exports.createAllocation = async (req, res, next) => {
 // @access  public
 exports.getAllAllocations = async (req, res, next) => {
   try {
-    const { sector, year, region } = req.query;
+    const { sector, year, region, page = 1, limit = 10 } = req.query;
 
     const filter = {};
 
@@ -33,11 +33,18 @@ exports.getAllAllocations = async (req, res, next) => {
     if (year) filter.year = year;
     if (region) filter.region = region;
 
-    const allocations = await BudgetAllocation.find(filter).populate("region");
+    const total = await BudgetAllocation.countDocuments(filter);
+
+    const allocations = await BudgetAllocation.find(filter)
+      .populate("region")
+      .skip((page - 1) * limit)
+      .limit(Number(limit));
 
     res.status(200).json({
       success: true,
-      count: allocations.length,
+      total,
+      page: Number(page),
+      pages: Math.ceil(total / limit),
       data: allocations,
     });
   } catch (error) {
