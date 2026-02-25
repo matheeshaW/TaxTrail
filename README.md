@@ -1,4 +1,4 @@
-﻿# TaxTrail (Backend)
+﻿# TaxTrail (Backend) - + 80% completed
 
 TaxTrail is a web-based public budget transparency system aligned with **SDG 10 – Reduced Inequalities**.
 
@@ -413,6 +413,23 @@ Example response:
   "page": 1,
   "pages": 5,
   "data": []
+}
+```
+
+---
+
+## Validation & Error Handling
+
+- Request validation middleware
+- Centralized error middleware
+- Standardized error responses
+
+Example:
+
+```json
+{
+  "success": false,
+  "message": "Invalid region ID format"
 }
 ```
 
