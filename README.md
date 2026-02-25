@@ -422,6 +422,236 @@ Example response:
 
 ---
 
+## Purpose
+
+The BudgetAllocation component manages government expenditure data across sectors and regions.
+
+It enables transparency in public spending and supports fiscal analysis aligned with SDG 16 – Peace, Justice and Strong Institutions.
+
+This module also integrates third-party inflation data to provide adjusted budget analytics.
+
+---
+
+## Functional Requirements
+
+1. Admin users must be able to create budget allocation records.
+2. Admin users must be able to update and delete allocation records.
+3. Public and Admin users must be able to view allocation records.
+4. Users must be able to filter allocations by
+   - Sector
+   - Year
+   - Region
+5. Users must be able to retrieve allocation data with pagination.
+6. Users must be able to retrieve aggregated allocation summaries by sector.
+7. Users must be able to retrieve inflation-adjusted allocation data.
+8. All routes must be protected via JWT authentication.
+9. Access must be restricted using role-based authorization.
+10. All requests must be validated before processing.
+11. All errors must be handled via centralized error middleware.
+
+---
+
+## Endpoints
+
+### Create Budget Allocation (Admin only)
+
+- **POST** `/api/v1/budget-allocations`
+
+```json
+{
+  "sector": "Health",
+  "allocatedAmount": 5000000,
+  "targetIncomeGroup": "High",
+  "year": 2024,
+  "region": "regionId"
+}
+```
+
+---
+
+### Get All Budget Allocations
+
+- **GET** `/api/v1/budget-allocations`
+
+Query parameters
+
+ Parameter | Description 
+----------|-------------
+ sector | Filter by sector name 
+ year | Filter by year 
+ region | Filter by region ID 
+ page | Pagination page number 
+ limit | Records per page 
+
+Example
+
+```
+/api/v1/budget-allocations?year=2024&page=1&limit=5
+```
+
+---
+
+### Get Single Budget Allocation
+
+- **GET** `/api/v1/budget-allocations/:id`
+
+---
+
+### Update Budget Allocation (Admin only)
+
+- **PUT** `/api/v1/budget-allocations/:id`
+
+---
+
+### Delete Budget Allocation (Admin only)
+
+- **DELETE** `/api/v1/budget-allocations/:id`
+
+---
+
+### Budget Summary by Sector
+
+- **GET** `/api/v1/budget-allocations/summary/by-sector`
+
+Returns total allocated amount grouped by sector using MongoDB aggregation.
+
+Example response
+```json
+{
+  "success": true,
+  "data": [
+    { "_id": "Health", "totalAllocated": 8000000 },
+    { "_id": "Education", "totalAllocated": 6000000 }
+  ]
+}
+```
+
+---
+
+### Inflation Adjusted Allocations
+
+- **GET** `/api/v1/budget-allocations/adjusted/:year`
+
+Returns allocation values adjusted based on annual inflation rate retrieved from a third-party API.
+
+---
+
+## Database Schema (BudgetAllocation)
+
+```js
+  {
+    sector: {
+      type: String,
+      enum: ["Health", "Education", "Welfare", "Infrastructure"],
+      required: [true, "Sector is required"],
+    },
+    allocatedAmount: {
+      type: Number,
+      required: [true, "Allocated amount is required"],
+      min: [0, "Amount can not be negative"],
+    },
+    targetIncomeGroup: {
+      type: String,
+      enum: ["Low", "Middle", "High"],
+      required: [true, "Target income group is required"],
+    },
+    year: {
+      type: Number,
+      required: [true, "Year is required"],
+    },
+    region: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Region",
+      required: [true, "Region is required"],
+    },
+  }
+```
+
+Indexes
+- Compound index on { region, year }
+- Index on sector
+
+---
+
+## Third-Party API
+
+Inflation rate data is retrieved from
+
+```
+https://api.worldbank.org/v2/country/LKA/indicator/FP.CPI.TOTL.ZG?format=json
+```
+
+Purpose
+
+- Retrieve annual inflation rate for Sri Lanka.
+- Adjust allocated amounts based on inflation percentage.
+
+Adjustment formula
+
+```
+adjustedAmount = allocatedAmount * (1 + inflationRate / 100)
+```
+
+Optimization strategy
+
+- API called per request for adjusted endpoint.
+- No API key required.
+- Lightweight JSON response parsing.
+
+---
+
+## Role Access Rules
+
+ Endpoint | Public | Admin 
+--------|--------|----------
+ GET all | ✅ | ✅ 
+ GET single | ✅ | ✅ 
+ POST | ❌ | ✅ 
+ PUT | ❌ | ✅ 
+ DELETE | ❌ | ✅ 
+ Summary | ✅ | ✅ 
+ Adjusted | ✅ | ✅ 
+
+---
+
+## Validation Rules
+
+Validation implemented using `express-validator`.
+
+Rules include
+
+- sector must not be empty
+- allocatedAmount must be a positive number
+- year must be ≥ 2000
+- region must be a valid MongoDB ObjectId
+- Optional fields validated during update operations
+- All required fields must be present
+
+---
+
+## Pagination
+
+Example response
+
+```json
+{
+  "success": true,
+  "total": 25,
+  "page": 1,
+  "pages": 5,
+  "data": []
+}
+```
+
+Benefits
+
+- Improved performance
+- Reduced response size
+- Scalable data retrieval
+
+---
+
+
 # Member 3 — SocialPrograms Component
 
 ## Purpose
