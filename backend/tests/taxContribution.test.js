@@ -35,7 +35,7 @@ describe('Tax Contribution API', () => {
                 password: "password",
                 role: "Admin"
             })
-        expect(res.statusCode).toEqual(200),
+        expect(res.statusCode).toEqual(201),
         expect(res.body.token).toBeDefined()
         adminToken = res.body.token
     })
@@ -51,7 +51,7 @@ describe('Tax Contribution API', () => {
             role: "Public"
         })
 
-        expect(res.statusCode).toBe(200)
+        expect(res.statusCode).toBe(201)
         publicToken = res.body.token
     })
 
