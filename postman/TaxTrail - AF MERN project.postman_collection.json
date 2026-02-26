@@ -1,0 +1,2099 @@
+{
+  "info": {
+    "_postman_id": "b6eaa8a1-561a-4d59-bccd-ffc51b97b28c",
+    "name": "TaxTrail - AF MERN project",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52314088",
+    "_collection_link": "https://go.postman.co/collection/52314088-b6eaa8a1-561a-4d59-bccd-ffc51b97b28c?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "auth component",
+      "item": [
+        {
+          "name": "http://localhost:4000/api/auth/register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {\r",
+                  "    const jsonData = pm.response.json();\r",
+                  "    pm.environment.set(\"token\", jsonData.token);\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\" : \"Matheesha4\",\r\n    \"email\" : \"Matheesha4@gmail.com\",\r\n    \"password\" : \"336699vv\",\r\n    \"role\" : \"Admin\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:4000/api/auth/login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {\r",
+                  "    const jsonData = pm.response.json();\r",
+                  "    pm.environment.set(\"token\", jsonData.token);\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\" : \"Matheesha3@gmail.com\",\r\n    \"password\" : \"336699vv\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "regions component (core)",
+      "item": [
+        {
+          "name": "localhost:4000/api/v1/regions/",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\" : \"bimba\",\r\n    \"content\" : \"yeah the third try\"\r\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/regions/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "regions",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "localhost:4000/api/v1/regions/",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"regionName\" : \"Northern Province\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/regions/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "regions",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "localhost:4000/api/v1/regions/6995c2953622ab6c85af4f54",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"regionName\" : \"Eastern Province\"\r\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/regions/6995c2953622ab6c85af4f54",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "regions",
+                "6995c2953622ab6c85af4f54"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "localhost:4000/api/v1/regions/6995c2953622ab6c85af4f54",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"regionName\" : \"Southern Province\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/regions/6995c2953622ab6c85af4f54",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "regions",
+                "6995c2953622ab6c85af4f54"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "localhost:4000/api/v1/regions/6995c2853622ab6c85af4f51",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"regionName\" : \"Eastern Province\"\r\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/regions/6995c2853622ab6c85af4f51",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "regions",
+                "6995c2853622ab6c85af4f51"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{token}}",
+            "type": "string"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              "if (!pm.environment.get(\"token\")) {\r",
+              "    console.log(\"No token found. Please login first.\");\r",
+              "}"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "tax contribution component",
+      "item": [
+        {
+          "name": "http://localhost:4000/api/v1/tax-contributions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/tax-contributions?page=1&limit=10",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "tax-contributions"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "region",
+                  "value": "6995c2703622ab6c85af4f4e",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "year",
+                  "value": "2019",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "incomeBracket",
+                  "value": "Low",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "currency",
+                  "value": "USD",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:4000/api/v1/tax-contributions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/tax-contributions?currency=EUR",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "tax-contributions"
+              ],
+              "query": [
+                {
+                  "key": "currency",
+                  "value": "EUR"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:4000/api/v1/tax-contributions/6996abd8a3a611418f1c178e",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"payerType\": \"Corporate\",\r\n  \"incomeBracket\": \"High\",\r\n  \"taxType\": \"Income\",\r\n  \"amount\": 80800,\r\n  \"year\": 2024,\r\n  \"region\": \"6995c2953622ab6c85af4f54\"\r\n}\r\n"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/tax-contributions/69974f97163fffce68c52fff",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "tax-contributions",
+                "69974f97163fffce68c52fff"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:4000/api/v1/tax-contributions",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"payerType\": \"Corporate\",\r\n  \"incomeBracket\": \"High\",\r\n  \"taxType\": \"VAT\",\r\n  \"amount\": 7700,\r\n  \"year\": 2024,\r\n  \"region\": \"6995c2953622ab6c85af4f54\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/tax-contributions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "tax-contributions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:4000/api/v1/tax-contributions/6996ac11a3a611418f1c1796",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"payerType\": \"Individual\",\r\n  \"incomeBracket\": \"Low\",\r\n  \"taxType\": \"VAT\",\r\n  \"amount\": 68000,\r\n  \"year\": 2023,\r\n  \"region\": \"6995c2953622ab6c85af4f54\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/tax-contributions/699ebfab6aea4a6b1dedb876",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "tax-contributions",
+                "699ebfab6aea4a6b1dedb876"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:4000/api/v1/tax-contributions/6996abeea3a611418f1c1792",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/tax-contributions/6996abeea3a611418f1c1792",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "tax-contributions",
+                "6996abeea3a611418f1c1792"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:4000/api/v1/tax-contributions/summary/region",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/tax-contributions/summary/region",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "tax-contributions",
+                "summary",
+                "region"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              "if (!pm.environment.get(\"token\")) {\r",
+              "    console.log(\"No token found. Please login first.\");\r",
+              "}"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Regional Development.",
+      "item": [
+        {
+          "name": "1. Admin Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"admin@taxtrail.com\",\r\n  \"password\": \"password123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:4000/api/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2. Create Base Region",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTdmMDdhNWQxMGY1ODExYjk4ODI3ZCIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc3MTkxNTA3NiwiZXhwIjoxNzcyMDAxNDc2fQ.O4WhpMyZFacshZzVkXfhwMS5V8mTeQMJF_KKu96t8v0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"regionName\": \"Southern Province\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:4000/api/v1/regions",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "regions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. Create Regional Data",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTdmMDdhNWQxMGY1ODExYjk4ODI3ZCIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc3MTkxNTA3NiwiZXhwIjoxNzcyMDAxNDc2fQ.O4WhpMyZFacshZzVkXfhwMS5V8mTeQMJF_KKu96t8v0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"region\": \"699d47b0f8d8b251424839fb\",\r\n  \"year\": 2026,\r\n  \"averageIncome\": 45000,\r\n  \"unemploymentRate\": 8.1,\r\n  \"povertyRate\": 8.5\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:4000/api/v1/regional-development",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "regional-development"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4. Get All Regional Data",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTdmMDdhNWQxMGY1ODExYjk4ODI3ZCIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc3MTkxNTA3NiwiZXhwIjoxNzcyMDAxNDc2fQ.O4WhpMyZFacshZzVkXfhwMS5V8mTeQMJF_KKu96t8v0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4000/api/v1/regional-development",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "regional-development"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5. Get Inequality Index Analytics",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTdmMDdhNWQxMGY1ODExYjk4ODI3ZCIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc3MTkxNTA3NiwiZXhwIjoxNzcyMDAxNDc2fQ.O4WhpMyZFacshZzVkXfhwMS5V8mTeQMJF_KKu96t8v0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4000/api/v1/regional-development/inequality-index",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "regional-development",
+                "inequality-index"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "6. Get Region SDG Metrics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4000/api/v1/regional-development/sdg-metrics/699d47e9f8d8b251424839fe",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "regional-development",
+                "sdg-metrics",
+                "699d47e9f8d8b251424839fe"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "7. Update Regional Data",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTdmMDdhNWQxMGY1ODExYjk4ODI3ZCIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc3MTkxNTA3NiwiZXhwIjoxNzcyMDAxNDc2fQ.O4WhpMyZFacshZzVkXfhwMS5V8mTeQMJF_KKu96t8v0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"averageIncome\": 52000,\r\n  \"unemploymentRate\": 7.5\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:4000/api/v1/regional-development/699d47e9f8d8b251424839fe",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "regional-development",
+                "699d47e9f8d8b251424839fe"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "8. Delete Regional Data",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTdmMDdhNWQxMGY1ODExYjk4ODI3ZCIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc3MTkxNTA3NiwiZXhwIjoxNzcyMDAxNDc2fQ.O4WhpMyZFacshZzVkXfhwMS5V8mTeQMJF_KKu96t8v0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4000/api/v1/regional-development/699d47e9f8d8b251424839fe",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "regional-development",
+                "699d47e9f8d8b251424839fe"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Social Programs",
+      "item": [
+        {
+          "name": "Auth",
+          "item": [
+            {
+              "name": "Login",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"email\": \"test@example.com\",\r\n    \"password\": \"12345\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/api/auth/login",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "api",
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Register",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"System Admin\",\r\n  \"email\": \"admin@taxtrail.com\",\r\n  \"password\": \"Admin@123\",\r\n  \"role\": \"Admin\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/api/auth/register",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "api",
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Login (Admin)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"email\": \"Kanushka@gmail.com\",\r\n    \"password\": \"password123\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/api/auth/login",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "api",
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Inequality",
+          "item": [
+            {
+              "name": "inequality",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:4000/api/inequality/gini/LKA",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "api",
+                    "inequality",
+                    "gini",
+                    "LKA"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "inequality (Admin)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:4000/api/inequality/gini/LKA",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "api",
+                    "inequality",
+                    "gini",
+                    "LKA"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Social Programs (Admin)",
+          "item": [
+            {
+              "name": "Create a Social Program (Admin)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OWY0OTNmZjZjOTVjMmQ5NjFlYWQ2ZiIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc3MjA0NjY4NCwiZXhwIjoxNzcyMTMzMDg0fQ.6F7rZB4vLvXWDWjTQK-ykDrE69NdqC0E25b8xPx9MG0",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"programName\": \"School Meals\",\r\n  \"sector\": \"Education\",\r\n  \"targetGroup\": \"Low Income\",\r\n  \"beneficiariesCount\": 100,\r\n  \"budgetUsed\": 50000,\r\n  \"year\": 2024,\r\n  \"region\": \"699f4a94f6c95c2d961ead75\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/api/socialprograms",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "api",
+                    "socialprograms"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "UPDATE a Social Program(Admin)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OWY0OTNmZjZjOTVjMmQ5NjFlYWQ2ZiIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc3MjA0NjY4NCwiZXhwIjoxNzcyMTMzMDg0fQ.6F7rZB4vLvXWDWjTQK-ykDrE69NdqC0E25b8xPx9MG0",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"programName\": \"Updated School Meals\"\r\n    \r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/api/socialprograms/699f4aa2f6c95c2d961ead79",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "api",
+                    "socialprograms",
+                    "699f4aa2f6c95c2d961ead79"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "DELETE a Social Program(Admin)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OWY0OTNmZjZjOTVjMmQ5NjFlYWQ2ZiIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc3MjA0NjY4NCwiZXhwIjoxNzcyMTMzMDg0fQ.6F7rZB4vLvXWDWjTQK-ykDrE69NdqC0E25b8xPx9MG0",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "http://localhost:4000/api/socialprograms/699f4aa2f6c95c2d961ead79",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "api",
+                    "socialprograms",
+                    "699f4aa2f6c95c2d961ead79"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Social Programs (Public)",
+          "item": [
+            {
+              "name": "Get All Programs",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:4000/api/socialprograms",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "api",
+                    "socialprograms"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Inequality Analysis",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:4000/api/socialprograms/inequality-analysis/LKA",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "api",
+                    "socialprograms",
+                    "inequality-analysis",
+                    "LKA"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Program by ID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:4000/api/socialprograms/6999f672bd03d191aebb6c19",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "api",
+                    "socialprograms",
+                    "6999f672bd03d191aebb6c19"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create a Social Program (Public)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OWMwYTZiODYzYmZiNTY1ZmMzMWIwMiIsImlhdCI6MTc3MTgzNDA0MiwiZXhwIjoxNzcxOTIwNDQyfQ.MdNGijgcClBYBBLUKTX6dXtUlBAkIRPN0Mfi85rrSHE",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"programName\": \"Samurdhi Program\",\r\n    \"sector\": \"Welfare\",\r\n    \"targetGroup\": \"Low Income\",\r\n    \"beneficiariesCount\": 5000,\r\n    \"budgetUsed\": 1000000,\r\n    \"year\": 2021,\r\n    \"region\": \"69945351626cde294188853e\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/api/socialprograms",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "api",
+                    "socialprograms"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "UPDATE a Social Program(Public)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OWMwYTZiODYzYmZiNTY1ZmMzMWIwMiIsImlhdCI6MTc3MTgzNDA0MiwiZXhwIjoxNzcxOTIwNDQyfQ.MdNGijgcClBYBBLUKTX6dXtUlBAkIRPN0Mfi85rrSHE",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"beneficiariesCount\": 7500,\r\n    \"budgetUsed\": 1500000\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/api/socialprograms/6999f672bd03d191aebb6c19",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "api",
+                    "socialprograms",
+                    "6999f672bd03d191aebb6c19"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "DELETE a Social Program (Public)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OWMwYTZiODYzYmZiNTY1ZmMzMWIwMiIsImlhdCI6MTc3MTgzNDA0MiwiZXhwIjoxNzcxOTIwNDQyfQ.MdNGijgcClBYBBLUKTX6dXtUlBAkIRPN0Mfi85rrSHE",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:4000/api/socialprograms/6999f672bd03d191aebb6c19",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "api",
+                    "socialprograms",
+                    "6999f672bd03d191aebb6c19"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Validation Tests",
+          "item": [
+            {
+              "name": "Low Income with zero beneficiaries (Public)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OWMwYTZiODYzYmZiNTY1ZmMzMWIwMiIsImlhdCI6MTc3MTgzNDA0MiwiZXhwIjoxNzcxOTIwNDQyfQ.MdNGijgcClBYBBLUKTX6dXtUlBAkIRPN0Mfi85rrSHE",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"targetGroup\": \"Low Income\",\r\n    \"beneficiariesCount\": 0\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/api/socialprograms/6999f672bd03d191aebb6c19",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "api",
+                    "socialprograms",
+                    "6999f672bd03d191aebb6c19"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Unrealistic budget per person (Public)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OWMwYTZiODYzYmZiNTY1ZmMzMWIwMiIsImlhdCI6MTc3MTgzNDA0MiwiZXhwIjoxNzcxOTIwNDQyfQ.MdNGijgcClBYBBLUKTX6dXtUlBAkIRPN0Mfi85rrSHE",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"beneficiariesCount\": 1,\r\n    \"budgetUsed\": 5000000\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/api/socialprograms/6999f672bd03d191aebb6c19",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "api",
+                    "socialprograms",
+                    "6999f672bd03d191aebb6c19"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Low Income with zero beneficiaries (Admin)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTU0ZDdlYWRiZTM0M2E5YjZlZGNiMCIsImlhdCI6MTc3MTgzNDg2MywiZXhwIjoxNzcxOTIxMjYzfQ.shZwg_02AjXzufnPjcUQ6jTdilWCx2qPyPjSYp9WrNc",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"targetGroup\": \"Low Income\",\r\n    \"beneficiariesCount\": 0\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/api/socialprograms/699c0e72863bfb565fc31b16",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "api",
+                    "socialprograms",
+                    "699c0e72863bfb565fc31b16"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Unrealistic budget per person (Admin)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTU0ZDdlYWRiZTM0M2E5YjZlZGNiMCIsImlhdCI6MTc3MTgzNDg2MywiZXhwIjoxNzcxOTIxMjYzfQ.shZwg_02AjXzufnPjcUQ6jTdilWCx2qPyPjSYp9WrNc",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"beneficiariesCount\": 1,\r\n    \"budgetUsed\": 5000000\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/api/socialprograms/699c0e72863bfb565fc31b16",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "api",
+                    "socialprograms",
+                    "699c0e72863bfb565fc31b16"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Test invalid create",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OWY0OTNmZjZjOTVjMmQ5NjFlYWQ2ZiIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc3MjA0NjY4NCwiZXhwIjoxNzcyMTMzMDg0fQ.6F7rZB4vLvXWDWjTQK-ykDrE69NdqC0E25b8xPx9MG0",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"programName\": \"\",\r\n  \"sector\": \"InvalidSector\",\r\n  \"targetGroup\": \"Low Income\",\r\n  \"beneficiariesCount\": -1,\r\n  \"budgetUsed\": -100,\r\n  \"year\": 3000,\r\n  \"region\": \"\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/api/socialprograms",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "api",
+                    "socialprograms"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "New Request",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OWY0OTNmZjZjOTVjMmQ5NjFlYWQ2ZiIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc3MjA0NjY4NCwiZXhwIjoxNzcyMTMzMDg0fQ.6F7rZB4vLvXWDWjTQK-ykDrE69NdqC0E25b8xPx9MG0",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"sector\": \"BadSector\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:4000/api/socialprograms/699f4aa2f6c95c2d961ead79?",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "4000",
+                  "path": [
+                    "api",
+                    "socialprograms",
+                    "699f4aa2f6c95c2d961ead79"
+                  ],
+                  "query": [
+                    {
+                      "key": "",
+                      "value": null,
+                      "type": "text"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "budget allocation component",
+      "item": [
+        {
+          "name": "http://localhost:4000/api/v1/budget-allocations",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"sector\": \"Health\",\r\n  \"allocatedAmount\": 300000,\r\n  \"targetIncomeGroup\": \"High\",\r\n  \"year\": 2025,\r\n  \"region\": \"6995c2703622ab6c85af4f4e\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:4000/api/v1/budget-allocations",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "budget-allocations"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:4000/api/v1/budget-allocations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4000/api/v1/budget-allocations",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "budget-allocations"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:4000/api/v1/budget-allocations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4000/api/v1/budget-allocations?sector=Health",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "budget-allocations"
+              ],
+              "query": [
+                {
+                  "key": "sector",
+                  "value": "Health"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:4000/api/v1/budget-allocations/699b37b38041a941ce4f6cbf",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4000/api/v1/budget-allocations/699b37b38041a941ce4f6cbf",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "budget-allocations",
+                "699b37b38041a941ce4f6cbf"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:4000/api/v1/budget-allocations/699b37b38041a941ce4f6cbf",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"year\": 2026\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:4000/api/v1/budget-allocations/699b37b38041a941ce4f6cbf",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "budget-allocations",
+                "699b37b38041a941ce4f6cbf"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:4000/api/v1/budget-allocations/699da8b910707b3b10ba18da",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4000/api/v1/budget-allocations/699da8b910707b3b10ba18da",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "budget-allocations",
+                "699da8b910707b3b10ba18da"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:4000/api/v1/budget-allocations/summary/by-sector",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4000/api/v1/budget-allocations/summary/by-sector",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "budget-allocations",
+                "summary",
+                "by-sector"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:4000/api/v1/budget-allocations/adjusted/2025",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4000/api/v1/budget-allocations/adjusted/2025",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "budget-allocations",
+                "adjusted",
+                "2025"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "test component",
+      "item": [
+        {
+          "name": "localhost:4000/api/testroutes",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/testroutes/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "testroutes",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "localhost:4000/api/testroutes/123",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/testroutes/698efae478a91c2f74090bb0",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "testroutes",
+                "698efae478a91c2f74090bb0"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "localhost:4000/api/testroutes/",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/testroutes/698efecf0712c5d6d9ffc2cf",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "testroutes",
+                "698efecf0712c5d6d9ffc2cf"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "localhost:4000/api/testroutes/",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\" : \"bimba\",\r\n    \"content\" : \"yeah the third try\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/testroutes/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "testroutes",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "localhost:4000/api/testroutes/222",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\" : \"boom shakalaka\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/testroutes/698ef5c6cd5e42d0c12914e5",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "testroutes",
+                "698ef5c6cd5e42d0c12914e5"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              "if (!pm.environment.get(\"token\")) {\r",
+              "    console.log(\"No token found. Please login first.\");\r",
+              "}"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "exchagnge rate apis",
+      "item": [
+        {
+          "name": "https://open.er-api.com/v6/latest/LKR",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://open.er-api.com/v6/latest/LKR",
+              "protocol": "https",
+              "host": [
+                "open",
+                "er-api",
+                "com"
+              ],
+              "path": [
+                "v6",
+                "latest",
+                "LKR"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "https://api.exchangerate.host/convert",
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "access_key",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "bc215779b89fece710368d8e13fbf7bc",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "query",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://api.exchangerate.host/convert?from=LKR&to=USD&amount=10000&format=1\n",
+              "protocol": "https",
+              "host": [
+                "api",
+                "exchangerate",
+                "host"
+              ],
+              "path": [
+                "convert"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "LKR"
+                },
+                {
+                  "key": "to",
+                  "value": "USD"
+                },
+                {
+                  "key": "amount",
+                  "value": "10000"
+                },
+                {
+                  "key": "format",
+                  "value": "1\n"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "https://api.frankfurter.app/latest",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://api.frankfurter.app/latest?amount=10000&from=USD&to=LKR",
+              "protocol": "https",
+              "host": [
+                "api",
+                "frankfurter",
+                "app"
+              ],
+              "path": [
+                "latest"
+              ],
+              "query": [
+                {
+                  "key": "amount",
+                  "value": "10000"
+                },
+                {
+                  "key": "from",
+                  "value": "USD"
+                },
+                {
+                  "key": "to",
+                  "value": "LKR"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/lkr.json",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/lkr.json",
+              "protocol": "https",
+              "host": [
+                "cdn",
+                "jsdelivr",
+                "net"
+              ],
+              "path": [
+                "npm",
+                "@fawazahmed0",
+                "currency-api@latest",
+                "v1",
+                "currencies",
+                "lkr.json"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}

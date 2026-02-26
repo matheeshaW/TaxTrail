@@ -1120,3 +1120,105 @@ Example:
 ```
 
 ---
+
+
+
+## Postman Collection (How to Use)
+
+This repository includes the Postman artifacts the team used to test all component APIs (including JWT-protected routes and role-based access).
+
+### Files
+
+- Collection: `postman/TaxTrail - AF MERN project.postman_collection.json`
+- Environment: `postman/TaxTrail Local.postman_environment.json`
+
+### Import into Postman
+
+1. Open Postman.
+2. Click **Import**.
+3. Import both JSON files:
+   - `postman/TaxTrail - AF MERN project.postman_collection.json`
+   - `postman/TaxTrail Local.postman_environment.json`
+4. In the top-right environment dropdown, select **TaxTrail Local**.
+
+### Configure environment variables
+
+Open **Environments → TaxTrail Local** and set:
+
+- `base_url` = `http://localhost:4000/api`
+- `token` = (leave empty; it will be set automatically after login)
+
+Notes:
+
+- Most requests in the collection use `{{base_url}}` (for example `{{base_url}}/v1/regions`).
+- A small number of requests (e.g., some under **Regional Development.**) are hard-coded to `http://localhost:4000/...`. If you are not running on `localhost:4000`, update those request URLs in Postman to use `{{base_url}}`.
+
+### How authentication works in the collection
+
+- The collection uses **Bearer Token** auth with `{{token}}`.
+- In the **auth component** folder, the **Login** request has a test script that stores the JWT into the environment variable `token`.
+- If `token` is missing, some folders log a message in the Postman console (“Please login first.”).
+
+### Suggested flow to run the APIs (recommended order)
+
+Because routes are protected and RBAC is enforced, run requests in this order.
+
+#### 1) Start the backend
+
+```bash
+cd backend
+npm run dev
+```
+
+#### 2) Create users (once)
+
+In Postman:
+
+1. Go to **auth component → /auth/register**.
+2. Register at least one **Admin** user and one **Public** user.
+
+Tip: You can duplicate the register request and change the `role` field to create both roles.
+
+#### 3) Login as Admin (to test write operations)
+
+1. Go to **auth component → /auth/login**.
+2. Send the request using the Admin credentials.
+3. Confirm the environment variable `token` is now set.
+
+At this point, Admin-only endpoints (POST/PUT/DELETE) should work.
+
+#### 4) Create Region(s) first (core dependency)
+
+Many entities reference a Region by MongoDB ObjectId.
+
+1. Go to **regions component (core) → POST /v1/regions**.
+2. Create a region.
+3. Copy the returned region `_id` and use it in other components’ requests where `region` is required.
+
+If the collection contains example IDs (e.g., `699...`) from another database, replace them with IDs created in your own database.
+
+#### 5) Test each component
+
+- **Tax Contributions**
+  - Create (Admin), then GET / filters / summary.
+  - Ensure you replace `:id` and `region` values with real IDs from your DB.
+
+- **Budget Allocations**
+  - Create allocations (Admin) using a valid `region` ID.
+  - Test summary and inflation-adjusted endpoints after you have some data.
+
+- **Social Programs**
+  - Create programs (Admin) using a valid `region` ID.
+  - Test public GET routes and the inequality-analysis endpoint.
+
+- **Regional Development**
+  - Follow the folder’s request sequence (create base region → create regional data → analytics).
+  - Prefer using the **auth component** login so `token` is stored into the environment automatically.
+
+#### 6) Login as Public (to verify RBAC)
+
+1. Send **auth component → /auth/login** using the Public user credentials.
+2. The environment `token` will be overwritten with the Public user token.
+3. Re-run GET endpoints (should succeed) and try an Admin-only endpoint (should return `403 Forbidden`).
+
+
