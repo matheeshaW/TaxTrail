@@ -920,6 +920,9 @@ Covered scenarios:
 ---
 
 # Member 4 — RegionalDevelopmentData Component
+
+---
+
 ## Purpose
 
 The RegionalDevelopmentData component manages regional economic and social metrics, enabling the tracking of development progress across different provinces.
@@ -1034,6 +1037,22 @@ Optimization strategy:
 
 ---
 
+## Third-Party API
+
+Inequality analytics uses the World Bank indicator endpoint:
+
+```text
+[https://api.worldbank.org/v2/country/LKA/indicator/SI.POV.GINI?format=json](https://api.worldbank.org/v2/country/LKA/indicator/SI.POV.GINI?format=json)
+```
+
+Service behavior:
+- Fetches latest available non-null Gini value for Sri Lanka.
+- Maps response to `globalBenchmark` for SDG 10 alignment.
+- Implements a safety fallback to cached offline data (27.7) if the API times out, preventing server crashes.
+- No API key required.
+
+---
+
 ## Role Access Rules
 
 | Endpoint | Public | Admin |
@@ -1047,14 +1066,43 @@ Optimization strategy:
 
 ---
 
+## Validation Rules
+
+Validation implemented using `express-validator`.
+
+Rules include:
+
+- `region` must be a valid MongoDB ObjectId
+- `year` must be ≥ 2000
+- `averageIncome` must be a positive number
+- `unemploymentRate` must be between 0 and 100
+- `povertyRate` must be between 0 and 100
+- All required fields must be present
+
+---
+
+## Pagination
+
+Example response:
+
+```json
+{
+  "success": true,
+  "total": 25,
+  "page": 1,
+  "pages": 5,
+  "data": []
+}
+```
+
+---
+
 ## Testing & Quality Assurance
 
 - **Unit & Integration Testing:** Implemented using `Jest`, `Supertest`, and `mongodb-memory-server`. Achieved 100% pass rate across core controller operations.
 - **Performance Testing:** Evaluated using `Artillery.io`. Successfully handled sustained loads of 1,000 requests via 50 concurrent users over 20 seconds, yielding a 0% failure rate and a median response time of 1ms.
 
 ---
-
-
 
 ## Validation & Error Handling
 
