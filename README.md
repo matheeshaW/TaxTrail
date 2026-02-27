@@ -1,4 +1,4 @@
-﻿# TaxTrail (Backend) - + 80% completed
+﻿# TaxTrail (Backend) -  80% completed
 
 TaxTrail is a web-based public budget transparency system aligned with **SDG 10 – Reduced Inequalities**.
 
