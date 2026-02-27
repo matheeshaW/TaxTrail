@@ -1148,6 +1148,12 @@ Returns a calculated analysis of wealth and development disparities across regio
     required: true,
     min: 0,
     max: 100
+  },
+  accessToServicesIndex: { 
+    type: Number, 
+    default: 50, 
+    min: 0, 
+    max: 100 
   }
 }
 ```
