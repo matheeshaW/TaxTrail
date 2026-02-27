@@ -214,15 +214,13 @@ Request body:
 
 - **DELETE** `/api/regions/:id`
 
----
-
 # Member 1 — TaxContribution Component
 
 ---
 
 ## Purpose
 
-The TaxContribution component manages government revenue data, enabling transparency in tax collection across different income groups and regions.  
+The TaxContribution component manages government revenue data, enabling transparency in tax collection across different income groups and regions.
 
 It supports analysis of wealth distribution and revenue patterns aligned with **SDG 10 – Reduced Inequalities**.
 
@@ -240,9 +238,10 @@ It supports analysis of wealth distribution and revenue patterns aligned with **
 5. Users must be able to retrieve tax data with pagination.
 6. Users must be able to convert tax amounts to a different currency.
 7. The system must provide aggregated revenue summaries by region.
-8. All routes must be protected via JWT authentication.
+8. All routes must be protected via JWT authentication and role-based access control (RBAC).
 9. All requests must be validated before processing.
 10. All errors must be handled via centralized error middleware.
+11. The component must be integration tested with authentication, validation, and RBAC enforcement.
 
 ---
 
@@ -250,7 +249,7 @@ It supports analysis of wealth distribution and revenue patterns aligned with **
 
 ### Create Tax Contribution (Admin only)
 
-- **POST** `/api/tax-contributions`
+- **POST** `/api/v1/tax-contributions`
 
 ```json
 {
@@ -267,7 +266,7 @@ It supports analysis of wealth distribution and revenue patterns aligned with **
 
 ### Get All Tax Contributions
 
-- **GET** `/api/tax-contributions`
+- **GET** `/api/v1/tax-contributions`
 
 Query parameters:
 
@@ -283,34 +282,89 @@ Query parameters:
 Example:
 
 ```
-/api/tax-contributions?currency=USD&page=1&limit=5
+/api/v1/tax-contributions?page=1&limit=10
+```
+or 
+
+```
+/api/v1/tax-contributions?page=1&limit=10&region=6995c2703622ab6c85af4f4e&year=2019&incomeBracket=Low&currency=USD
 ```
 
+Response:
+
+```json
+{
+    "success": true,
+    "total": 1,
+    "page": 1,
+    "pages": 1,
+    "data": [
+        {
+            "_id": "6997265f8bbd7d4657eef954",
+            "payerType": "Individual",
+            "incomeBracket": "Low",
+            "taxType": "VAT",
+            "amount": 8952,
+            "year": 2019,
+            "region": {
+                "_id": "6995c2703622ab6c85af4f4e",
+                "regionName": "Central Province"
+            },
+            "createdAt": "2026-02-19T15:03:59.436Z",
+            "updatedAt": "2026-02-19T15:03:59.436Z",
+            "__v": 0,
+            "originalAmount": 8952,
+            "convertedAmount": 28.96,
+            "convertedCurrency": "USD"
+        }
+    ]
+}
+```
 ---
 
 ### Get Single Tax Contribution
 
-- **GET** `/api/tax-contributions/:id`
+- **GET** `/api/v1/tax-contributions/:id`
 
 ---
 
 ### Update Tax Contribution (Admin only)
 
-- **PUT** `/api/tax-contributions/:id`
+- **PUT** `/api/v1/tax-contributions/:id`
 
 ---
 
 ### Delete Tax Contribution (Admin only)
 
-- **DELETE** `/api/tax-contributions/:id`
+- **DELETE** `/api/v1/tax-contributions/:id`
 
 ---
 
 ### Revenue Summary by Region
 
-- **GET** `/api/tax-contributions/summary/by-region`
+- **GET** `/api/v1/tax-contributions/summary/by-region`
 
 Returns total tax revenue grouped by region.
+
+Response:
+
+```json
+{
+    "success": true,
+    "data": [
+        {
+            "_id": "6995c2953622ab6c85af4f54",
+            "totalTax": 1114429,
+            "regionName": "Sabaragamuwa Province"
+        },
+        {
+            "_id": "6995c2703622ab6c85af4f4e",
+            "totalTax": 9174,
+            "regionName": "Central Province"
+        }
+    ]
+}
+```
 
 ---
 
@@ -352,8 +406,26 @@ Returns total tax revenue grouped by region.
 ```
 
 Indexes:
+
 - Compound index on `{ region, year }`
 - Index on `incomeBracket`
+
+---
+
+## Validation & Business Rules
+
+Validation is implemented using `express-validator`, ObjectId checks, and service-layer validation.
+
+Rules include:
+
+- `payerType` must be either `Individual` or `Corporate`
+- `incomeBracket` must be `Low`, `Middle`, or `High`
+- `taxType` must be `Income`, `VAT`, or `Corporate`
+- `amount` must be a positive number
+- `year` must be an integer ≥ 2000
+- `region` must be a valid MongoDB ObjectId
+- Referenced `region` must exist in the Region collection
+- All required fields must be present
 
 ---
 
@@ -365,11 +437,12 @@ Exchange rate conversion is implemented using:
 https://open.er-api.com/v6/latest/LKR
 ```
 
-Optimization strategy:
-- Exchange rates cached in memory for 1 hour
-- Single API call per cache cycle
-- Local multiplication for conversion
-- No API key required
+### Optimization Strategy
+
+- Exchange rates are cached in memory for 1 hour
+- Only one API call is made per cache cycle
+- Currency conversion is performed locally via multiplication
+- No API key is required
 
 ---
 
@@ -377,28 +450,12 @@ Optimization strategy:
 
 | Endpoint | Public | Admin |
 |----------|--------|--------|
-| GET all | ✅ | ✅ |
-| GET single | ✅ | ✅ |
-| POST | ❌ | ✅ |
-| PUT | ❌ | ✅ |
-| DELETE | ❌ | ✅ |
-| Summary | ✅ | ✅ |
-
----
-
-## Validation Rules
-
-Validation implemented using `express-validator`.
-
-Rules include:
-
-- payerType must be either Individual or Corporate
-- incomeBracket must be Low, Middle, or High
-- taxType must be Income, VAT, or Corporate
-- amount must be a positive number
-- year must be ≥ 2000
-- region must be a valid MongoDB ObjectId
-- All required fields must be present
+| GET all | Yes | Yes |
+| GET single | Yes | Yes |
+| GET summary | Yes | Yes |
+| POST | No | Yes |
+| PUT | No | Yes |
+| DELETE | No | Yes |
 
 ---
 
@@ -420,18 +477,84 @@ Example response:
 
 ## Validation & Error Handling
 
-- Request validation middleware
-- Centralized error middleware
-- Standardized error responses
+Validation and error handling are implemented at multiple layers:
 
-Example:
+- Route-level validation via `express-validator`
+- ObjectId validation for `:id` route parameters
+- Service-layer validation for region existence and currency support
+- Centralized error middleware for standardized responses
+
+### Error Response Examples
+
+Validation failure:
 
 ```json
 {
   "success": false,
-  "message": "Invalid region ID format"
+  "errors": [
+    {
+      "msg": "Invalid payer type",
+      "path": "payerType"
+    }
+  ]
 }
 ```
+
+Resource not found:
+
+```json
+{
+  "success": false,
+  "message": "Tax contribution not found"
+}
+```
+
+Status code mapping:
+
+- `400` → Validation errors, invalid ObjectId, unsupported currency
+- `401` → Missing or invalid authentication token
+- `403` → Unauthorized role access
+- `404` → Resource not found
+- `500` → Unexpected server error
+
+---
+
+## Testing & Quality Assurance
+
+Integration tests are implemented using:
+
+- `Jest`
+- `Supertest`
+- `mongodb-memory-server`
+
+Test file location:
+
+```
+backend/tests/taxContribution.test.js
+```
+
+### Covered Scenarios
+
+- Admin and Public user registration
+- JWT authentication enforcement (`401` for missing token)
+- Role-based access control (`403` for unauthorized access)
+- Successful tax creation (Admin)
+- Validation failures (`400` for invalid payload)
+- ObjectId format validation (`400`)
+- Retrieval of all tax records
+- Retrieval of single tax record by ID
+- Update operation
+- Delete operation
+- Post-deletion `404` behavior
+- Region dependency validation
+
+Testing ensures:
+
+- Correct HTTP status codes
+- Proper RBAC enforcement
+- Validation correctness
+- Database isolation using in-memory MongoDB
+- Full CRUD lifecycle integrity
 
 ---
 
