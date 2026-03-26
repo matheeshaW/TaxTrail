@@ -165,7 +165,7 @@ const getAdjustedAllocations = async (year) => {
         : errorMessageGeneric,
     );
 
-   .errorStatusCode = err && err.code === "ECONNABORTED" ? 503 : 502;
+    error.statusCode = err && err.code === "ECONNABORTED" ? 503 : 502;
     throw error;
   }
   const adjustedAllocations = allocations.map((allocation) => {
