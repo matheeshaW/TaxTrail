@@ -12,6 +12,12 @@ exports.createAllocation = async (req, res, next) => {
       data: allocation,
     });
   } catch (error) {
+    if (
+      (error && error.name === "ValidationError") ||
+      (error && error.name === "CastError")
+    ) {
+      error.statusCode = error.statusCode || 400;
+    }
     return next(error);
   }
 };

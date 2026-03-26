@@ -115,18 +115,59 @@ const getAdjustedAllocations = async (year) => {
     throw error;
   }
 
-  const response = await axios.get(
-    "https://api.worldbank.org/v2/country/LKA/indicator/FP.CPI.TOTL.ZG?format=json",
-  );
+  let inflationRate = 0;
 
-  const inflationData = response.data[1];
+  try {
+    const response = await axios.get(
+      "https://api.worldbank.org/v2/country/LKA/indicator/FP.CPI.TOTL.ZG?format=json",
+      {
+        timeout: 5000,
+      },
+    );
 
-  const yearData = inflationData.find(
-    (item) => item.date === year && item.value !== null,
-  );
+    // Validate response shape: expect an array with inflation data at index 1
+    if (
+      !response ||
+      !Array.isArray(response.data) ||
+      response.data.length < 2 ||
+      !Array.isArray(response.data[1])
+    ) {
+      const error = new Error(
+        "Unexpected response format from World Bank API when retrieving inflation data",
+      );
+      error.statusCode = 502;
+      throw error;
+    }
 
-  const inflationRate = yearData ? yearData.value : 0;
+    const inflationData = response.data[1];
 
+    const yearData = inflationData.find(
+      (item) => item.date === year && item.value !== null,
+    );
+
+    // Preserve existing behavior: default inflationRate to 0 if no yearData
+    inflationRate = yearData ? yearData.value : 0;
+  } catch (err) {
+    // Translate axios/network/shape errors into controlled errors
+    if (err && err.statusCode) {
+      // Already translated (e.g., shape error above)
+      throw err;
+    }
+
+    const errorMessageTimeout =
+      "World Bank API request timed out while retrieving inflation data";
+    const errorMessageGeneric =
+      "Failed to fetch inflation data from World Bank API";
+
+    const error = new Error(
+      err && err.code === "ECONNABORTED"
+        ? errorMessageTimeout
+        : errorMessageGeneric,
+    );
+
+   .errorStatusCode = err && err.code === "ECONNABORTED" ? 503 : 502;
+    throw error;
+  }
   const adjustedAllocations = allocations.map((allocation) => {
     const adjustedAmount =
       allocation.allocatedAmount * (1 + inflationRate / 100);
