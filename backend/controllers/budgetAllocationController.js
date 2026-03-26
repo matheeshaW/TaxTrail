@@ -54,7 +54,7 @@ exports.getSingleAllocation = async (req, res, next) => {
 };
 
 // @desc   Update allocation
-// @route  PUT /api/v1/budget-allocations/:id
+// @route  PATCH /api/v1/budget-allocations/:id
 // @access Admin
 exports.updateAllocation = async (req, res, next) => {
   try {

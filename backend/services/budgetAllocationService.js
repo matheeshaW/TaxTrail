@@ -1,5 +1,6 @@
 const BudgetAllocation = require("../models/budgetAllocationModel");
 const axios = require("axios");
+const mongoose = require("mongoose");
 
 // Create new budget allocation
 const createAllocation = async (data) => {
@@ -33,6 +34,13 @@ const getAllAllocations = async (queryParams) => {
 
 // Get single allocation by ID
 const getAllocationById = async (id) => {
+  // add this validation block
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    const error = new Error("Invalid allocation ID format");
+    error.statusCode = 400;
+    throw error;
+  }
+
   const allocation = await BudgetAllocation.findById(id).populate("region");
 
   if (!allocation) {
@@ -46,6 +54,12 @@ const getAllocationById = async (id) => {
 
 // Update allocation by ID
 const updateAllocation = async (id, data) => {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    const error = new Error("Invalid allocation ID format");
+    error.statusCode = 400;
+    throw error;
+  }
+
   const allocation = await BudgetAllocation.findByIdAndUpdate(id, data, {
     new: true,
     runValidators: true,
@@ -62,6 +76,12 @@ const updateAllocation = async (id, data) => {
 
 // Delete allocation by ID
 const deleteAllocation = async (id) => {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    const error = new Error("Invalid allocation ID format");
+    error.statusCode = 400;
+    throw error;
+  }
+
   const allocation = await BudgetAllocation.findByIdAndDelete(id);
 
   if (!allocation) {

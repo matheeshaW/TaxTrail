@@ -45,7 +45,7 @@ router
 router
   .route("/:id")
   .get(protect, authorize("Admin", "Public"), getSingleAllocation)
-  .put(
+  .patch(
     protect,
     authorize("Admin"),
     updateBudgetValidator,
