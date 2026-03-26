@@ -1,9 +1,24 @@
 const BudgetAllocation = require("../models/budgetAllocationModel");
 const axios = require("axios");
 const mongoose = require("mongoose");
+const Region = require("../models/regionModel");
 
 // Create new budget allocation
 const createAllocation = async (data) => {
+  if (data.region) {
+    if (!mongoose.Types.ObjectId.isValid(data.region)) {
+      const error = new Error("Invalid region ID format");
+      error.statusCode = 400;
+      throw error;
+    }
+
+    const region = await Region.findById(data.region);
+    if (!region) {
+      const error = new Error("Region not found");
+      error.statusCode = 404;
+      throw error;
+    }
+  }
   return await BudgetAllocation.create(data);
 };
 

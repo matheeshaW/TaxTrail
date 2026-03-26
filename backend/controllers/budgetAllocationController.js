@@ -112,7 +112,7 @@ exports.getSummaryBySector = async (req, res, next) => {
 
 // @desc   Get inflation-adjusted allocations by year
 // @route  GET /api/v1/budget-allocations/adjusted/:year
-// @access Public
+// @access Authenticated (Admin, Public)
 exports.getAdjustedAllocations = async (req, res, next) => {
   try {
     const result = await budgetAllocationService.getAdjustedAllocations(
