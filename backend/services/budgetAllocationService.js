@@ -1,0 +1,136 @@
+const BudgetAllocation = require("../models/budgetAllocationModel");
+const axios = require("axios");
+
+// Create new budget allocation
+const createAllocation = async (data) => {
+  return await BudgetAllocation.create(data);
+};
+
+// Get all allocations with filtering and pagination
+const getAllAllocations = async (queryParams) => {
+  const { sector, year, region, page = 1, limit = 10 } = queryParams;
+
+  const filter = {};
+
+  if (sector) filter.sector = sector;
+  if (year) filter.year = year;
+  if (region) filter.region = region;
+
+  const total = await BudgetAllocation.countDocuments(filter);
+
+  const allocations = await BudgetAllocation.find(filter)
+    .populate("region")
+    .skip((page - 1) * limit)
+    .limit(Number(limit));
+
+  return {
+    total,
+    page: Number(page),
+    pages: Math.ceil(total / limit),
+    data: allocations,
+  };
+};
+
+// Get single allocation by ID
+const getAllocationById = async (id) => {
+  const allocation = await BudgetAllocation.findById(id).populate("region");
+
+  if (!allocation) {
+    const error = new Error("Allocation not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  return allocation;
+};
+
+// Update allocation by ID
+const updateAllocation = async (id, data) => {
+  const allocation = await BudgetAllocation.findByIdAndUpdate(id, data, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!allocation) {
+    const error = new Error("Allocation not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  return allocation;
+};
+
+// Delete allocation by ID
+const deleteAllocation = async (id) => {
+  const allocation = await BudgetAllocation.findByIdAndDelete(id);
+
+  if (!allocation) {
+    const error = new Error("Allocation not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  return allocation;
+};
+
+// Get allocation summary grouped by sector
+const getSummaryBySector = async () => {
+  return await BudgetAllocation.aggregate([
+    {
+      $group: {
+        _id: "$sector",
+        totalAllocated: { $sum: "$allocatedAmount" },
+      },
+    },
+  ]);
+};
+
+// Get inflation-adjusted allocations for a given year
+const getAdjustedAllocations = async (year) => {
+  const allocations = await BudgetAllocation.find({ year });
+
+  if (allocations.length === 0) {
+    const error = new Error("No allocations found for this year");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const response = await axios.get(
+    "https://api.worldbank.org/v2/country/LKA/indicator/FP.CPI.TOTL.ZG?format=json",
+  );
+
+  const inflationData = response.data[1];
+
+  const yearData = inflationData.find(
+    (item) => item.date === year && item.value !== null,
+  );
+
+  const inflationRate = yearData ? yearData.value : 0;
+
+  const adjustedAllocations = allocations.map((allocation) => {
+    const adjustedAmount =
+      allocation.allocatedAmount * (1 + inflationRate / 100);
+
+    return {
+      ...allocation.toObject(),
+      inflationRate,
+      adjustedAmount: Number(adjustedAmount.toFixed(2)),
+    };
+  });
+
+  return {
+    year,
+    inflationRate,
+    data: adjustedAllocations,
+  };
+};
+
+module.exports = {
+  createAllocation,
+  getAllAllocations,
+  getAllocationById,
+  updateAllocation,
+  deleteAllocation,
+  getSummaryBySector,
+  getAdjustedAllocations,
+};
