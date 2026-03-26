@@ -1,16 +1,9 @@
-import './App.css'
-
 function App() {
-
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <h1>Vite + React</h1>
-        </div>
-      </section>
-    </>
-  )
+    <div className="h-screen flex items-center justify-center bg-blue-500">
+      <h1 className="text-white text-4xl font-bold">Tailwind Working 🚀</h1>
+    </div>
+  );
 }
 
-export default App
+export default App;
