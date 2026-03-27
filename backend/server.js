@@ -2,6 +2,7 @@ require('dotenv').config()
 
 const express = require('express')
 const mongoose = require('mongoose')
+const cors = require('cors')
 
 const authRoutes = require('./routes/authRoutes')
 const regionRoutes = require('./routes/regionRoutes')
@@ -17,6 +18,21 @@ const errorHandler = require('./middleware/errorMiddleware')
 require('./models/regionModel')
 
 const app = express()
+
+// allow frontend dev origins
+const allowedOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173']
+
+app.use(
+  cors({
+    origin(origin, callback) {
+      // allow non-browser tools (Postman/curl) where origin may be undefined
+      if (!origin || allowedOrigins.includes(origin)) return callback(null, true)
+      return callback(new Error('Not allowed by CORS'))
+    },
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  }),
+)
 
 // middleware
 app.use(express.json())
