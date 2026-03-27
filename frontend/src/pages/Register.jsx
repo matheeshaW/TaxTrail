@@ -38,7 +38,7 @@ function Register() {
           onChange={(e) => setForm({ ...form, name: e.target.value })}
         />
 
-        <input placeholder="Email" className="w-full mb-2 p-2 border"
+        <input type="email" placeholder="Email" className="w-full mb-2 p-2 border"
           onChange={(e) => setForm({ ...form, email: e.target.value })}
         />
 
