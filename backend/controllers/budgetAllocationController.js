@@ -1,205 +1,131 @@
-const BudgetAllocation = require("../models/budgetAllocationModel");
-const axios = require("axios");
+const budgetAllocationService = require("../services/budgetAllocationService");
 
-// @desc  create new budget allocation
+// @desc   Create new budget allocation
 // @route  POST /api/v1/budget-allocations
-// @access  Admin
+// @access Admin
 exports.createAllocation = async (req, res, next) => {
   try {
-    const allocation = await BudgetAllocation.create(req.body);
+    const allocation = await budgetAllocationService.createAllocation(req.body);
 
     res.status(201).json({
       success: true,
       data: allocation,
     });
   } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: error.message,
-    });
+    if (
+      (error && error.name === "ValidationError") ||
+      (error && error.name === "CastError")
+    ) {
+      error.statusCode = error.statusCode || 400;
+    }
+    return next(error);
   }
 };
 
-// @desc  get all allocation (with filtering)
+// @desc   Get all allocations (with filtering)
 // @route  GET /api/v1/budget-allocations
-// @access  public
+// @access Public
 exports.getAllAllocations = async (req, res, next) => {
   try {
-    const { sector, year, region, page = 1, limit = 10 } = req.query;
-
-    const filter = {};
-
-    if (sector) filter.sector = sector;
-    if (year) filter.year = year;
-    if (region) filter.region = region;
-
-    const total = await BudgetAllocation.countDocuments(filter);
-
-    const allocations = await BudgetAllocation.find(filter)
-      .populate("region")
-      .skip((page - 1) * limit)
-      .limit(Number(limit));
+    const result = await budgetAllocationService.getAllAllocations(req.query);
 
     res.status(200).json({
       success: true,
-      total,
-      page: Number(page),
-      pages: Math.ceil(total / limit),
-      data: allocations,
+      total: result.total,
+      page: result.page,
+      pages: result.pages,
+      data: result.data,
     });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
 
-// @desc  get single allocation
+// @desc   Get single allocation
 // @route  GET /api/v1/budget-allocations/:id
-// @access  public
+// @access Public
 exports.getSingleAllocation = async (req, res, next) => {
   try {
-    const allocation = await BudgetAllocation.findById(req.params.id).populate(
-      "region",
+    const allocation = await budgetAllocationService.getAllocationById(
+      req.params.id,
     );
-
-    if (!allocation) {
-      return res.status(404).json({
-        success: false,
-        message: "Allocation not found",
-      });
-    }
 
     res.status(200).json({
       success: true,
       data: allocation,
     });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
 
-// @desc  update allocation
-// @route  PUT /api/v1/budget-allocations/:id
+// @desc   Update allocation
+// @route  PATCH /api/v1/budget-allocations/:id
 // @access Admin
 exports.updateAllocation = async (req, res, next) => {
   try {
-    const allocation = await BudgetAllocation.findByIdAndUpdate(
+    const allocation = await budgetAllocationService.updateAllocation(
       req.params.id,
       req.body,
-      {
-        new: true,
-        runValidators: true,
-      },
     );
-
-    if (!allocation) {
-      return res.status(404).json({
-        success: false,
-        message: "Allocation not found",
-      });
-    }
 
     res.status(200).json({
       success: true,
       data: allocation,
     });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
 
-// @desc  delete allocation
-// @route  /api/v1/budget-allocations/:id
-// @access  Admin
+// @desc   Delete allocation
+// @route  DELETE /api/v1/budget-allocations/:id
+// @access Admin
 exports.deleteAllocation = async (req, res, next) => {
   try {
-    const allocation = await BudgetAllocation.findByIdAndDelete(req.params.id);
-
-    if (!allocation) {
-      return res.status(404).json({
-        success: false,
-        message: "Allocation not found",
-      });
-    }
+    await budgetAllocationService.deleteAllocation(req.params.id);
 
     res.status(200).json({
       success: true,
       message: "Allocation deleted successfully",
     });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
 
-// @desc    Get allocation summary by sector
-// @route   GET /api/v1/budget-allocations/summary/by-sector
-// @access  Public
+// @desc   Get allocation summary by sector
+// @route  GET /api/v1/budget-allocations/summary/by-sector
+// @access Public
 exports.getSummaryBySector = async (req, res, next) => {
   try {
-    const summary = await BudgetAllocation.aggregate([
-      {
-        $group: {
-          _id: "$sector",
-          totalAllocated: { $sum: "$allocatedAmount" },
-        },
-      },
-    ]);
+    const summary = await budgetAllocationService.getSummaryBySector();
 
     res.status(200).json({
       success: true,
       data: summary,
     });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
 
-// @desc  Get Inflation-adjusted allocations by year
-// @route GET /api/v1/budget-allocations/adjusted/:year
-// @access Public
+// @desc   Get inflation-adjusted allocations by year
+// @route  GET /api/v1/budget-allocations/adjusted/:year
+// @access Authenticated (Admin, Public)
 exports.getAdjustedAllocations = async (req, res, next) => {
   try {
-    const { year } = req.params;
-
-    const allocations = await BudgetAllocation.find({ year });
-
-    if (allocations.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "No allocations found for this year",
-      });
-    }
-
-    const response = await axios.get(
-      "https://api.worldbank.org/v2/country/LKA/indicator/FP.CPI.TOTL.ZG?format=json",
+    const result = await budgetAllocationService.getAdjustedAllocations(
+      req.params.year,
     );
-
-    const inflationData = response.data[1];
-
-    const yearData = inflationData.find(
-      (item) => item.date === year && item.value !== null,
-    );
-
-    const inflationRate = yearData ? yearData.value : 0;
-
-    // 3️⃣ Adjust allocations
-    const adjustedAllocations = allocations.map((allocation) => {
-      const adjustedAmount =
-        allocation.allocatedAmount * (1 + inflationRate / 100);
-
-      return {
-        ...allocation.toObject(),
-        inflationRate,
-        adjustedAmount: Number(adjustedAmount.toFixed(2)),
-      };
-    });
 
     res.status(200).json({
       success: true,
-      year,
-      inflationRate,
-      data: adjustedAllocations,
+      year: result.year,
+      inflationRate: result.inflationRate,
+      data: result.data,
     });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
