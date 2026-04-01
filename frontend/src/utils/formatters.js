@@ -30,7 +30,10 @@ export const formatNumber = (num) => {
  */
 export const formatDate = (dateString) => {
   if (!dateString) return "-";
+
   const date = new Date(dateString);
+  if (isNaN(date.getTime())) return "-";
+
   return new Intl.DateTimeFormat("en-US", {
     year: "numeric",
     month: "short",
@@ -39,13 +42,23 @@ export const formatDate = (dateString) => {
 };
 
 /**
- * Format percentage
+ * Format a decimal ratio (0–1) as a percentage string.
  * @param {number} value
  * @returns {string}
  */
-export const formatPercent = (value) => {
+export const formatDecimalPercent = (value) => {
   if (value === null || value === undefined) return "0%";
   return `${(value * 100).toFixed(2)}%`;
+};
+
+/**
+ * Format a whole-number percentage (0–100) as a percentage string.
+ * @param {number} value
+ * @returns {string}
+ */
+export const formatWholePercent = (value) => {
+  if (value === null || value === undefined) return "0%";
+  return `${Number(value).toFixed(2)}%`;
 };
 
 /**
@@ -55,6 +68,7 @@ export const formatPercent = (value) => {
  * @returns {string}
  */
 export const truncateText = (text, maxLength = 50) => {
-  if (!text || text.length <= maxLength) return text;
+  if (!text) return "";
+  if (text.length <= maxLength) return text;
   return `${text.substring(0, maxLength)}...`;
 };

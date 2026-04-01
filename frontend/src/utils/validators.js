@@ -34,6 +34,7 @@ export const validateEmail = (email) => {
  * @param {number} value
  * @param {number} min
  * @param {number} max
+ * @param {string} fieldName
  * @returns {string|null}
  */
 export const validateRange = (value, min, max, fieldName) => {
@@ -55,13 +56,15 @@ export const validateRange = (value, min, max, fieldName) => {
  * @param {string} value
  * @param {number} minLength
  * @param {number} maxLength
+ * @param {string} fieldName
  * @returns {string|null}
  */
 export const validateLength = (value, minLength, maxLength, fieldName) => {
-  if (value.length < minLength) {
+  const safeValue = value == null ? "" : String(value);
+  if (safeValue.length < minLength) {
     return `${fieldName} must be at least ${minLength} characters`;
   }
-  if (value.length > maxLength) {
+  if (safeValue.length > maxLength) {
     return `${fieldName} must not exceed ${maxLength} characters`;
   }
   return null;
@@ -88,6 +91,11 @@ export const validateUrl = (url) => {
  */
 export const validateFutureDate = (date) => {
   const selectedDate = new Date(date);
+
+  if (isNaN(selectedDate.getTime())) {
+    return "Invalid date";
+  }
+
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
