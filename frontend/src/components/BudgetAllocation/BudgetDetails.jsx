@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { formatCurrency, formatDate } from "../../utils/formatters";
 import LoadingSpinner from "../Common/LoadingSpinner";
 
@@ -92,7 +91,7 @@ export default function BudgetDetails({
             <div>
               <p className="text-sm text-gray-500">Last Updated</p>
               <p className="text-lg font-semibold text-gray-900 mt-1">
-                {formatDate(record.updateAt)}
+                {formatDate(record.updatedAt)}
               </p>
             </div>
           </div>

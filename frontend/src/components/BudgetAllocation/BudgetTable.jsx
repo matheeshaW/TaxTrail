@@ -78,7 +78,7 @@ export default function BudgetTable({
                   {record.region?.regionName || "-"}
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-500">
-                  {formatDate(record.updateAt)}
+                  {formatDate(record.updatedAt)}
                 </td>
                 <td className="px-6 py-4 text-center">
                   <div className="flex justify-center gap-2">

@@ -11,7 +11,7 @@ export default function RegionSelect({
   disabled = false,
   placeholder = "Select a region...",
 }) {
-  const [region, setRegions] = useState([]);
+  const [regions, setRegions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -21,7 +21,7 @@ export default function RegionSelect({
       setLoading(true);
       setError(null);
       try {
-        const response = await API.get("/regions");
+        const response = await API.get("/v1/regions");
         const regionList = response.data.data || response.data;
         setRegions(Array.isArray(regionList) ? regionList : []);
       } catch (err) {
@@ -72,7 +72,7 @@ export default function RegionSelect({
       <option value="">{placeholder}</option>
       {regions.map((region) => (
         <option key={region._id} value={region._id}>
-          {region.regionName || region.name};
+          {region.regionName || region.name}
         </option>
       ))}
     </select>

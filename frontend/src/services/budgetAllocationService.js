@@ -7,7 +7,14 @@ import API from "./api";
  */
 export const getAll = async (params = {}) => {
   const response = await API.get("/v1/budget-allocations", { params });
-  return response.data;
+  const { data, total, page, pages, ...rest } = response.data;
+  return {
+    ...rest,
+    data,
+    total,
+    totalPages: pages,
+    currentPage: page,
+  };
 };
 
 /**
@@ -17,7 +24,7 @@ export const getAll = async (params = {}) => {
  */
 export const getOne = async (id) => {
   const response = await API.get(`/v1/budget-allocations/${id}`);
-  return response.data;
+  return response.data.data;
 };
 
 /**
@@ -27,7 +34,7 @@ export const getOne = async (id) => {
  */
 export const create = async (data) => {
   const response = await API.post("/v1/budget-allocations", data);
-  return response.data;
+  return response.data.data;
 };
 
 /**
@@ -37,7 +44,7 @@ export const create = async (data) => {
  * @returns {Promise<Object>}
  */
 export const update = async (id, data) => {
-  const response = await API.put(`/v1/budget-allocations/${id}`, data);
+  const response = await API.patch(`/v1/budget-allocations/${id}`, data);
   return response.data;
 };
 
@@ -57,7 +64,7 @@ export const remove = async (id) => {
  */
 export const getSummary = async () => {
   const response = await API.get("/v1/budget-allocations/summary/by-sector");
-  return response.data;
+  return Array.isArray(response.data) ? response.data : response.data.data;
 };
 
 /**
@@ -67,7 +74,7 @@ export const getSummary = async () => {
  */
 export const getAdjusted = async (year) => {
   const response = await API.get(`/v1/budget-allocations/adjusted/${year}`);
-  return response.data;
+  return response.data.data;
 };
 
 export default {

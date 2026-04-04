@@ -3,11 +3,39 @@ import API from "../services/api";
 
 export const AuthContext = createContext();
 
+// Decode the JWT payload without a library — the token is not verified here
+const parseJwt = (token) => {
+  try {
+    return JSON.parse(atob(token.split(".")[1]));
+  } catch {
+    return null;
+  }
+};
+
+// Re-hydrate user from a stored token, or return null if missing/expired.
+const getUserFromToken = (token) => {
+  if (!token) return null;
+  const payload = parseJwt(token);
+  if (!payload) return null;
+  if (payload.exp && payload.exp * 1000 < Date.now()) return null;
+  const { id, name, email, role } = payload;
+  return { id, name, email, role };
+};
+
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
   const [token, setToken] = useState(() => localStorage.getItem("token"));
+  const [user, setUser] = useState(() =>
+    getUserFromToken(localStorage.getItem("token")),
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  // Shared helper so login and register stay DRY.
+  const applyCredentials = (newToken, userData) => {
+    localStorage.setItem("token", newToken);
+    setToken(newToken);
+    setUser(userData);
+  };
 
   // login
   const login = useCallback(async (email, password) => {
@@ -17,9 +45,7 @@ export function AuthProvider({ children }) {
       const response = await API.post("/auth/login", { email, password });
       const { token: newToken, user: userData } = response.data;
 
-      localStorage.setItem("token", newToken);
-      setToken(newToken);
-      setUser(userData);
+      applyCredentials(newToken, userData);
       return userData;
     } catch (err) {
       const errMsg = err.response?.data?.message || "Login Failed";
@@ -42,9 +68,7 @@ export function AuthProvider({ children }) {
       });
       const { token: newToken, user: userData } = response.data;
 
-      localStorage.setItem("token", newToken);
-      setToken(newToken);
-      setUser(userData);
+      applyCredentials(newToken, userData);
       return userData;
     } catch (err) {
       const errMsg = err.response?.data?.message || "Registration failed";

@@ -1,9 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  formatCurrency,
-  formatDate,
-  formatWholePercent,
-} from "../../utils/formatters";
+import { formatCurrency, formatWholePercent } from "../../utils/formatters";
 import LoadingSpinner from "../Common/LoadingSpinner";
 
 // View inflation-adjusted budget allocation
@@ -78,8 +74,8 @@ export default function InflationAdjustedView({
             </thead>
             <tbody className="divide-y">
               {data.map((item, idx) => {
-                const difference = item.adjusted - item.original;
-                const isPossitive = difference >= 0;
+                const difference = item.adjustedAmount - item.allocatedAmount;
+                const isPositive = difference >= 0;
 
                 return (
                   <tr
@@ -90,22 +86,22 @@ export default function InflationAdjustedView({
                       {item.sector}
                     </td>
                     <td className="px-6 py-4 text-sm text-right text-gray-700">
-                      {formatCurrency(item.original)}
+                      {formatCurrency(item.allocatedAmount)}
                     </td>
                     <td className="px-6 py-4 text-sm text-right">
-                      <span className="inline-flex px-2 py-1 bg-orange-100 text-orange-800 ron text-xs font-semibold">
+                      <span className="inline-flex px-2 py-1 bg-orange-100 text-orange-800 text-xs font-semibold">
                         {formatWholePercent(item.inflationRate)}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-sm text-right font-semibold text-green-600">
-                      {formatCurrency(item.adjusted)}
+                      {formatCurrency(item.adjustedAmount)}
                     </td>
                     <td
                       className={`px-6 py-4 text-sm text-right font-semibold ${
-                        isPossitive ? "text-green-600" : "text-red-600"
+                        isPositive ? "text-green-600" : "text-red-600"
                       }`}
                     >
-                      {isPossitive ? "+" : ""}
+                      {isPositive ? "+" : ""}
                       {formatCurrency(difference)}
                     </td>
                   </tr>
@@ -121,7 +117,7 @@ export default function InflationAdjustedView({
                 <p className="text-sm text-gray-600">Total Original</p>
                 <p className="text-lg font-semibold text-gray-900 mt-1">
                   {formatCurrency(
-                    data.reduce((sum, item) => sum + item.original, 0),
+                    data.reduce((sum, item) => sum + item.allocatedAmount, 0),
                   )}
                 </p>
               </div>
@@ -138,7 +134,7 @@ export default function InflationAdjustedView({
                 <p className="text-sm text-gray-600">Total Adjusted</p>
                 <p className="text-lg font-semibold text-green-600 mt-1">
                   {formatCurrency(
-                    data.reduce((sum, item) => sum + item.adjusted, 0),
+                    data.reduce((sum, item) => sum + item.adjustedAmount, 0),
                   )}
                 </p>
               </div>

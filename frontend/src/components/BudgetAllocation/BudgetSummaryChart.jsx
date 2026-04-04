@@ -31,10 +31,18 @@ export default function BudgetSummaryChart({ data = [], loading = false }) {
     );
   }
 
-  const formattedData = data.map((item) => ({
-    ...item,
-    displayName: item.sector,
-  }));
+  const formattedData = data.map((item) => {
+    const sector = item.sector ?? item._id ?? "Unknown";
+    const total = item.total ?? item.totalAllocated ?? 0;
+    const count = item.count ?? 0;
+    return {
+      ...item,
+      sector,
+      total,
+      count,
+      displayName: sector,
+    };
+  });
 
   return (
     <div className="bg-white rounded-lg shadow p-6">

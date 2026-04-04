@@ -17,7 +17,7 @@ export default function BudgetFilters({ filters, onFilterChange, onReset }) {
   };
 
   const handleIncomeGroupChange = (e) => {
-    const updated = { ...localFilters, incomeGroup: e.target.value };
+    const updated = { ...localFilters, targetIncomeGroup: e.target.value };
     setLocalFilters(updated);
     onFilterChange(updated);
   };
@@ -28,14 +28,19 @@ export default function BudgetFilters({ filters, onFilterChange, onReset }) {
     onFilterChange(updated);
   };
 
-  const handleRegionChange = (e) => {
-    const updated = { ...localFilters, region: e.target.value };
+  const handleRegionChange = (region) => {
+    const updated = { ...localFilters, region };
     setLocalFilters(updated);
     onFilterChange(updated);
   };
 
   const handleReset = () => {
-    setLocalFilters({ sector: "", year: "", region: "" });
+    setLocalFilters({
+      sector: "",
+      year: "",
+      region: "",
+      targetIncomeGroup: "",
+    });
     onReset();
   };
 
@@ -69,7 +74,7 @@ export default function BudgetFilters({ filters, onFilterChange, onReset }) {
             Income Group
           </label>
           <select
-            value={localFilters.incomeGroup || ""}
+            value={localFilters.targetIncomeGroup || ""}
             onChange={handleIncomeGroupChange}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
           >
