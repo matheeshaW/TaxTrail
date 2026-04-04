@@ -5,6 +5,7 @@ import ProtectedRoute from "./components/Common/ProtectedRoute";
 import PublicRoute from "./components/Common/PublicRoute";
 
 // Pages
+import WelcomePage from "./pages/WelcomePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
@@ -13,6 +14,8 @@ function App() {
   return (
     <AuthProvider>
       <Routes>
+
+        <Route path="/" element={<WelcomePage />} />
 
         {/* Public Routes */}
         <Route element={<PublicRoute />}>
