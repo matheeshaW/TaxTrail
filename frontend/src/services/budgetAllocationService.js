@@ -45,7 +45,7 @@ export const create = async (data) => {
  */
 export const update = async (id, data) => {
   const response = await API.patch(`/v1/budget-allocations/${id}`, data);
-  return response.data;
+  return response.data.data;
 };
 
 /**
@@ -55,7 +55,7 @@ export const update = async (id, data) => {
  */
 export const remove = async (id) => {
   const response = await API.delete(`/v1/budget-allocations/${id}`);
-  return response.data;
+  return response.data.data;
 };
 
 /**

@@ -73,13 +73,13 @@ export default function InflationAdjustedView({
               </tr>
             </thead>
             <tbody className="divide-y">
-              {data.map((item, idx) => {
+              {data.map((item) => {
                 const difference = item.adjustedAmount - item.allocatedAmount;
                 const isPositive = difference >= 0;
 
                 return (
                   <tr
-                    key={item.id || idx}
+                    key={item._id || item.id}
                     className="hover:bg-gray-50 transition"
                   >
                     <td className="px-6 py-4 text-sm font-medium text-gray-900">

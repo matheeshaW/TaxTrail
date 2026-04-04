@@ -20,6 +20,7 @@ export const useBudgetAllocation = () => {
     sector: "",
     year: "",
     region: "",
+    targetIncomeGroup: "",
   });
 
   // single record for details modal
@@ -157,7 +158,7 @@ export const useBudgetAllocation = () => {
 
   // clear all filters and reset state
   const resetFilters = useCallback(() => {
-    setFilters({ sector: "", year: "", region: "" });
+    setFilters({ sector: "", year: "", region: "", targetIncomeGroup: "" });
     setCurrentPage(1);
   }, []);
 

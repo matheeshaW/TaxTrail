@@ -5,9 +5,9 @@
  */
 export const formatCurrency = (amount) => {
   if (amount === null || amount === undefined) return "$0.00";
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("en-LK", {
     style: "currency",
-    currency: "USD",
+    currency: "LKR",
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(amount);
