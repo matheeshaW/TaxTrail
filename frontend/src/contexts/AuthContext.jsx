@@ -6,10 +6,30 @@ export const AuthContext = createContext();
 // Decode the JWT payload without a library — the token is not verified here
 const parseJwt = (token) => {
   try {
-    return JSON.parse(atob(token.split(".")[1]));
+    const payload = token.split(".")[1];
+    const base64 = payload.replace(/-/g, "+").replace(/_/g, "/");
+    const padded = base64.padEnd(
+      base64.length + ((4 - (base64.length % 4)) % 4),
+      "=",
+    );
+
+    return JSON.parse(atob(padded));
   } catch {
     return null;
   }
+};
+
+const buildUserFromPayload = (payload) => {
+  if (!payload) return null;
+
+  const id = payload.id || payload._id || payload.sub || null;
+  const name = payload.name || null;
+  const email = payload.email || null;
+  const role = payload.role || null;
+
+  if (!id && !name && !email && !role) return null;
+
+  return { id, name, email, role };
 };
 
 // Re-hydrate user from a stored token, or return null if missing/expired.
@@ -18,8 +38,15 @@ const getUserFromToken = (token) => {
   const payload = parseJwt(token);
   if (!payload) return null;
   if (payload.exp && payload.exp * 1000 < Date.now()) return null;
-  const { id, name, email, role } = payload;
-  return { id, name, email, role };
+  return buildUserFromPayload(payload);
+};
+
+const getUserFromAuthResponse = (responseData, token) => {
+  if (responseData?.user) {
+    return responseData.user;
+  }
+
+  return getUserFromToken(token);
 };
 
 export function AuthProvider({ children }) {
@@ -34,7 +61,7 @@ export function AuthProvider({ children }) {
   const applyCredentials = (newToken, userData) => {
     localStorage.setItem("token", newToken);
     setToken(newToken);
-    setUser(userData);
+    setUser(userData || getUserFromToken(newToken));
   };
 
   // login
@@ -43,7 +70,12 @@ export function AuthProvider({ children }) {
     setError(null);
     try {
       const response = await API.post("/auth/login", { email, password });
-      const { token: newToken, user: userData } = response.data;
+      const { token: newToken } = response.data;
+      const userData = getUserFromAuthResponse(response.data, newToken);
+
+      if (!newToken) {
+        throw new Error("Authentication token missing from login response");
+      }
 
       applyCredentials(newToken, userData);
       return userData;
@@ -66,7 +98,14 @@ export function AuthProvider({ children }) {
         password,
         name,
       });
-      const { token: newToken, user: userData } = response.data;
+      const { token: newToken } = response.data;
+      const userData = getUserFromAuthResponse(response.data, newToken);
+
+      if (!newToken) {
+        throw new Error(
+          "Authentication token missing from registration response",
+        );
+      }
 
       applyCredentials(newToken, userData);
       return userData;
