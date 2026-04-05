@@ -1,4 +1,5 @@
 import useAuth from "../../hooks/useAuth";
+import CurrencyBadge from "./CurrencyBadge";
 
 export default function TaxTable({ data, onEdit, onDelete }) {
   const { user } = useAuth();
@@ -24,7 +25,7 @@ export default function TaxTable({ data, onEdit, onDelete }) {
               <td className="p-2">{item.taxType}</td>
               <td className="p-2">{item.incomeBracket}</td>
               <td className="p-2">
-                {item.convertedAmount || item.amount}
+                <CurrencyBadge item={item} />
               </td>
               <td className="p-2">{item.year}</td>
               <td className="p-2">
