@@ -1,8 +1,6 @@
-import { Link, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 export default function Sidebar() {
-  const location = useLocation();
-
   const navItems = [
     { label: "Dashboard", path: "/dashboard", enabled: true },
     { label: "Tax Contributions", path: "/tax", enabled: true },
@@ -10,13 +8,6 @@ export default function Sidebar() {
     { label: "Programs", path: "/programs", enabled: false },
     { label: "Development", path: "/development", enabled: false },
   ];
-
-  const linkClass = (path) =>
-    `block rounded-lg px-4 py-2.5 transition ${
-      location.pathname === path
-        ? "bg-blue-600 text-white shadow"
-        : "text-gray-700 hover:bg-blue-50 hover:text-blue-700"
-    }`;
 
   return (
     <aside className="w-64 border-r border-gray-200 bg-white p-4">
@@ -26,12 +17,24 @@ export default function Sidebar() {
       <nav className="space-y-2">
         {navItems.map((item) =>
           item.enabled ? (
-            <Link key={item.path} to={item.path} className={linkClass(item.path)}>
+            <NavLink
+              key={item.path}
+              to={item.path}
+              className={({ isActive }) =>
+                `block rounded-lg px-4 py-2.5 transition ${
+                  isActive
+                    ? "bg-blue-600 text-white shadow"
+                    : "text-gray-700 hover:bg-blue-50 hover:text-blue-700"
+                }`
+              }
+            >
               {item.label}
-            </Link>
+            </NavLink>
           ) : (
             <div
               key={item.path}
+              aria-disabled="true"
+              tabIndex={-1}
               className="flex items-center justify-between rounded-lg px-4 py-2.5 text-gray-400"
             >
               <span>{item.label}</span>

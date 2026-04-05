@@ -83,7 +83,7 @@ export default function TaxContributionPage() {
     if (error) return <p className="text-red-500">{error}</p>;
 
     return (
-        <div className="p-6">
+        <div>
 
             <h1 className="text-2xl font-bold mb-4">
                 Tax Contributions
