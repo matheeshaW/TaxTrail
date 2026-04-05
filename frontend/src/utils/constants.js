@@ -37,7 +37,7 @@ export const SORT_OPTIONS = [
 
 export const PAGINATION_LIMITS = [10, 25, 50, 100];
 
-/** Shared with Budget Allocation and Social Programs (must match backend enums). */
+
 export const SECTOR_VALUES = SECTORS.map((s) => s.value);
 
 export const SOCIAL_PROGRAM_TARGET_GROUP_VALUES = [
@@ -53,11 +53,6 @@ export const SOCIAL_PROGRAM_TARGET_GROUPS = SOCIAL_PROGRAM_TARGET_GROUP_VALUES.m
 );
 
 export const SOCIAL_PROGRAM_YEAR_MIN = 1900;
-
 export const SOCIAL_PROGRAM_PROGRAM_NAME_MAX_LENGTH = 100;
-
-/** Matches backend budgetUsed max on SocialProgram schema */
 export const SOCIAL_PROGRAM_BUDGET_MAX = 1_000_000_000;
-
-/** Matches backend BUDGET_PER_PERSON_THRESHOLD */
 export const SOCIAL_PROGRAM_BUDGET_PER_BENEFICIARY_MAX = 1_000_000;
