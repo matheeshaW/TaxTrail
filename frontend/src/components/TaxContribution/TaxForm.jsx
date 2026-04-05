@@ -1,6 +1,6 @@
 import { useState } from "react";
 import RegionSelect from "../Common/RegionSelect";
-import { INCOME_GROUPS, PAYER_TYPES, TAX_TYPES } from "../../utils/constants";
+import { INCOME_BRACKETS, PAYER_TYPES, TAX_TYPES } from "../../utils/constants";
 
 export default function TaxForm({ onSubmit, initialData = {}, onClose }) {
   const [form, setForm] = useState({
@@ -46,7 +46,7 @@ export default function TaxForm({ onSubmit, initialData = {}, onClose }) {
           className="border p-2"
         >
           <option value="">Select Income</option>
-          {INCOME_GROUPS.map((i) => (
+          {INCOME_BRACKETS.map((i) => (
             <option key={i.value} value={i.value}>
               {i.label}
             </option>

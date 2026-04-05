@@ -7,7 +7,7 @@ export const SECTORS = [
 
 export const INCOME_GROUPS = [
   { value: "Low", label: "Low Income" },
-  { value: "Medium", label: "Medium Income" },
+  { value: "Middle", label: "Middle Income" },
   { value: "High", label: "High Income" },
 ];
 
@@ -20,6 +20,12 @@ export const TAX_TYPES = [
   { value: "Income", label: "Income" },
   { value: "VAT", label: "VAT" },
   { value: "Corporate", label: "Corporate" },
+];
+
+export const INCOME_BRACKETS = [
+  { value: "Low", label: "Low Income" },
+  { value: "Medium", label: "Medium Income" },
+  { value: "High", label: "High Income" },
 ];
 
 export const SORT_OPTIONS = [

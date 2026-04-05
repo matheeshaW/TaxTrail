@@ -1,5 +1,5 @@
 import RegionSelect from "../Common/RegionSelect";
-import { INCOME_GROUPS } from "../../utils/constants";
+import { INCOME_BRACKETS } from "../../utils/constants";
 
 export default function TaxFilters({ filters, setFilters, onApply }) {
   return (
@@ -29,7 +29,7 @@ export default function TaxFilters({ filters, setFilters, onApply }) {
         }
       >
         <option value="">All Income</option>
-        {INCOME_GROUPS.map((i) => (
+        {INCOME_BRACKETS.map((i) => (
           <option key={i.value} value={i.value}>
             {i.label}
           </option>
