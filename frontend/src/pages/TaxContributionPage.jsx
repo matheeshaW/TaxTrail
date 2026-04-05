@@ -15,6 +15,7 @@ export default function TaxContributionPage() {
     const {
         data,
         summary,
+        summaryError,
         loading,
         error,
         filters,
@@ -38,8 +39,16 @@ export default function TaxContributionPage() {
     }, [pagination.page]);
 
     useEffect(() => {
-        fetchSummary();
+        fetchSummary().catch(() => {});
     }, [fetchSummary]);
+
+    const refreshSummarySafely = async () => {
+        try {
+            await fetchSummary();
+        } catch {
+            // summaryError state is already set by the hook
+        }
+    };
 
     const handleApplyFilters = async () => {
         if (pagination.page !== 1) {
@@ -52,13 +61,13 @@ export default function TaxContributionPage() {
 
     const handleCreate = async (data) => {
         await create(data);
-        await fetchSummary();
+        await refreshSummarySafely();
         setShowForm(false);
     };
 
     const handleUpdate = async (data) => {
         await update(selected._id, data);
-        await fetchSummary();
+        await refreshSummarySafely();
         setSelected(null);
         setShowForm(false);
     };
@@ -66,7 +75,7 @@ export default function TaxContributionPage() {
     const handleDelete = async (id) => {
         if (confirm("Are you sure?")) {
             await remove(id);
-            await fetchSummary();
+            await refreshSummarySafely();
         }
     };
 
@@ -125,6 +134,20 @@ export default function TaxContributionPage() {
                     setPagination({ ...pagination, page })
                 }
             />
+
+            {summaryError && (
+                <div className="mt-4 rounded border border-amber-300 bg-amber-50 p-3 text-amber-800">
+                    <p>{summaryError}</p>
+                    <button
+                        type="button"
+                        onClick={refreshSummarySafely}
+                        className="mt-2 rounded bg-amber-600 px-3 py-1 text-sm font-medium text-white transition hover:bg-amber-700"
+                    >
+                        Retry Summary
+                    </button>
+                </div>
+            )}
+
             <TaxSummaryChart data={summary} />
         </div>
     );

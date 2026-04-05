@@ -4,6 +4,7 @@ import * as taxService from "../services/taxContributionService";
 export default function useTaxContribution() {
     const [data, setData] = useState([]);
     const [summary, setSummary] = useState([]);
+    const [summaryError, setSummaryError] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -48,11 +49,15 @@ export default function useTaxContribution() {
 
     // FETCH SUMMARY
     const fetchSummary = useCallback(async () => {
+        setSummaryError(null);
+
         try {
             const res = await taxService.getTaxSummary();
             setSummary(res.data.data);
+            return res.data.data;
         } catch (err) {
-            console.error(err);
+            setSummaryError("Failed to fetch tax summary");
+            throw err;
         }
     }, []);
 
@@ -93,6 +98,7 @@ export default function useTaxContribution() {
     return {
         data,
         summary,
+        summaryError,
         loading,
         error,
         filters,
