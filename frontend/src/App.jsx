@@ -9,6 +9,7 @@ import WelcomePage from "./pages/WelcomePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
+import TaxContributionPage from "./pages/TaxContributionPage";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/tax" element={<TaxContributionPage />} />
         </Route>
 
       </Routes>

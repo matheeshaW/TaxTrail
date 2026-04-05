@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+import { Link } from "react-router-dom";
 
 export default function DashboardPage() {
 	const { user, logout } = useAuth();
@@ -37,6 +38,9 @@ export default function DashboardPage() {
 				>
 					Logout
 				</button>
+				<Link to="/tax" className="text-blue-500">
+					Go to Tax Contributions
+				</Link>
 			</div>
 		</div>
 	);
