@@ -36,3 +36,8 @@ export const SORT_OPTIONS = [
 ];
 
 export const PAGINATION_LIMITS = [10, 25, 50, 100];
+
+export const YEAR_OPTIONS = Array.from({ length: 20 }, (_, index) => {
+  const year = new Date().getFullYear() - index;
+  return String(year);
+});
