@@ -4,7 +4,7 @@ export default function Sidebar() {
   const navItems = [
     { label: "Dashboard", path: "/dashboard", enabled: true },
     { label: "Tax Contributions", path: "/tax", enabled: true },
-    { label: "Budget", path: "/budget", enabled: false },
+    { label: "Budget", path: "/budget", enabled: true },
     { label: "Programs", path: "/programs", enabled: false },
     { label: "Development", path: "/development", enabled: false },
   ];
