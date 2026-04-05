@@ -12,12 +12,12 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
 import TaxContributionPage from "./pages/TaxContributionPage";
+import BudgetAllocationPage from "./pages/BudgetAllocationPage";
 
 function App() {
   return (
     <AuthProvider>
       <Routes>
-
         <Route path="/" element={<WelcomePage />} />
 
         {/* Public Routes */}
@@ -31,9 +31,9 @@ function App() {
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/tax" element={<TaxContributionPage />} />
+            <Route path="/budget" element={<BudgetAllocationPage />} />
           </Route>
         </Route>
-
       </Routes>
     </AuthProvider>
   );
