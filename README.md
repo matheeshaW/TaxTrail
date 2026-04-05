@@ -379,7 +379,7 @@ Response:
   },
   incomeBracket: {
     type: String,
-    enum: ['Low', 'Middle', 'High'],
+    enum: ['Low', 'Medium', 'High'],
     required: true
   },
   taxType: {
