@@ -1,10 +1,8 @@
-import { useId } from "react";
 import RegionSelect from "../Common/RegionSelect";
-import { INCOME_BRACKETS, YEAR_OPTIONS } from "../../utils/constants";
+import YearPicker from "../Common/YearPicker";
+import { INCOME_BRACKETS } from "../../utils/constants";
 
 export default function TaxFilters({ filters, setFilters, onApply }) {
-  const yearListId = useId();
-
   const handleClear = () => {
     setFilters({
       region: "",
@@ -32,24 +30,11 @@ export default function TaxFilters({ filters, setFilters, onApply }) {
           />
         </div>
 
-        <div className="space-y-1">
-          <label className="text-xs font-semibold uppercase tracking-wide text-gray-600">Year</label>
-          <input
-            type="text"
-            list={yearListId}
-            inputMode="numeric"
-            pattern="[0-9]{4}"
-            placeholder="Select or type year"
-            className="w-full rounded-md border border-gray-300 p-2.5 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-            value={filters.year}
-            onChange={(e) => setFilters({ ...filters, year: e.target.value })}
-          />
-          <datalist id={yearListId}>
-            {YEAR_OPTIONS.map((year) => (
-              <option key={year} value={year} />
-            ))}
-          </datalist>
-        </div>
+        <YearPicker
+          value={filters.year}
+          onChange={(value) => setFilters({ ...filters, year: value })}
+          placeholder="Enter year"
+        />
 
         <div className="space-y-1">
           <label className="text-xs font-semibold uppercase tracking-wide text-gray-600">Income Bracket</label>
