@@ -14,10 +14,27 @@ export default function TaxFilters({ filters, setFilters, onApply }) {
 
   return (
     <section className="mb-5 rounded-xl border border-gray-200 bg-white p-4 shadow-sm md:p-5">
-      <div className="mb-4 flex flex-col gap-1 md:flex-row md:items-end md:justify-between">
+      <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
         <div>
           <h2 className="text-base font-semibold text-gray-900">Filter Tax Records</h2>
           <p className="text-sm text-gray-500">Narrow results by region, year, income group, or currency.</p>
+        </div>
+
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <button
+            type="button"
+            onClick={handleClear}
+            className="rounded-md border border-gray-300 px-4 py-2 font-medium text-gray-700 transition hover:bg-gray-50"
+          >
+            Clear
+          </button>
+          <button
+            type="button"
+            onClick={onApply}
+            className="rounded-md bg-blue-600 px-4 py-2 font-medium text-white transition hover:bg-blue-700"
+          >
+            Apply Filters
+          </button>
         </div>
       </div>
 
@@ -70,22 +87,6 @@ export default function TaxFilters({ filters, setFilters, onApply }) {
         </div>
       </div>
 
-      <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-end">
-        <button
-          type="button"
-          onClick={handleClear}
-          className="rounded-md border border-gray-300 px-4 py-2 font-medium text-gray-700 transition hover:bg-gray-50"
-        >
-          Clear
-        </button>
-        <button
-          type="button"
-          onClick={onApply}
-          className="rounded-md bg-blue-600 px-4 py-2 font-medium text-white transition hover:bg-blue-700"
-        >
-          Apply Filters
-        </button>
-      </div>
     </section>
   );
 }

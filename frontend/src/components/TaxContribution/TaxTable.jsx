@@ -4,55 +4,73 @@ import CurrencyBadge from "./CurrencyBadge";
 export default function TaxTable({ data, onEdit, onDelete }) {
   const { user } = useAuth();
 
-
   return (
-    <div className="bg-white rounded shadow overflow-hidden">
-      <table className="w-full text-left">
-        <thead className="bg-gray-100">
+    <section className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+      <div className="border-b border-gray-200 px-4 py-3">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-700">
+          Tax Records
+        </h2>
+      </div>
+
+      <div className="overflow-x-auto">
+        <table className="min-w-full text-left">
+          <thead className="bg-gray-50 text-xs uppercase tracking-wide text-gray-600">
           <tr>
-            <th className="p-2">Type</th>
-            <th className="p-2">Income</th>
-            <th className="p-2">Amount</th>
-            <th className="p-2">Year</th>
-            <th className="p-2">Region</th>
-            {user?.role === "Admin" && <th className="p-2">Actions</th>}
+            <th className="px-4 py-3 font-semibold">Type</th>
+            <th className="px-4 py-3 font-semibold">Income</th>
+            <th className="px-4 py-3 font-semibold">Amount</th>
+            <th className="px-4 py-3 font-semibold">Year</th>
+            <th className="px-4 py-3 font-semibold">Region</th>
+            {user?.role === "Admin" && (
+              <th className="px-4 py-3 text-right font-semibold">Actions</th>
+            )}
           </tr>
         </thead>
 
         <tbody>
-          {data.map((item) => (
-            <tr key={item._id} className="border-t">
-              <td className="p-2">{item.taxType}</td>
-              <td className="p-2">{item.incomeBracket}</td>
-              <td className="p-2">
-                <CurrencyBadge item={item} />
+          {data.length === 0 ? (
+            <tr>
+              <td
+                colSpan={user?.role === "Admin" ? 6 : 5}
+                className="px-4 py-10 text-center text-sm text-gray-500"
+              >
+                No tax records found for the current filters.
               </td>
-              <td className="p-2">{item.year}</td>
-              <td className="p-2">
-                {item.region?.regionName}
-              </td>
-              {user?.role === "Admin" && (
-                <td className="p-2">
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => onEdit(item)}
-                      className="rounded bg-amber-500 px-3 py-1 text-sm font-medium text-white transition hover:bg-amber-600"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => onDelete(item._id)}
-                      className="rounded bg-red-600 px-3 py-1 text-sm font-medium text-white transition hover:bg-red-700"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </td>
-              )}
             </tr>
-          ))}
+          ) : (
+            data.map((item) => (
+              <tr key={item._id} className="border-t border-gray-100 hover:bg-gray-50">
+                <td className="px-4 py-3 text-sm font-medium text-gray-900">{item.taxType}</td>
+                <td className="px-4 py-3 text-sm text-gray-700">{item.incomeBracket}</td>
+                <td className="px-4 py-3 text-sm text-gray-800">
+                  <CurrencyBadge item={item} />
+                </td>
+                <td className="px-4 py-3 text-sm text-gray-700">{item.year}</td>
+                <td className="px-4 py-3 text-sm text-gray-700">{item.region?.regionName || "-"}</td>
+                {user?.role === "Admin" && (
+                  <td className="px-4 py-3">
+                    <div className="flex items-center justify-end gap-2">
+                      <button
+                        onClick={() => onEdit(item)}
+                        className="rounded-md bg-amber-500 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-amber-600"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => onDelete(item._id)}
+                        className="rounded-md bg-red-600 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-red-700"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                )}
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
-    </div>
+      </div>
+    </section>
   );
 }
