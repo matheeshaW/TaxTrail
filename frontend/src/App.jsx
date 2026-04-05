@@ -4,6 +4,8 @@ import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/Common/ProtectedRoute";
 import PublicRoute from "./components/Common/PublicRoute";
 
+import DashboardLayout from "./components/Layout/DashboardLayout";
+
 // Pages
 import WelcomePage from "./pages/WelcomePage";
 import LoginPage from "./pages/LoginPage";
@@ -26,8 +28,10 @@ function App() {
 
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/tax" element={<TaxContributionPage />} />
+          <Route element={<DashboardLayout />}>
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/tax" element={<TaxContributionPage />} />
+          </Route>
         </Route>
 
       </Routes>
