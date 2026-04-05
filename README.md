@@ -342,7 +342,7 @@ Response:
 
 ### Revenue Summary by Region
 
-- **GET** `/api/v1/tax-contributions/summary/by-region`
+- **GET** `/api/v1/tax-contributions/summary/region`
 
 Returns total tax revenue grouped by region.
 
@@ -379,7 +379,7 @@ Response:
   },
   incomeBracket: {
     type: String,
-    enum: ['Low', 'Middle', 'High'],
+    enum: ['Low', 'Medium', 'High'],
     required: true
   },
   taxType: {
