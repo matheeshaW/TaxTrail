@@ -6,6 +6,7 @@ import TaxFilters from "../components/TaxContribution/TaxFilters";
 import TaxTable from "../components/TaxContribution/TaxTable";
 import Pagination from "../components/Common/Pagination";
 import LoadingSpinner from "../components/Common/LoadingSpinner";
+import TaxSummaryChart from "../components/TaxContribution/TaxSummaryChart";
 
 import TaxForm from "../components/TaxContribution/TaxForm";
 import useAuth from "../hooks/useAuth";
@@ -13,6 +14,7 @@ import useAuth from "../hooks/useAuth";
 export default function TaxContributionPage() {
     const {
         data,
+        summary,
         loading,
         error,
         filters,
@@ -20,6 +22,7 @@ export default function TaxContributionPage() {
         pagination,
         setPagination,
         fetchAll,
+        fetchSummary,
         create,
         update,
         remove,
@@ -34,13 +37,19 @@ export default function TaxContributionPage() {
         fetchAll();
     }, [pagination.page]);
 
+    useEffect(() => {
+        fetchSummary();
+    }, []);
+
     const handleCreate = async (data) => {
         await create(data);
+        await fetchSummary();
         setShowForm(false);
     };
 
     const handleUpdate = async (data) => {
         await update(selected._id, data);
+        await fetchSummary();
         setSelected(null);
         setShowForm(false);
     };
@@ -48,6 +57,7 @@ export default function TaxContributionPage() {
     const handleDelete = async (id) => {
         if (confirm("Are you sure?")) {
             await remove(id);
+            await fetchSummary();
         }
     };
 
@@ -106,6 +116,7 @@ export default function TaxContributionPage() {
                     setPagination({ ...pagination, page })
                 }
             />
+            <TaxSummaryChart data={summary} />
         </div>
     );
 }

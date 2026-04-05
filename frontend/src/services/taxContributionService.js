@@ -27,5 +27,5 @@ export const deleteTax = (id) => {
 
 // SUMMARY
 export const getTaxSummary = () => {
-  return API.get("/v1/tax-contributions/summary/by-region");
+  return API.get("/v1/tax-contributions/summary/region");
 };
