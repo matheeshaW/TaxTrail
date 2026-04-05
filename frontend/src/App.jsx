@@ -4,11 +4,14 @@ import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/Common/ProtectedRoute";
 import PublicRoute from "./components/Common/PublicRoute";
 
+import DashboardLayout from "./components/Layout/DashboardLayout";
+
 // Pages
 import WelcomePage from "./pages/WelcomePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
+import TaxContributionPage from "./pages/TaxContributionPage";
 
 function App() {
   return (
@@ -25,7 +28,10 @@ function App() {
 
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
-          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route element={<DashboardLayout />}>
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/tax" element={<TaxContributionPage />} />
+          </Route>
         </Route>
 
       </Routes>
