@@ -8,6 +8,7 @@ import ProgramDetails from "../components/SocialProgram/ProgramDetails";
 import InequalityAnalysis from "../components/SocialProgram/InequalityAnalysis";
 import ConfirmModal from "../components/Common/ConfirmModal";
 import ErrorAlert from "../components/Common/ErrorAlert";
+import { PAGINATION_LIMITS } from "../utils/constants";
 
 export default function SocialProgramPage() {
   const { user } = useAuth();
@@ -35,6 +36,8 @@ export default function SocialProgramPage() {
     update,
     remove,
     setCurrentPage,
+    pageSize,
+    setPageSize,
   } = useSocialProgram();
 
   const [formOpen, setFormOpen] = useState(false);
@@ -112,6 +115,11 @@ export default function SocialProgramPage() {
     }
   };
 
+  const handleRefresh = async () => {
+    clearError();
+    await fetchAll();
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="mx-auto max-w-7xl">
@@ -144,15 +152,43 @@ export default function SocialProgramPage() {
               onReset={resetFilters}
             />
           </div>
-          {isAdmin && (
+          <div className="flex shrink-0 flex-wrap items-center gap-2 lg:justify-end">
             <button
               type="button"
-              onClick={handleCreate}
-              className="h-fit shrink-0 rounded-md bg-green-600 px-4 py-2 font-medium text-white transition hover:bg-green-700"
+              onClick={handleRefresh}
+              disabled={loading}
+              className="h-fit rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-800 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              + New program
+              Refresh
             </button>
-          )}
+            {isAdmin && (
+              <button
+                type="button"
+                onClick={handleCreate}
+                className="h-fit rounded-md bg-green-600 px-4 py-2 font-medium text-white transition hover:bg-green-700"
+              >
+                + New program
+              </button>
+            )}
+          </div>
+        </div>
+
+        <div className="mb-3 flex flex-wrap items-center justify-end gap-3 rounded-lg border border-gray-200 bg-white px-4 py-3 shadow-sm">
+          <label className="flex items-center gap-2 text-sm text-gray-700">
+            <span className="whitespace-nowrap">Rows per page</span>
+            <select
+              value={pageSize}
+              onChange={(e) => setPageSize(Number(e.target.value))}
+              disabled={loading}
+              className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:opacity-60"
+            >
+              {PAGINATION_LIMITS.map((n) => (
+                <option key={n} value={n}>
+                  {n}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
 
         {filteredTotal > 0 && (

@@ -1,13 +1,34 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import socialProgramService from "../services/socialProgramService";
 
+const formatErrorItems = (items) => {
+  if (!Array.isArray(items) || items.length === 0) return null;
+  const parts = items.map((item) => {
+    if (typeof item === "string") return item;
+    if (item && typeof item.msg === "string") return item.msg;
+    if (item && typeof item.message === "string") return item.message;
+    return null;
+  }).filter(Boolean);
+  return parts.length ? parts.join(", ") : null;
+};
+
 const getErrorMessage = (err) => {
   const data = err.response?.data;
   if (!data) return err.message || "Request failed";
   if (typeof data.message === "string") return data.message;
+
   if (Array.isArray(data.errors) && data.errors.length) {
-    return data.errors.join(", ");
+    const line = formatErrorItems(data.errors);
+    if (line) return line;
+    return data.errors.map((e) => (typeof e === "string" ? e : JSON.stringify(e))).join(", ");
   }
+
+  if (data.errors && typeof data.errors === "object" && !Array.isArray(data.errors)) {
+    const flat = Object.values(data.errors).flat();
+    const line = formatErrorItems(flat);
+    if (line) return line;
+  }
+
   return "Request failed";
 };
 
@@ -27,7 +48,14 @@ export const useSocialProgram = () => {
   const [error, setError] = useState(null);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSizeState] = useState(10);
+
+  const setPageSize = useCallback((next) => {
+    const n = typeof next === "number" ? next : Number(next);
+    if (!Number.isFinite(n) || n < 1) return;
+    setPageSizeState(n);
+    setCurrentPage(1);
+  }, []);
 
   const [filters, setFilters] = useState({
     sector: "",
