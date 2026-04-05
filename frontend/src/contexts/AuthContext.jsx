@@ -2,6 +2,7 @@ import { createContext, useState, useCallback } from "react";
 import API from "../services/api";
 
 export const AuthContext = createContext();
+const USER_STORAGE_KEY = "auth_user";
 
 // Decode the JWT payload without a library — the token is not verified here
 const parseJwt = (token) => {
@@ -49,19 +50,58 @@ const getUserFromAuthResponse = (responseData, token) => {
   return getUserFromToken(token);
 };
 
+const getStoredUser = () => {
+  try {
+    const raw = localStorage.getItem(USER_STORAGE_KEY);
+    if (!raw) return null;
+
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== "object") return null;
+
+    return parsed;
+  } catch {
+    return null;
+  }
+};
+
+const getInitialUser = () => {
+  const token = localStorage.getItem("token");
+  const tokenUser = getUserFromToken(token);
+  const storedUser = getStoredUser();
+
+  if (storedUser && tokenUser) {
+    return {
+      ...storedUser,
+      id: tokenUser.id || storedUser.id || null,
+      role: tokenUser.role || storedUser.role || null,
+      name: storedUser.name || tokenUser.name || null,
+      email: storedUser.email || tokenUser.email || null,
+    };
+  }
+
+  return storedUser || tokenUser;
+};
+
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem("token"));
-  const [user, setUser] = useState(() =>
-    getUserFromToken(localStorage.getItem("token")),
-  );
+  const [user, setUser] = useState(getInitialUser);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   // Shared helper so login and register stay DRY.
   const applyCredentials = (newToken, userData) => {
+    const normalizedUser = userData || getUserFromToken(newToken);
+
     localStorage.setItem("token", newToken);
+
+    if (normalizedUser) {
+      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(normalizedUser));
+    } else {
+      localStorage.removeItem(USER_STORAGE_KEY);
+    }
+
     setToken(newToken);
-    setUser(userData || getUserFromToken(newToken));
+    setUser(normalizedUser);
   };
 
   // login
@@ -121,6 +161,7 @@ export function AuthProvider({ children }) {
   // logout
   const logout = useCallback(() => {
     localStorage.removeItem("token");
+    localStorage.removeItem(USER_STORAGE_KEY);
     setToken(null);
     setUser(null);
     setError(null);
