@@ -1,5 +1,5 @@
 export default function CurrencyBadge({ item }) {
-  if (!item.convertedAmount) {
+  if (item.convertedAmount == null) {
     return <span>{item.amount} LKR</span>;
   }
 
