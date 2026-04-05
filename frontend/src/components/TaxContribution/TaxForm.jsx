@@ -9,7 +9,7 @@ export default function TaxForm({ onSubmit, initialData = {}, onClose }) {
     taxType: initialData.taxType || "",
     amount: initialData.amount || "",
     year: initialData.year || "",
-    region: initialData.region || "",
+    region: initialData.region?._id || initialData.region || "",
   });
 
   const handleSubmit = (e) => {
