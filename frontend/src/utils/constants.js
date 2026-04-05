@@ -7,7 +7,7 @@ export const SECTORS = [
 
 export const INCOME_GROUPS = [
   { value: "Low", label: "Low Income" },
-  { value: "Middle", label: "Middle Income" },
+  { value: "Medium", label: "Medium Income" },
   { value: "High", label: "High Income" },
 ];
 
