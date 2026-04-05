@@ -22,6 +22,14 @@ export default function useTaxContribution() {
         currency: "",
     });
 
+    const clearError = useCallback(() => {
+        setError(null);
+    }, []);
+
+    const clearSummaryError = useCallback(() => {
+        setSummaryError(null);
+    }, []);
+
     // FETCH ALL
     const fetchAll = useCallback(async () => {
         setLoading(true);
@@ -101,6 +109,8 @@ export default function useTaxContribution() {
         summaryError,
         loading,
         error,
+        clearError,
+        clearSummaryError,
         filters,
         setFilters,
         pagination,

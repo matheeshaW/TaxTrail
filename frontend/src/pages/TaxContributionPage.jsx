@@ -7,6 +7,8 @@ import TaxTable from "../components/TaxContribution/TaxTable";
 import Pagination from "../components/Common/Pagination";
 import LoadingSpinner from "../components/Common/LoadingSpinner";
 import TaxSummaryChart from "../components/TaxContribution/TaxSummaryChart";
+import ConfirmModal from "../components/Common/ConfirmModal";
+import ErrorAlert from "../components/Common/ErrorAlert";
 
 import TaxForm from "../components/TaxContribution/TaxForm";
 import useAuth from "../hooks/useAuth";
@@ -18,6 +20,8 @@ export default function TaxContributionPage() {
         summaryError,
         loading,
         error,
+        clearError,
+        clearSummaryError,
         filters,
         setFilters,
         pagination,
@@ -31,6 +35,9 @@ export default function TaxContributionPage() {
 
     const [selected, setSelected] = useState(null);
     const [showForm, setShowForm] = useState(false);
+    const [deleteId, setDeleteId] = useState(null);
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const { user } = useAuth();
 
@@ -73,14 +80,27 @@ export default function TaxContributionPage() {
     };
 
     const handleDelete = async (id) => {
-        if (confirm("Are you sure?")) {
-            await remove(id);
+        setDeleteId(id);
+        setShowConfirm(true);
+    };
+
+    const confirmDelete = async () => {
+        if (!deleteId) return;
+
+        setIsDeleting(true);
+        try {
+            await remove(deleteId);
             await refreshSummarySafely();
+            setShowConfirm(false);
+            setDeleteId(null);
+        } catch {
+            // error is already handled in the hook
+        } finally {
+            setIsDeleting(false);
         }
     };
 
     if (loading) return <LoadingSpinner />;
-    if (error) return <p className="text-red-500">{error}</p>;
 
     return (
         <div>
@@ -88,6 +108,12 @@ export default function TaxContributionPage() {
             <h1 className="text-2xl font-bold mb-4">
                 Tax Contributions
             </h1>
+
+            <ErrorAlert
+                message={error}
+                onDismiss={clearError}
+                className="mb-4"
+            />
 
             <TaxFilters
                 filters={filters}
@@ -135,20 +161,40 @@ export default function TaxContributionPage() {
                 }
             />
 
+            <ErrorAlert
+                message={summaryError}
+                onDismiss={clearSummaryError}
+                className="mt-4"
+            />
+
             {summaryError && (
-                <div className="mt-4 rounded border border-amber-300 bg-amber-50 p-3 text-amber-800">
-                    <p>{summaryError}</p>
-                    <button
-                        type="button"
-                        onClick={refreshSummarySafely}
-                        className="mt-2 rounded bg-amber-600 px-3 py-1 text-sm font-medium text-white transition hover:bg-amber-700"
-                    >
-                        Retry Summary
-                    </button>
-                </div>
+                <button
+                    type="button"
+                    onClick={refreshSummarySafely}
+                    className="mt-2 rounded bg-amber-600 px-3 py-1 text-sm font-medium text-white transition hover:bg-amber-700"
+                >
+                    Retry Summary
+                </button>
             )}
 
             <TaxSummaryChart data={summary} />
+
+            <ConfirmModal
+                isOpen={showConfirm}
+                title="Delete Tax Record"
+                message="Are you sure you want to delete this tax record? This action cannot be undone."
+                confirmText="Delete"
+                cancelText="Cancel"
+                isDangerous={true}
+                isLoading={isDeleting}
+                onConfirm={confirmDelete}
+                onCancel={() => {
+                    if (!isDeleting) {
+                        setShowConfirm(false);
+                        setDeleteId(null);
+                    }
+                }}
+            />
         </div>
     );
 }
