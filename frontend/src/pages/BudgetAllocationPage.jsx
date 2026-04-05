@@ -66,19 +66,37 @@ export default function BudgetAllocationPage() {
   };
 
   // handle edit
-  const handleEdit = (record) => {
-    setFormMode("edit");
-    setFormOpen(true);
+  const handleEdit = async (record) => {
+    const recordId = record?._id || record?.id;
+    if (!recordId) {
+      console.error("Edit error: missing record id", record);
+      return;
+    }
+    try {
+      await fetchOne(recordId);
+      setFormMode("edit");
+      setFormOpen(true);
+    } catch (err) {
+      console.error("Edit load error:", err);
+    }
   };
 
   // handle view details
-  const handleViewDetails = (id) => {
-    fetchOne(id).then(() => setDetailsOpen(true));
+  const handleViewDetails = async (id) => {
+    const record = await fetchOne(id);
+    if (record) {
+      setDetailsOpen(true);
+    }
   };
 
   // handle delete confirm
-  const handleDeleteConfirm = (id) => {
-    setRecordToDelete(id);
+  const handleDeleteConfirm = (record) => {
+    const recordId = record?._id || record?.id;
+    if (!recordId) {
+      console.error("Delete error: missing record id", record);
+      return;
+    }
+    setRecordToDelete(recordId);
     setDeleteConfirmOpen(true);
   };
 
@@ -96,9 +114,12 @@ export default function BudgetAllocationPage() {
   // handle form submit
   const handleFormSubmit = async (formData) => {
     try {
-      if (formData === "create") {
+      if (formMode === "create") {
         await create(formData);
       } else {
+        if (!selectedRecord?._id) {
+          throw new Error("No selected record available for update.");
+        }
         await update(selectedRecord._id, formData);
       }
       setFormOpen(false);
