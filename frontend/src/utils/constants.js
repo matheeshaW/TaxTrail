@@ -11,6 +11,17 @@ export const INCOME_GROUPS = [
   { value: "High", label: "High Income" },
 ];
 
+export const PAYER_TYPES = [
+  { value: "Individual", label: "Individual" },
+  { value: "Corporate", label: "Corporate" },
+];
+
+export const TAX_TYPES = [
+  { value: "Income", label: "Income" },
+  { value: "VAT", label: "VAT" },
+  { value: "Corporate", label: "Corporate" },
+];
+
 export const SORT_OPTIONS = [
   { value: "newest", label: "Newest First" },
   { value: "oldest", label: "Oldest First" },
