@@ -52,13 +52,13 @@ export default function TaxTable({ data, onEdit, onDelete }) {
                     <div className="flex items-center justify-end gap-2">
                       <button
                         onClick={() => onEdit(item)}
-                        className="rounded-md bg-amber-500 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-amber-600"
+                        className="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-amber-500 to-yellow-500 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-white shadow-sm transition hover:from-amber-600 hover:to-yellow-600 focus:outline-none focus:ring-2 focus:ring-amber-300"
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => onDelete(item._id)}
-                        className="rounded-md bg-red-600 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-red-700"
+                        className="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-red-600 to-rose-600 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-white shadow-sm transition hover:from-red-700 hover:to-rose-700 focus:outline-none focus:ring-2 focus:ring-red-300"
                       >
                         Delete
                       </button>

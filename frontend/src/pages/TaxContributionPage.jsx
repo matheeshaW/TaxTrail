@@ -131,7 +131,7 @@ export default function TaxContributionPage() {
                                     setSelected(null);
                                     setShowForm(true);
                                 }}
-                                className="rounded bg-green-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-green-700"
+                                className="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-emerald-600 to-green-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:from-emerald-700 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-emerald-300"
                             >
                                 Add Tax Record
                             </button>
@@ -149,10 +149,10 @@ export default function TaxContributionPage() {
                     <button
                         type="button"
                         onClick={() => setActiveView("records")}
-                        className={`px-4 py-2 text-sm font-medium transition ${
+                        className={`rounded-t-lg px-4 py-2 text-sm font-semibold transition ${
                             activeView === "records"
-                                ? "border-b-2 border-blue-600 text-blue-700"
-                                : "text-gray-600 hover:text-gray-900"
+                                ? "border-b-2 border-blue-600 bg-blue-50 text-blue-700"
+                                : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                         }`}
                     >
                         Records
@@ -160,10 +160,10 @@ export default function TaxContributionPage() {
                     <button
                         type="button"
                         onClick={() => setActiveView("summary")}
-                        className={`px-4 py-2 text-sm font-medium transition ${
+                        className={`rounded-t-lg px-4 py-2 text-sm font-semibold transition ${
                             activeView === "summary"
-                                ? "border-b-2 border-blue-600 text-blue-700"
-                                : "text-gray-600 hover:text-gray-900"
+                                ? "border-b-2 border-blue-600 bg-blue-50 text-blue-700"
+                                : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                         }`}
                     >
                         Revenue Summary
@@ -222,7 +222,7 @@ export default function TaxContributionPage() {
                             type="button"
                             onClick={refreshSummarySafely}
                             disabled={summaryRefreshing}
-                            className="rounded bg-amber-600 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-amber-700 disabled:cursor-not-allowed disabled:opacity-70"
+                            className="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-amber-500 to-orange-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:from-amber-600 hover:to-orange-700 focus:outline-none focus:ring-2 focus:ring-amber-300 disabled:cursor-not-allowed disabled:opacity-70"
                         >
                             {summaryRefreshing ? "Refreshing..." : "Refresh Summary"}
                         </button>
