@@ -47,29 +47,47 @@ export default function useTaxContribution() {
     }, [filters, pagination.page, pagination.limit]);
 
     // FETCH SUMMARY
-    const fetchSummary = async () => {
+    const fetchSummary = useCallback(async () => {
         try {
             const res = await taxService.getTaxSummary();
             setSummary(res.data.data);
         } catch (err) {
             console.error(err);
         }
-    };
+    }, []);
 
 
     const create = async (data) => {
-        await taxService.createTax(data);
-        fetchAll();
+        setError(null);
+        try {
+            await taxService.createTax(data);
+            await fetchAll();
+        } catch (err) {
+            setError("Failed to create tax data");
+            throw err;
+        }
     };
 
     const update = async (id, data) => {
-        await taxService.updateTax(id, data);
-        fetchAll();
+        setError(null);
+        try {
+            await taxService.updateTax(id, data);
+            await fetchAll();
+        } catch (err) {
+            setError("Failed to update tax data");
+            throw err;
+        }
     };
 
     const remove = async (id) => {
-        await taxService.deleteTax(id);
-        fetchAll();
+        setError(null);
+        try {
+            await taxService.deleteTax(id);
+            await fetchAll();
+        } catch (err) {
+            setError("Failed to delete tax data");
+            throw err;
+        }
     };
 
     return {

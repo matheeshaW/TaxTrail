@@ -39,7 +39,16 @@ export default function TaxContributionPage() {
 
     useEffect(() => {
         fetchSummary();
-    }, []);
+    }, [fetchSummary]);
+
+    const handleApplyFilters = async () => {
+        if (pagination.page !== 1) {
+            setPagination((prev) => ({ ...prev, page: 1 }));
+            return;
+        }
+
+        await fetchAll();
+    };
 
     const handleCreate = async (data) => {
         await create(data);
@@ -74,7 +83,7 @@ export default function TaxContributionPage() {
             <TaxFilters
                 filters={filters}
                 setFilters={setFilters}
-                onApply={fetchAll}
+                onApply={handleApplyFilters}
             />
 
             {user?.role === "Admin" && (
