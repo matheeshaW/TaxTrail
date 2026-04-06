@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { SECTORS, SOCIAL_PROGRAM_TARGET_GROUPS } from "../../utils/constants";
+import { SECTORS, SOCIAL_PROGRAM_TARGET_GROUPS, SOCIAL_PROGRAM_YEAR_MIN } from "../../utils/constants";
 import RegionSelect from "../Common/RegionSelect";
 
 export default function ProgramFilters({ filters, onFilterChange, onReset }) {
@@ -44,7 +44,10 @@ export default function ProgramFilters({ filters, onFilterChange, onReset }) {
   };
 
   const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 80 }, (_, i) => currentYear - i);
+  const years = Array.from(
+    { length: currentYear - SOCIAL_PROGRAM_YEAR_MIN + 1 },
+    (_, i) => currentYear - i,
+  );
 
   return (
     <div className="rounded-lg bg-white p-4 shadow">

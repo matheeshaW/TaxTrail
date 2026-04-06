@@ -43,6 +43,7 @@ export default function SocialProgramPage() {
   const [formOpen, setFormOpen] = useState(false);
   const [formMode, setFormMode] = useState("create");
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [detailsLoading, setDetailsLoading] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [recordToDelete, setRecordToDelete] = useState(null);
   const [inequalityCountry, setInequalityCountry] = useState("LKA");
@@ -69,11 +70,14 @@ export default function SocialProgramPage() {
   };
 
   const handleViewDetails = async (id) => {
+    setDetailsOpen(true);
+    setDetailsLoading(true);
     try {
-      const record = await fetchOne(id);
-      if (record) setDetailsOpen(true);
+      await fetchOne(id);
     } catch {
       /* error set in hook */
+    } finally {
+      setDetailsLoading(false);
     }
   };
 
@@ -227,7 +231,7 @@ export default function SocialProgramPage() {
       <ProgramDetails
         isOpen={detailsOpen}
         record={selectedRecord}
-        loading={false}
+        loading={detailsLoading}
         isAdmin={isAdmin}
         onClose={() => setDetailsOpen(false)}
         onEdit={(rec) => {
