@@ -23,7 +23,7 @@ export default function DashboardPage() {
       title: "Social Programs",
       description: "Track welfare initiatives and beneficiary coverage",
       link: "/programs",
-      available: false,
+      available: true,
       color: "from-teal-600 to-sky-500",
     },
     {

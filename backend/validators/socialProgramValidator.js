@@ -3,7 +3,7 @@ const { body } = require('express-validator')
 
 // Constants
 const BUDGET_PER_PERSON_THRESHOLD = 1_000_000
-const VALID_SECTORS = ['Welfare', 'Education', 'Health', 'Housing', 'Food Assistance']
+const VALID_SECTORS = ['Health', 'Education', 'Welfare', 'Infrastructure']
 const VALID_TARGET_GROUPS = ['Low Income', 'Middle Income', 'Rural', 'Urban Poor', 'Disabled']
 
 const createProgramValidator = [

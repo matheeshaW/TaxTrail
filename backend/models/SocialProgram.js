@@ -8,7 +8,7 @@ const socialProgramSchema = new mongoose.Schema({
     },
     sector : {
         type : String,
-        enum : ['Welfare','Education','Health','Housing','Food Assistance'],
+        enum : ['Health', 'Education', 'Welfare', 'Infrastructure'],
         required : true
     },
     targetGroup : {

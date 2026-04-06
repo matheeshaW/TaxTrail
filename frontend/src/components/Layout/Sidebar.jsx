@@ -5,7 +5,7 @@ export default function Sidebar() {
     { label: "Dashboard", path: "/dashboard", enabled: true },
     { label: "Tax Contributions", path: "/tax", enabled: true },
     { label: "Budget", path: "/budget", enabled: true },
-    { label: "Programs", path: "/programs", enabled: false },
+    { label: "Programs", path: "/programs", enabled: true },
     { label: "Development", path: "/development", enabled: false },
   ];
 
