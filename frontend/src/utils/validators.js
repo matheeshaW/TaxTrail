@@ -213,7 +213,7 @@ export const validateSocialProgramBudgetUsed = (value) => {
   if (required) return required;
   const num = Number(value);
   if (Number.isNaN(num) || num < 0) {
-    return "Budget must be a positive number";
+    return "Budget must be a non-negative number";
   }
   if (num > SOCIAL_PROGRAM_BUDGET_MAX) {
     return `Budget cannot exceed ${SOCIAL_PROGRAM_BUDGET_MAX.toLocaleString()}`;
