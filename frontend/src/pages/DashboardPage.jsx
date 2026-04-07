@@ -29,8 +29,8 @@ export default function DashboardPage() {
     {
       title: "Regional Development",
       description: "Monitor inequality and regional development signals",
-      link: "/development",
-      available: false,
+      link: "/regional-development",
+      available: true,
       color: "from-amber-500 to-orange-600",
     },
   ];
