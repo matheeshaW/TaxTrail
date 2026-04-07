@@ -1,6 +1,6 @@
 import api from './api';
 
-const API_URL = 'v1/regional-development';
+const API_URL = '/v1/regional-development';
 
 const regionalDevelopmentService = {
   // 1. CRUD: Get all records (supports pagination and filtering)

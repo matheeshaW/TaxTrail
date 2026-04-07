@@ -1,4 +1,3 @@
-import React from 'react';
 
 const RegionalTable = ({ data, onEdit, onDelete, userRole }) => {
   //  Role-Based UI

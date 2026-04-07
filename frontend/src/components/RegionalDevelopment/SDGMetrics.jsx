@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 
 const SDGMetrics = ({ regions = [], sdgMetrics, loading, onFetchMetrics }) => {
   const [selectedRegion, setSelectedRegion] = useState('');

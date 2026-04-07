@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import useRegionalDevelopment from '../hooks/useRegionalDevelopment';
-import api from '../services/api'; // Import the shared axios instance
+import useAuth from '../hooks/useAuth'; 
+import api from '../services/api';
 
 // UI Components
 import RegionalFilters from '../components/RegionalDevelopment/RegionalFilters';
@@ -10,7 +11,8 @@ import InequalityIndex from '../components/RegionalDevelopment/InequalityIndex';
 import SDGMetrics from '../components/RegionalDevelopment/SDGMetrics';
 
 const RegionalDevelopmentPage = () => {
-  const userRole = 'Admin'; 
+  const { user } = useAuth();
+  const userRole = user?.role; 
 
   const {
     data,
@@ -26,12 +28,10 @@ const RegionalDevelopmentPage = () => {
     fetchSDGMetrics
   } = useRegionalDevelopment();
 
- 
   const [regions, setRegions] = useState([]);
   const [filters, setFilters] = useState({ region: '', year: '' });
   const [showForm, setShowForm] = useState(false);
   const [editingRecord, setEditingRecord] = useState(null);
-
 
   const fetchRegions = useCallback(async () => {
     try {
@@ -44,9 +44,12 @@ const RegionalDevelopmentPage = () => {
 
   useEffect(() => {
     fetchRegions();
-    fetchAll(filters);
     fetchInequalityIndex();
-  }, [fetchRegions, fetchAll, fetchInequalityIndex, filters]);
+  }, [fetchRegions, fetchInequalityIndex]);
+
+  useEffect(() => {
+    fetchAll(filters);
+  }, [fetchAll, filters]);
 
   const handleEdit = (record) => {
     setEditingRecord(record);
@@ -70,7 +73,7 @@ const RegionalDevelopmentPage = () => {
       setShowForm(false);
       setEditingRecord(null);
       fetchAll(filters);
-      fetchInequalityIndex();
+      fetchInequalityIndex(); 
     } catch (err) {
       console.error("Form submission failed", err);
     }
@@ -136,7 +139,7 @@ const RegionalDevelopmentPage = () => {
             ) : (
               <RegionalTable 
                 data={data} 
-                userRole={userRole} 
+                userRole={userRole}
                 onEdit={handleEdit} 
                 onDelete={handleDelete} 
               />

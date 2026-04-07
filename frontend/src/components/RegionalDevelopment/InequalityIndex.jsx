@@ -1,4 +1,3 @@
-import React from 'react';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine 
 } from 'recharts';
@@ -66,13 +65,12 @@ const InequalityIndex = ({ data, loading }) => {
               barSize={40}
             />
             
-            {/* The 3rd Party API World Bank Benchmark Line! */}
             <ReferenceLine 
               y={data.globalBenchmark} 
               stroke="#ef4444" 
               strokeDasharray="4 4" 
               strokeWidth={2}
-              label={{ position: 'top', value: 'World Bank Gini', fill: '#ef4444', fontSize: 12, fontWeight: 600 }}
+              label={{ position: 'top', value: 'Global Poverty Standard', fill: '#ef4444', fontSize: 12, fontWeight: 600 }}
             />
           </BarChart>
         </ResponsiveContainer>

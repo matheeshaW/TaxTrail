@@ -24,7 +24,7 @@ const useRegionalDevelopment = () => {
         setPagination(response.pagination);
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to fetch regional data.');
+      setError(err.response?.data?.message || err.response?.data?.error || 'Failed to fetch regional data.');
     } finally {
       setLoading(false);
     }
@@ -38,7 +38,7 @@ const useRegionalDevelopment = () => {
       const response = await regionalDevelopmentService.getOne(id);
       setSelectedRecord(response.data);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to fetch record details.');
+      setError(err.response?.data?.message || err.response?.data?.error || 'Failed to fetch record details.');
     } finally {
       setLoading(false);
     }
@@ -50,10 +50,9 @@ const useRegionalDevelopment = () => {
     setError(null);
     try {
       await regionalDevelopmentService.create(recordData);
-      // We don't fetchAll here; we let the UI component trigger the refetch
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to create record.');
-      throw err; // Throwing allows the form component to catch and handle it
+      setError(err.response?.data?.message || err.response?.data?.error || 'Failed to create record.');
+      throw err; 
     } finally {
       setLoading(false);
     }
@@ -66,7 +65,7 @@ const useRegionalDevelopment = () => {
     try {
       await regionalDevelopmentService.update(id, recordData);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to update record.');
+      setError(err.response?.data?.message || err.response?.data?.error || 'Failed to update record.');
       throw err;
     } finally {
       setLoading(false);
@@ -80,22 +79,20 @@ const useRegionalDevelopment = () => {
     try {
       await regionalDevelopmentService.delete(id);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to delete record.');
+      setError(err.response?.data?.message || err.response?.data?.error || 'Failed to delete record.');
       throw err;
     } finally {
       setLoading(false);
     }
   };
 
-// ANALYTICS: Fetch Gini Index Comparison
+  // ANALYTICS: Fetch Gini Index Comparison
   const fetchInequalityIndex = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
       const response = await regionalDevelopmentService.getInequalityIndex();
-      
-       setInequalityData(response); 
-      
+      setInequalityData(response); 
     } catch (err) {
       console.error("Inequality Fetch Error:", err);
     } finally {
@@ -103,17 +100,15 @@ const useRegionalDevelopment = () => {
     }
   }, []);
 
-// ANALYTICS: Fetch specific SDG 10 Metrics
+  // ANALYTICS: Fetch specific SDG 10 Metrics
   const fetchSDGMetrics = useCallback(async (id) => {
     setLoading(true);
     setError(null);
     try {
       const response = await regionalDevelopmentService.getSDGMetrics(id);
-      
       setSdgMetrics(response); 
-      
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to fetch SDG metrics.');
+      setError(err.response?.data?.message || err.response?.data?.error || 'Failed to fetch SDG metrics.');
     } finally {
       setLoading(false);
     }
