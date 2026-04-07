@@ -342,7 +342,7 @@ Response:
 
 ### Revenue Summary by Region
 
-- **GET** `/api/v1/tax-contributions/summary/by-region`
+- **GET** `/api/v1/tax-contributions/summary/region`
 
 Returns total tax revenue grouped by region.
 
@@ -379,7 +379,7 @@ Response:
   },
   incomeBracket: {
     type: String,
-    enum: ['Low', 'Middle', 'High'],
+    enum: ['Low', 'Medium', 'High'],
     required: true
   },
   taxType: {
@@ -895,7 +895,7 @@ Returns:
   },
   sector: {
     type: String,
-    enum: ['Welfare', 'Education', 'Health', 'Housing', 'Food Assistance'],
+    enum: ['Health', 'Education', 'Welfare', 'Infrastructure'],
     required: true
   },
   targetGroup: {
@@ -942,7 +942,7 @@ Validation is enforced through `express-validator`, ObjectId checks, and service
 
 Rules include:
 - `programName` is required, non-empty, max 100 chars
-- `sector` must be one of: Welfare, Education, Health, Housing, Food Assistance
+- `sector` must be one of: Health, Education, Welfare, Infrastructure
 - `targetGroup` must be one of: Low Income, Middle Income, Rural, Urban Poor, Disabled
 - `beneficiariesCount` must be an integer >= 0
 - `budgetUsed` must be a number >= 0

@@ -24,13 +24,21 @@ const createAllocation = async (data) => {
 
 // Get all allocations with filtering and pagination
 const getAllAllocations = async (queryParams) => {
-  const { sector, year, region, page = 1, limit = 10 } = queryParams;
+  const {
+    sector,
+    year,
+    region,
+    targetIncomeGroup,
+    page = 1,
+    limit = 10,
+  } = queryParams;
 
   const filter = {};
 
   if (sector) filter.sector = sector;
-  if (year) filter.year = year;
+  if (year) filter.year = Number(year);
   if (region) filter.region = region;
+  if (targetIncomeGroup) filter.targetIncomeGroup = targetIncomeGroup;
 
   const total = await BudgetAllocation.countDocuments(filter);
 
@@ -122,7 +130,8 @@ const getSummaryBySector = async () => {
 
 // Get inflation-adjusted allocations for a given year
 const getAdjustedAllocations = async (year) => {
-  const allocations = await BudgetAllocation.find({ year });
+  const yearNum = Number(year);
+  const allocations = await BudgetAllocation.find({ year: yearNum });
 
   if (allocations.length === 0) {
     const error = new Error("No allocations found for this year");
@@ -157,7 +166,7 @@ const getAdjustedAllocations = async (year) => {
     const inflationData = response.data[1];
 
     const yearData = inflationData.find(
-      (item) => item.date === year && item.value !== null,
+      (item) => item.date === String(yearNum) && item.value !== null,
     );
 
     // Preserve existing behavior: default inflationRate to 0 if no yearData
