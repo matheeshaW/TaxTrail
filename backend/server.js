@@ -46,7 +46,7 @@ app.use('/api/auth', authRoutes)
 app.use('/api/v1/regions', regionRoutes)
 app.use('/api/v1/tax-contributions', taxContributionRoutes)
 app.use('/api/socialprograms', socialProgramRoutes)
-app.use('/api/inequality', inequalityRoutes)
+app.use('/api/v1/inequality', inequalityRoutes)
 app.use('/api/v1/budget-allocations', budgetAllocationRoutes)
 app.use('/api/v1/regional-development', regionalDevelopmentRoutes)
 
