@@ -6,7 +6,7 @@ export default function Sidebar() {
     { label: "Tax Contributions", path: "/tax", enabled: true },
     { label: "Budget", path: "/budget", enabled: true },
     { label: "Programs", path: "/programs", enabled: true },
-    { label: "Regional Development", path: "/regional-development", enabled: true },
+    { label: "Development", path: "/development", enabled: false },
   ];
 
   return (
