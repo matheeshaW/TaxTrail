@@ -13,6 +13,8 @@ import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
 import TaxContributionPage from "./pages/TaxContributionPage";
 import BudgetAllocationPage from "./pages/BudgetAllocationPage";
+import SocialProgramPage from "./pages/SocialProgramPage";
+import RegionalDevelopmentPage from "./pages/RegionalDevelopmentPage"; 
 
 function App() {
   return (
@@ -32,6 +34,8 @@ function App() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/tax" element={<TaxContributionPage />} />
             <Route path="/budget" element={<BudgetAllocationPage />} />
+            <Route path="/programs" element={<SocialProgramPage />} />
+            <Route path="/regional-development" element={<RegionalDevelopmentPage />} />
           </Route>
         </Route>
       </Routes>

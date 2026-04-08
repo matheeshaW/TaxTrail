@@ -24,7 +24,7 @@ describe('SocialProgram Service - Unit Tests', () => {
 
   const baseProgramData = () => ({
     programName: 'Food Aid',
-    sector: 'Food Assistance',
+    sector: 'Welfare',
     targetGroup: 'Low Income',
     beneficiariesCount: 100,
     budgetUsed: 500000,

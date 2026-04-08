@@ -23,14 +23,14 @@ export default function DashboardPage() {
       title: "Social Programs",
       description: "Track welfare initiatives and beneficiary coverage",
       link: "/programs",
-      available: false,
+      available: true,
       color: "from-teal-600 to-sky-500",
     },
     {
       title: "Regional Development",
       description: "Monitor inequality and regional development signals",
-      link: "/development",
-      available: false,
+      link: "/regional-development",
+      available: true,
       color: "from-amber-500 to-orange-600",
     },
   ];
