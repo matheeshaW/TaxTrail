@@ -44,36 +44,35 @@ exports.getRegions = async (req, res) => {
   }
 };
 
-// @desc    Analytical Endpoint: Get Inequality Index (FOR HIGHEST MARKS)
+// @desc    Analytical Endpoint: Get Inequality Index 
 // @route   GET /api/v1/regional-development/inequality-index
 exports.getInequalityIndex = async (req, res) => {
   try {
-    const year = req.query.year || 2026; 
+    const year = req.query.year || 2026;
 
-    // Find the region with the highest poverty rate
-    const highestPoverty = await RegionalDevelopment.findOne({ year })
-      .sort({ povertyRate: -1 })
+    // Fetch ALL records for the year to build the bar chart array
+    const allRecords = await RegionalDevelopment.find({ year })
       .populate('region', 'regionName');
 
-    // Find the region with the lowest average income
-    const lowestIncome = await RegionalDevelopment.findOne({ year })
-      .sort({ averageIncome: 1 })
-      .populate('region', 'regionName');
-
-    if (!highestPoverty || !lowestIncome) {
-      return res.status(404).json({ success: false, message: `Not enough data for the year ${year}` });
+    if (!allRecords || allRecords.length === 0) {
+      return res.status(404).json({ success: false, message: "No data for this year" });
     }
+
+    const regionalData = allRecords.map(record => ({
+      regionName: record.region?.regionName || 'Unknown',
+      localPovertyRate: record.povertyRate
+    }));
+
+    // Get the UN/World Bank Benchmark
+    const unData = await sdgService.getGlobalInequalityData();
 
     res.status(200).json({
       success: true,
-      year: year,
-      analysis: {
-        highestPovertyRegion: highestPoverty.region.regionName,
-        highestPovertyRate: highestPoverty.povertyRate,
-        lowestIncomeRegion: lowestIncome.region.regionName,
-        lowestIncomeValue: lowestIncome.averageIncome
-      }
+      globalBenchmark: unData.globalBenchmark,
+      regionalData: regionalData,             
+      source: unData.source
     });
+
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -81,17 +80,20 @@ exports.getInequalityIndex = async (req, res) => {
 
 // @desc    Compare Region vs Global SDG Standards (UN API Integration)
 // @route   GET /api/v1/regional-development/sdg-metrics/:id
-
 exports.getRegionSDGAnalysis = async (req, res) => {
   try {
-    //search by ID now, because of the ObjectId structure
-    const localData = await RegionalDevelopment.findById(req.params.id).populate('region', 'regionName');
+    const localData = await RegionalDevelopment.findOne({ region: req.params.id })
+      .populate('region', 'regionName')
+      .sort({ year: -1 });
 
     if (!localData) {
-      return res.status(404).json({ success: false, error: 'Regional data not found' });
+      return res.status(404).json({ 
+        success: false, 
+        error: 'No development records found for this region' 
+      });
     }
 
-    // Get External Data from UN Service
+    // Get External Data from UN Service 
     const unData = await sdgService.getGlobalInequalityData();
 
     // Perform SDG Business Logic
@@ -112,8 +114,11 @@ exports.getRegionSDGAnalysis = async (req, res) => {
       success: true,
       region: localData.region.regionName,
       year: localData.year,
+      povertyRate: localData.povertyRate,
+      unemploymentRate: localData.unemploymentRate,
+      averageIncome: localData.averageIncome,
+      accessToServicesIndex: localData.accessToServicesIndex,
       analysis: {
-        localPovertyRate: localData.povertyRate,
         globalBenchmark: unData.globalBenchmark,
         gap: povertyGap.toFixed(2),
         status: status,
@@ -125,7 +130,6 @@ exports.getRegionSDGAnalysis = async (req, res) => {
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
-
 };
 
 // @desc    Update regional data
