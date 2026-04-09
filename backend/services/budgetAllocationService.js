@@ -19,7 +19,8 @@ const createAllocation = async (data) => {
       throw error;
     }
   }
-  return await BudgetAllocation.create(data);
+  const allocation = await BudgetAllocation.create(data);
+  return await allocation.populate("region");
 };
 
 // Get all allocations with filtering and pagination

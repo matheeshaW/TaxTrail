@@ -55,7 +55,11 @@ export const useBudgetAllocation = () => {
       );
 
       const result = await budgetAllocationService.getAll(params);
-      setData(result.data || []);
+      // Sort by updatedAt descending (newest first)
+      const sortedData = (result.data || []).sort(
+        (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt),
+      );
+      setData(sortedData);
       setTotalPages(result.totalPages || 1);
       setCurrentPage(result.currentPage || 1);
     } catch (err) {
@@ -99,7 +103,12 @@ export const useBudgetAllocation = () => {
     setError(null);
     try {
       const result = await budgetAllocationService.update(id, formData);
-      setData((prev) => prev.map((item) => (item._id === id ? result : item)));
+      setData((prev) => {
+        const updated = prev.map((item) => (item._id === id ? result : item));
+        return updated.sort(
+          (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt),
+        );
+      });
       setSelectedRecord(result);
       return result;
     } catch (err) {
