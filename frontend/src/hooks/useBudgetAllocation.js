@@ -55,6 +55,7 @@ export const useBudgetAllocation = () => {
       );
 
       const result = await budgetAllocationService.getAll(params);
+      //  Use server-side sorted data directly
       setData(result.data || []);
       setTotalPages(result.totalPages || 1);
       setCurrentPage(result.currentPage || 1);
@@ -77,39 +78,47 @@ export const useBudgetAllocation = () => {
   }, []);
 
   // create new allocation
-  const create = useCallback(async (formData) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const result = await budgetAllocationService.create(formData);
-      setData((prev) => [result, ...prev]);
-      return result;
-    } catch (err) {
-      const errorMsg = err.response?.data?.message || "Failed to create";
-      setError(errorMsg);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const create = useCallback(
+    async (formData) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const result = await budgetAllocationService.create(formData);
+        // Refresh data to maintain server-side sort order
+        await fetchAll();
+        return result;
+      } catch (err) {
+        const errorMsg = err.response?.data?.message || "Failed to create";
+        setError(errorMsg);
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [fetchAll],
+  );
 
   // update existing allocation
-  const update = useCallback(async (id, formData) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const result = await budgetAllocationService.update(id, formData);
-      setData((prev) => prev.map((item) => (item._id === id ? result : item)));
-      setSelectedRecord(result);
-      return result;
-    } catch (err) {
-      const errorMsg = err.response?.data?.message || "Failed to update";
-      setError(errorMsg);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const update = useCallback(
+    async (id, formData) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const result = await budgetAllocationService.update(id, formData);
+        // Refresh data to maintain server-side sort order
+        await fetchAll();
+        setSelectedRecord(result);
+        return result;
+      } catch (err) {
+        const errorMsg = err.response?.data?.message || "Failed to update";
+        setError(errorMsg);
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [fetchAll],
+  );
 
   // delete an allocation
   const remove = useCallback(async (id) => {
