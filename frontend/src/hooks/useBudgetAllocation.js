@@ -134,19 +134,6 @@ export const useBudgetAllocation = () => {
     setCurrentPage(1);
   }, []);
 
-  // fetch sector summary
-  const fetchSummary = useCallback(async () => {
-    setSummaryLoading(true);
-    try {
-      const result = await budgetAllocationService.getSummary();
-      setSummary(result);
-    } catch (err) {
-      setError(err.response?.data?.message || "Failed to load summary");
-    } finally {
-      setSummaryLoading(false);
-    }
-  }, []);
-
   // fetch available years
   const fetchAvailableYears = useCallback(async () => {
     try {
@@ -163,7 +150,7 @@ export const useBudgetAllocation = () => {
   }, [selectedYear]);
 
   // fetch summary with year filter
-  const fetchSummaryWithYear = useCallback(async (year) => {
+  const fetchSummary = useCallback(async (year) => {
     setSummaryLoading(true);
     try {
       const result = year
@@ -236,7 +223,7 @@ export const useBudgetAllocation = () => {
     create,
     update,
     remove,
-    fetchSummary: fetchSummaryWithYear,
+    fetchSummary,
     fetchAdjusted,
 
     availableYears,

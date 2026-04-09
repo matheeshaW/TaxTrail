@@ -201,7 +201,7 @@ const getAdjustedAllocations = async (year) => {
     }
 
     const errorMessageTimeout =
-      "World Bank API request timed out while retrieving inflation data. Please Try Again Later.";
+      "World Bank API request timed out while retrieving inflation data. Please try again later.";
     const errorMessageGeneric =
       "Failed to fetch inflation data from World Bank API";
 

@@ -29,7 +29,12 @@ router.get(
 );
 
 // GET available years with data
-router.get("/summary/available-years", getAvailableYears);
+router.get(
+  "/summary/available-years",
+  protect,
+  authorize("Admin", "Public"),
+  getAvailableYears,
+);
 
 router
   .route("/")
