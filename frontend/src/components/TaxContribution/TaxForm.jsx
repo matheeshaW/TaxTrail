@@ -16,9 +16,59 @@ export default function TaxForm({ onSubmit, initialData = {}, onClose }) {
     year: initialData.year || "",
     region: initialData.region?._id || initialData.region || "",
   });
+  const [errors, setErrors] = useState({});
+  const [submitAttempted, setSubmitAttempted] = useState(false);
+
+  const validate = (candidate = form) => {
+    const nextErrors = {};
+
+    if (!candidate.incomeBracket) {
+      nextErrors.incomeBracket = "Please select an income bracket.";
+    }
+
+    if (!candidate.taxType) {
+      nextErrors.taxType = "Please select a tax type.";
+    }
+
+    if (candidate.amount === "" || candidate.amount === null || candidate.amount === undefined) {
+      nextErrors.amount = "Please enter an amount.";
+    } else if (Number(candidate.amount) < 0) {
+      nextErrors.amount = "Amount cannot be negative.";
+    }
+
+    if (!candidate.year) {
+      nextErrors.year = "Please select or enter a year.";
+    } else if (!/^\d{4}$/.test(String(candidate.year))) {
+      nextErrors.year = "Please enter a valid 4-digit year.";
+    }
+
+    if (!candidate.region) {
+      nextErrors.region = "Please select a region.";
+    }
+
+    return nextErrors;
+  };
+
+  const updateField = (field, value) => {
+    const nextForm = { ...form, [field]: value };
+    setForm(nextForm);
+
+    if (submitAttempted) {
+      setErrors(validate(nextForm));
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    setSubmitAttempted(true);
+    const nextErrors = validate(form);
+    setErrors(nextErrors);
+
+    if (Object.keys(nextErrors).length > 0) {
+      return;
+    }
+
     onSubmit(form);
   };
 
@@ -38,7 +88,7 @@ export default function TaxForm({ onSubmit, initialData = {}, onClose }) {
           <label className="text-xs font-semibold uppercase tracking-wide text-gray-600">Payer Type</label>
           <select
             value={form.payerType}
-            onChange={(e) => setForm({ ...form, payerType: e.target.value })}
+            onChange={(e) => updateField("payerType", e.target.value)}
             className="w-full rounded-md border border-gray-300 p-2.5 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
           >
             {PAYER_TYPES.map((option) => (
@@ -53,10 +103,13 @@ export default function TaxForm({ onSubmit, initialData = {}, onClose }) {
           <label className="text-xs font-semibold uppercase tracking-wide text-gray-600">Income Bracket</label>
           <select
             value={form.incomeBracket}
-            onChange={(e) =>
-              setForm({ ...form, incomeBracket: e.target.value })
-            }
-            className="w-full rounded-md border border-gray-300 p-2.5 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            onChange={(e) => updateField("incomeBracket", e.target.value)}
+            aria-invalid={!!errors.incomeBracket}
+            className={`w-full rounded-md p-2.5 outline-none transition focus:ring-2 ${
+              errors.incomeBracket
+                ? "border border-red-300 focus:border-red-500 focus:ring-red-100"
+                : "border border-gray-300 focus:border-blue-500 focus:ring-blue-100"
+            }`}
           >
             <option value="">Select Income</option>
             {INCOME_BRACKETS.map((i) => (
@@ -71,8 +124,13 @@ export default function TaxForm({ onSubmit, initialData = {}, onClose }) {
           <label className="text-xs font-semibold uppercase tracking-wide text-gray-600">Tax Type</label>
           <select
             value={form.taxType}
-            onChange={(e) => setForm({ ...form, taxType: e.target.value })}
-            className="w-full rounded-md border border-gray-300 p-2.5 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            onChange={(e) => updateField("taxType", e.target.value)}
+            aria-invalid={!!errors.taxType}
+            className={`w-full rounded-md p-2.5 outline-none transition focus:ring-2 ${
+              errors.taxType
+                ? "border border-red-300 focus:border-red-500 focus:ring-red-100"
+                : "border border-gray-300 focus:border-blue-500 focus:ring-blue-100"
+            }`}
           >
             <option value="">Select Tax Type</option>
             {TAX_TYPES.map((option) => (
@@ -90,24 +148,33 @@ export default function TaxForm({ onSubmit, initialData = {}, onClose }) {
             min="0"
             step="0.01"
             placeholder="e.g. 150000"
-            className="w-full rounded-md border border-gray-300 p-2.5 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            aria-invalid={!!errors.amount}
+            className={`w-full rounded-md p-2.5 outline-none transition focus:ring-2 ${
+              errors.amount
+                ? "border border-red-300 focus:border-red-500 focus:ring-red-100"
+                : "border border-gray-300 focus:border-blue-500 focus:ring-blue-100"
+            }`}
             value={form.amount}
-            onChange={(e) => setForm({ ...form, amount: e.target.value })}
+            onChange={(e) => updateField("amount", e.target.value)}
           />
+          {errors.amount && <p className="text-xs text-red-600">{errors.amount}</p>}
         </div>
 
         <YearPicker
           value={form.year}
-          onChange={(value) => setForm({ ...form, year: value })}
+          onChange={(value) => updateField("year", value)}
           placeholder="Enter year"
+          error={submitAttempted ? errors.year : ""}
         />
 
         <div className="space-y-1">
           <label className="text-xs font-semibold uppercase tracking-wide text-gray-600">Region</label>
           <RegionSelect
             value={form.region}
-            onChange={(value) => setForm({ ...form, region: value })}
+            onChange={(value) => updateField("region", value)}
+            invalid={!!errors.region}
           />
+          {errors.region && <p className="text-xs text-red-600">{errors.region}</p>}
         </div>
 
         <div className="md:col-span-2 flex flex-col gap-2 pt-1 sm:flex-row sm:justify-end">
