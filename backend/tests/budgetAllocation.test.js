@@ -98,7 +98,7 @@ describe("Budget Allocation API", () => {
   });
 
   // SUCCESS: CREATE
-  it("should create a budget allocation", async () => {
+  it("should create a budget allocation with populated region", async () => {
     const res = await request(app)
       .post("/api/v1/budget-allocations")
       .set("Authorization", `Bearer ${adminToken}`)
@@ -111,7 +111,18 @@ describe("Budget Allocation API", () => {
       });
 
     expect(res.statusCode).toBe(201);
+    expect(res.body.data).toBeDefined();
+    expect(res.body.data._id).toBeDefined();
     expect(res.body.data.allocatedAmount).toBe(500000);
+    expect(res.body.data.sector).toBe("Education");
+    expect(res.body.data.targetIncomeGroup).toBe("Low");
+    expect(res.body.data.year).toBe(2023);
+
+    // Assert region is populated as object, not just ObjectId
+    expect(res.body.data.region).toBeDefined();
+    expect(typeof res.body.data.region).toBe("object");
+    expect(res.body.data.region._id).toBe(regionId);
+    expect(res.body.data.region.regionName).toBe("Western Province");
 
     allocationId = res.body.data._id;
   });
@@ -146,13 +157,19 @@ describe("Budget Allocation API", () => {
   });
 
   // GET SINGLE
-  it("should get a single budget allocation by ID", async () => {
+  // GET SINGLE
+  it("should get a single budget allocation by ID with populated region", async () => {
     const res = await request(app)
       .get(`/api/v1/budget-allocations/${allocationId}`)
       .set("Authorization", `Bearer ${adminToken}`);
 
     expect(res.statusCode).toBe(200);
     expect(res.body.data._id).toBe(allocationId);
+
+    // Assert region is populated
+    expect(res.body.data.region).toBeDefined();
+    expect(typeof res.body.data.region).toBe("object");
+    expect(res.body.data.region.regionName).toBe("Western Province");
   });
 
   // FAIL: INVALID OBJECT ID
@@ -175,7 +192,7 @@ describe("Budget Allocation API", () => {
   });
 
   // UPDATE (PATCH - partial update)
-  it("should partially update a budget allocation", async () => {
+  it("should partially update a budget allocation with populated region", async () => {
     const res = await request(app)
       .patch(`/api/v1/budget-allocations/${allocationId}`)
       .set("Authorization", `Bearer ${adminToken}`)
@@ -183,6 +200,11 @@ describe("Budget Allocation API", () => {
 
     expect(res.statusCode).toBe(200);
     expect(res.body.data.allocatedAmount).toBe(750000);
+
+    // Assert region remains populated after update
+    expect(res.body.data.region).toBeDefined();
+    expect(typeof res.body.data.region).toBe("object");
+    expect(res.body.data.region.regionName).toBe("Western Province");
   });
 
   // FAIL: PUBLIC USER TRYING TO UPDATE
