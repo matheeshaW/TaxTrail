@@ -157,7 +157,6 @@ describe("Budget Allocation API", () => {
   });
 
   // GET SINGLE
-  // GET SINGLE
   it("should get a single budget allocation by ID with populated region", async () => {
     const res = await request(app)
       .get(`/api/v1/budget-allocations/${allocationId}`)
