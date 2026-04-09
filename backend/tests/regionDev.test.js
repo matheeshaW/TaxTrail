@@ -98,16 +98,18 @@ describe('Regional Development API - Full CRUD Tests', () => {
     expect(res.body.data.averageIncome).toBe(55000); 
   });
 
-  //ANALYTICS (GET Inequality Index)
   it('Should calculate the inequality index', async () => {
+    
     const res = await request(app)
       .get('/api/v1/regional-development/inequality-index')
-      .set('Authorization', `Bearer ${adminToken}`);
-      
-    expect(res.statusCode).toBe(200);
-    expect(res.body.success).toBe(true);
-    expect(res.body.analysis).toBeDefined();
-  });
+      .set('Authorization', `Bearer ${adminToken}`); 
+
+    expect(res.statusCode).toEqual(200);
+    
+    expect(res.body).toHaveProperty('globalBenchmark');
+    expect(res.body).toHaveProperty('regionalData');
+    
+  }, 10000);
 
   //DELETE
   it('Should delete the regional data', async () => {

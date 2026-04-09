@@ -19,7 +19,8 @@ const createAllocation = async (data) => {
       throw error;
     }
   }
-  return await BudgetAllocation.create(data);
+  const allocation = await BudgetAllocation.create(data);
+  return await allocation.populate("region");
 };
 
 // Get all allocations with filtering and pagination
@@ -42,8 +43,10 @@ const getAllAllocations = async (queryParams) => {
 
   const total = await BudgetAllocation.countDocuments(filter);
 
+  //  Sort by updatedAt descending BEFORE pagination
   const allocations = await BudgetAllocation.find(filter)
     .populate("region")
+    .sort({ updatedAt: -1 })
     .skip((page - 1) * limit)
     .limit(Number(limit));
 
@@ -86,7 +89,7 @@ const updateAllocation = async (id, data) => {
   const allocation = await BudgetAllocation.findByIdAndUpdate(id, data, {
     new: true,
     runValidators: true,
-  });
+  }).populate("region");
 
   if (!allocation) {
     const error = new Error("Allocation not found");
@@ -117,15 +120,37 @@ const deleteAllocation = async (id) => {
 };
 
 // Get allocation summary grouped by sector
-const getSummaryBySector = async () => {
-  return await BudgetAllocation.aggregate([
+const getSummaryBySector = async (year) => {
+  const pipeline = [];
+
+  // Add year filter if provided
+  if (year) {
+    pipeline.push({ $match: { year: Number(year) } });
+  }
+
+  // Group by sector with count
+  pipeline.push({
+    $group: {
+      _id: "$sector",
+      totalAllocated: { $sum: "$allocatedAmount" },
+      count: { $sum: 1 },
+    },
+  });
+
+  return await BudgetAllocation.aggregate(pipeline);
+};
+
+// Get available years with data
+const getAvailableYears = async () => {
+  const years = await BudgetAllocation.aggregate([
     {
       $group: {
-        _id: "$sector",
-        totalAllocated: { $sum: "$allocatedAmount" },
+        _id: "$year",
       },
     },
+    { $sort: { _id: -1 } },
   ]);
+  return years.map((y) => y._id);
 };
 
 // Get inflation-adjusted allocations for a given year
@@ -179,7 +204,7 @@ const getAdjustedAllocations = async (year) => {
     }
 
     const errorMessageTimeout =
-      "World Bank API request timed out while retrieving inflation data";
+      "World Bank API request timed out while retrieving inflation data. Please try again later.";
     const errorMessageGeneric =
       "Failed to fetch inflation data from World Bank API";
 
@@ -218,4 +243,5 @@ module.exports = {
   deleteAllocation,
   getSummaryBySector,
   getAdjustedAllocations,
+  getAvailableYears,
 };
