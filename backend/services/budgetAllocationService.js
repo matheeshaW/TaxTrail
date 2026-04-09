@@ -86,7 +86,7 @@ const updateAllocation = async (id, data) => {
   const allocation = await BudgetAllocation.findByIdAndUpdate(id, data, {
     new: true,
     runValidators: true,
-  });
+  }).populate("region");
 
   if (!allocation) {
     const error = new Error("Allocation not found");
