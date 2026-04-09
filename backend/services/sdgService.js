@@ -8,7 +8,7 @@ exports.getGlobalInequalityData = async () => {
   try {
     console.log("Fetching live data from World Bank API...");
     
-    
+    // Using a 5-second timeout 
     const response = await axios.get(WB_API_URL, { timeout: 5000 });
 
     // Extract the latest actual value from the World Bank's array format
@@ -25,7 +25,13 @@ exports.getGlobalInequalityData = async () => {
     };
 
   } catch (error) {
-    console.log("API request failed. Switching to Fallback Data.");
+
+    console.error("World Bank API Error Details:", error.message);
+    if (error.response) {
+       console.error(" Status Code:", error.response.status);
+    }
+    
+    console.log("⚠️ API request failed. Switching to Fallback Data.");
     
     return {
       source: "World Bank API (Offline Mode)",
