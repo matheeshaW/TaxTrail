@@ -99,11 +99,27 @@ exports.deleteAllocation = async (req, res, next) => {
 // @access Public
 exports.getSummaryBySector = async (req, res, next) => {
   try {
-    const summary = await budgetAllocationService.getSummaryBySector();
+    const { year } = req.query;
+    const summary = await budgetAllocationService.getSummaryBySector(year);
 
     res.status(200).json({
       success: true,
       data: summary,
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+// @desc  Get available years
+// @route  GET /api/v1/budget-allocations/summary/available-years
+// @access Public
+exports.getAvailableYears = async (req, res, next) => {
+  try {
+    const years = await budgetAllocationService.getAvailableYears();
+    res.status(200).json({
+      success: true,
+      data: years,
     });
   } catch (error) {
     return next(error);

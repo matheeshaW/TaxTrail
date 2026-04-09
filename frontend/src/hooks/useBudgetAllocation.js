@@ -34,6 +34,10 @@ export const useBudgetAllocation = () => {
   const [adjustedData, setAdjustedData] = useState([]);
   const [adjustedLoading, setAdjustedLoading] = useState(false);
 
+  // available years and selected year for summary
+  const [availableYears, setAvailableYears] = useState([]);
+  const [selectedYear, setSelectedYear] = useState(null);
+
   // fetch all allocations based on current filters & pagination
   const fetchAll = useCallback(async () => {
     setLoading(true);
@@ -143,6 +147,36 @@ export const useBudgetAllocation = () => {
     }
   }, []);
 
+  // fetch available years
+  const fetchAvailableYears = useCallback(async () => {
+    try {
+      const years = await budgetAllocationService.getAvailableYears();
+      setAvailableYears(years.sort((a, b) => b - a)); // newest first
+
+      // Set default to first year with data
+      if (years.length > 0 && !selectedYear) {
+        setSelectedYear(years[0]);
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to load years");
+    }
+  }, [selectedYear]);
+
+  // fetch summary with year filter
+  const fetchSummaryWithYear = useCallback(async (year) => {
+    setSummaryLoading(true);
+    try {
+      const result = year
+        ? await budgetAllocationService.getSummaryByYear(year)
+        : await budgetAllocationService.getSummary();
+      setSummary(result);
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to load summary");
+    } finally {
+      setSummaryLoading(false);
+    }
+  }, []);
+
   // fetch inflation-adjusted data
   const fetchAdjusted = useCallback(async (year) => {
     setAdjustedLoading(true);
@@ -199,8 +233,13 @@ export const useBudgetAllocation = () => {
     create,
     update,
     remove,
-    fetchSummary,
+    fetchSummary: fetchSummaryWithYear,
     fetchAdjusted,
+
+    availableYears,
+    selectedYear,
+    setSelectedYear,
+    fetchAvailableYears,
   };
 };
 

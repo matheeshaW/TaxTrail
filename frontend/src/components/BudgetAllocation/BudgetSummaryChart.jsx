@@ -18,10 +18,21 @@ import LoadingSpinner from "../Common/LoadingSpinner";
 const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444"];
 
 // chart showing budget allocation summary by sector
-export default function BudgetSummaryChart({ data = [], loading = false }) {
-  const [chartType, setChartType] = useState("bar");
+export default function BudgetSummaryChart({
+  data = [],
+  loading = false,
+  availableYears = [],
+  selectedYear = null,
+  onYearChange = () => {},
+}) {
+  const [chartType, setChartType] = useState("pie");
 
   if (loading) return <LoadingSpinner />;
+
+  // Handle year change
+  const handleYearChange = (newYear) => {
+    onYearChange(newYear);
+  };
 
   if (!data || data.length === 0) {
     return (
@@ -46,11 +57,31 @@ export default function BudgetSummaryChart({ data = [], loading = false }) {
 
   return (
     <div className="bg-white rounded-lg shadow p-6">
-      {/* Header & Toggle */}
-      <div className="flex justify-between items-center mb-6">
+      {/* Header & Controls */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
         <h3 className="text-lg font-semibold text-gray-900">
           Budget by Sector
         </h3>
+
+        {/* Year Filter */}
+        {availableYears.length > 0 && (
+          <div className="flex items-center gap-2">
+            <label className="text-sm font-medium text-gray-700">Year:</label>
+            <select
+              value={selectedYear || ""}
+              onChange={(e) => handleYearChange(Number(e.target.value))}
+              className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {availableYears.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        {/* Chart Type Toggle - RIGHT */}
         <div className="flex gap-2">
           <button
             onClick={() => setChartType("bar")}

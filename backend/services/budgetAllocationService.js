@@ -117,15 +117,37 @@ const deleteAllocation = async (id) => {
 };
 
 // Get allocation summary grouped by sector
-const getSummaryBySector = async () => {
-  return await BudgetAllocation.aggregate([
+const getSummaryBySector = async (year) => {
+  const pipeline = [];
+
+  // Add year filter if provided
+  if (year) {
+    pipeline.push({ $match: { year: Number(year) } });
+  }
+
+  // Group by sector with count
+  pipeline.push({
+    $group: {
+      _id: "$sector",
+      totalAllocated: { $sum: "$allocatedAmount" },
+      count: { $sum: 1 },
+    },
+  });
+
+  return await BudgetAllocation.aggregate(pipeline);
+};
+
+// Get available years with data
+const getAvailableYears = async () => {
+  const years = await BudgetAllocation.aggregate([
     {
       $group: {
-        _id: "$sector",
-        totalAllocated: { $sum: "$allocatedAmount" },
+        _id: "$year",
       },
     },
+    { $sort: { _id: -1 } },
   ]);
+  return years.map((y) => y._id);
 };
 
 // Get inflation-adjusted allocations for a given year
@@ -218,4 +240,5 @@ module.exports = {
   deleteAllocation,
   getSummaryBySector,
   getAdjustedAllocations,
+  getAvailableYears,
 };

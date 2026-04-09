@@ -37,6 +37,10 @@ export default function BudgetAllocationPage() {
     update,
     remove,
     setCurrentPage,
+    availableYears,
+    selectedYear,
+    setSelectedYear,
+    fetchAvailableYears,
   } = useBudgetAllocation();
 
   // UI state
@@ -55,9 +59,16 @@ export default function BudgetAllocationPage() {
   // fetch summary when view changes
   useEffect(() => {
     if (view === "summary") {
-      fetchSummary();
+      fetchAvailableYears();
     }
-  }, [view, fetchSummary]);
+  }, [view, fetchAvailableYears]);
+
+  // fetch summary when year changes
+  useEffect(() => {
+    if (view === "summary" && selectedYear) {
+      fetchSummary(selectedYear);
+    }
+  }, [view, selectedYear, fetchSummary]);
 
   // handle create
   const handleCreate = () => {
@@ -217,7 +228,13 @@ export default function BudgetAllocationPage() {
         )}
 
         {view === "summary" && (
-          <BudgetSummaryChart data={summary} loading={summaryLoading} />
+          <BudgetSummaryChart
+            data={summary}
+            loading={summaryLoading}
+            availableYears={availableYears}
+            selectedYear={selectedYear}
+            onYearChange={setSelectedYear}
+          />
         )}
 
         {view === "adjusted" && (
