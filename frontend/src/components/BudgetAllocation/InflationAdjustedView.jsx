@@ -53,21 +53,21 @@ export default function InflationAdjustedView({
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-100 border-b">
+            <thead className="bg-gray-100 border-b sticky top-0">
               <tr>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 w-1/6">
                   Sector
                 </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700 w-1/4">
                   Original Amount
                 </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                <th className="px-6 py-3 text-center text-sm font-semibold text-gray-700 w-1/6">
                   Inflation Rate
                 </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700 w-1/4">
                   Adjusted Amount
                 </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700 w-1/4">
                   Difference
                 </th>
               </tr>
@@ -82,22 +82,22 @@ export default function InflationAdjustedView({
                     key={item._id || item.id}
                     className="hover:bg-gray-50 transition"
                   >
-                    <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                    <td className="px-6 py-4 text-sm font-medium text-gray-900 w-1/6 break-words">
                       {item.sector}
                     </td>
-                    <td className="px-6 py-4 text-sm text-right text-gray-700">
+                    <td className="px-6 py-4 text-sm text-right text-gray-700 w-1/4">
                       {formatCurrency(item.allocatedAmount)}
                     </td>
-                    <td className="px-6 py-4 text-sm text-right">
-                      <span className="inline-flex px-2 py-1 bg-orange-100 text-orange-800 text-xs font-semibold">
+                    <td className="px-6 py-4 text-sm text-center w-1/6">
+                      <span className="inline-block px-2 py-1 bg-orange-100 text-orange-800 text-xs font-semibold rounded">
                         {formatWholePercent(item.inflationRate)}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-right font-semibold text-green-600">
+                    <td className="px-6 py-4 text-sm text-right font-semibold text-green-600 w-1/4">
                       {formatCurrency(item.adjustedAmount)}
                     </td>
                     <td
-                      className={`px-6 py-4 text-sm text-right font-semibold ${
+                      className={`px-6 py-4 text-sm text-right font-semibold w-1/4 ${
                         isPositive ? "text-green-600" : "text-red-600"
                       }`}
                     >

@@ -1,3 +1,4 @@
+import { useAuth } from "../../hooks/useAuth";
 import { formatCurrency, formatDate } from "../../utils/formatters";
 import LoadingSpinner from "../Common/LoadingSpinner";
 
@@ -9,6 +10,9 @@ export default function BudgetDetails({
   onClose,
   onEdit,
 }) {
+  const { user } = useAuth();
+  const isAdmin = user?.role === "Admin";
+
   if (!isOpen) return null;
 
   if (loading || !record) {
@@ -99,7 +103,7 @@ export default function BudgetDetails({
 
         {/* Footer */}
         <div className="px-6 py-4 border-t border-gray-200 flex justify-end gap-2">
-          {onEdit && (
+          {isAdmin && (
             <button
               onClick={() => onEdit(record)}
               className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition"
