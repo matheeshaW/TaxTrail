@@ -136,6 +136,7 @@ export default function TaxForm({ onSubmit, initialData = {}, onClose }) {
             value={form.taxType}
             onChange={(e) => updateField("taxType", e.target.value)}
             aria-invalid={!!errors.taxType}
+            aria-describedby={errors.taxType ? "tax-type-error" : undefined}
             className={`w-full rounded-md p-2.5 outline-none transition focus:ring-2 ${
               errors.taxType
                 ? "border border-red-300 focus:border-red-500 focus:ring-red-100"
@@ -149,6 +150,11 @@ export default function TaxForm({ onSubmit, initialData = {}, onClose }) {
               </option>
             ))}
           </select>
+          {errors.taxType && (
+            <p id="tax-type-error" className="text-xs text-red-600">
+              {errors.taxType}
+            </p>
+          )}
         </div>
 
         <div className="space-y-1">
