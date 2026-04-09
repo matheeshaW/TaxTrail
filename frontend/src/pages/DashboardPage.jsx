@@ -124,7 +124,7 @@ export default function DashboardPage() {
                 </div>
                 <p className="mt-2 text-sm text-white/90">{card.description}</p>
               </div>
-            ),
+            )
           )}
         </div>
       </section>

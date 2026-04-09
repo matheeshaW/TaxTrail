@@ -69,7 +69,11 @@ export default function TaxForm({ onSubmit, initialData = {}, onClose }) {
       return;
     }
 
-    onSubmit(form);
+    onSubmit({
+      ...form,
+      amount: Number.parseFloat(form.amount),
+      year: Number.parseInt(form.year, 10),
+    });
   };
 
   return (
@@ -105,6 +109,7 @@ export default function TaxForm({ onSubmit, initialData = {}, onClose }) {
             value={form.incomeBracket}
             onChange={(e) => updateField("incomeBracket", e.target.value)}
             aria-invalid={!!errors.incomeBracket}
+            aria-describedby={errors.incomeBracket ? "income-bracket-error" : undefined}
             className={`w-full rounded-md p-2.5 outline-none transition focus:ring-2 ${
               errors.incomeBracket
                 ? "border border-red-300 focus:border-red-500 focus:ring-red-100"
@@ -118,6 +123,11 @@ export default function TaxForm({ onSubmit, initialData = {}, onClose }) {
               </option>
             ))}
           </select>
+          {errors.incomeBracket && (
+            <p id="income-bracket-error" className="text-xs text-red-600">
+              {errors.incomeBracket}
+            </p>
+          )}
         </div>
 
         <div className="space-y-1">
