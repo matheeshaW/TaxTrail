@@ -10,6 +10,7 @@ export default function RegionSelect({
   onChange,
   disabled = false,
   placeholder = "Select a region...",
+  invalid = false,
 }) {
   const [regions, setRegions] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -43,7 +44,7 @@ export default function RegionSelect({
     return (
       <select
         disabled
-        className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-500"
+        className="w-full rounded-md border border-gray-300 bg-gray-100 px-3 py-2 text-gray-500"
       >
         <option>Loading regions...</option>
       </select>
@@ -63,10 +64,13 @@ export default function RegionSelect({
       value={value}
       onChange={handleChange}
       disabled={disabled}
-      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-blue-500 ${
+      aria-invalid={invalid}
+      className={`w-full rounded-md px-3 py-2 outline-none focus:ring-2 ${
         disabled
-          ? "bg-gray-100 text-gray-500 cursor-not-allowed"
-          : "border-gray-300 bg-white text-gray-900"
+          ? "border-gray-300 bg-gray-100 text-gray-500 cursor-not-allowed"
+          : invalid
+          ? "border-red-300 bg-white text-gray-900 focus:border-red-500 focus:ring-red-100"
+          : "border-gray-300 bg-white text-gray-900 focus:border-blue-500 focus:ring-blue-100"
       }`}
     >
       <option value="">{placeholder}</option>

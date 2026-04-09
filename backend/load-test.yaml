@@ -1,0 +1,104 @@
+config:
+  target: "http://localhost:4000"
+  http:
+    timeout: 30
+  variables:
+    adminEmail: "admin@gmail.com"
+    adminPassword: "12345678"
+    testYear: "2024"
+  phases:
+    - duration: 20
+      arrivalRate: 5
+      name: "Warm up"
+    - duration: 30
+      arrivalRate: 20
+      name: "Moderate load"
+    - duration: 20
+      arrivalRate: 50
+      name: "Sustained high load"
+    - duration: 15
+      arrivalRate: 80
+      name: "Stress spike"
+scenarios:
+  - name: "Read-heavy mixed traffic"
+    weight: 60
+    flow:
+      - post:
+          url: "/api/auth/login"
+          json:
+            email: "{{ adminEmail }}"
+            password: "{{ adminPassword }}"
+          capture:
+            - json: "$.token"
+              as: "token"
+
+      - get:
+          url: "/api/v1/regions"
+          headers:
+            Authorization: "Bearer {{ token }}"
+
+      - get:
+          url: "/api/v1/tax-contributions?page=1&limit=10"
+          headers:
+            Authorization: "Bearer {{ token }}"
+
+      - get:
+          url: "/api/v1/tax-contributions/summary/region"
+          headers:
+            Authorization: "Bearer {{ token }}"
+
+      - get:
+          url: "/api/v1/budget-allocations?page=1&limit=10"
+          headers:
+            Authorization: "Bearer {{ token }}"
+
+      - get:
+          url: "/api/v1/budget-allocations/summary/by-sector"
+          headers:
+            Authorization: "Bearer {{ token }}"
+
+      - get:
+          url: "/api/socialprograms"
+          headers:
+            Authorization: "Bearer {{ token }}"
+
+      - get:
+          url: "/api/v1/regional-development"
+          headers:
+            Authorization: "Bearer {{ token }}"
+
+      - think: 1
+
+  - name: "Analytics-heavy endpoints"
+    weight: 40
+    flow:
+      - post:
+          url: "/api/auth/login"
+          json:
+            email: "{{ adminEmail }}"
+            password: "{{ adminPassword }}"
+          capture:
+            - json: "$.token"
+              as: "token"
+
+      - get:
+          url: "/api/v1/tax-contributions/summary/region"
+          headers:
+            Authorization: "Bearer {{ token }}"
+
+      - get:
+          url: "/api/v1/budget-allocations/adjusted/{{ testYear }}"
+          headers:
+            Authorization: "Bearer {{ token }}"
+
+      - get:
+          url: "/api/socialprograms/inequality-analysis/LKA"
+          headers:
+            Authorization: "Bearer {{ token }}"
+
+      - get:
+          url: "/api/v1/regional-development/inequality-index"
+          headers:
+            Authorization: "Bearer {{ token }}"
+
+      - think: 1
