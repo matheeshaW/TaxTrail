@@ -200,8 +200,8 @@ export default function BudgetAllocationPage() {
         {view === "table" && (
           <>
             {/* Filters & Create button */}
-            <div className="mb-6 flex justify-between items-end gap-4">
-              <div className="flex-1">
+            <div className="mb-6 flex flex-col gap-4">
+              <div>
                 <BudgetFilters
                   filters={filters}
                   onFilterChange={updateFilters}
@@ -211,7 +211,7 @@ export default function BudgetAllocationPage() {
               {isAdmin && (
                 <button
                   onClick={handleCreate}
-                  className="px-4 py-2 h-fit bg-green-600 hover:bg-green-700 text-white rounded-md font-medium transition"
+                  className="px-4 py-2 w-fit bg-green-600 hover:bg-green-700 text-white rounded-md font-medium transition"
                 >
                   + New Allocation
                 </button>

@@ -84,16 +84,6 @@ export default function BudgetSummaryChart({
         {/* Chart Type Toggle - RIGHT */}
         <div className="flex gap-2">
           <button
-            onClick={() => setChartType("bar")}
-            className={`px-3 py-1 rounded-md text-sm font-medium transition ${
-              chartType === "bar"
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 text-gray-800 hover:bg-gray-300"
-            }`}
-          >
-            Bar
-          </button>
-          <button
             onClick={() => setChartType("pie")}
             className={`px-3 py-1 rounded-md text-sm font-medium transition ${
               chartType === "pie"
@@ -102,6 +92,16 @@ export default function BudgetSummaryChart({
             }`}
           >
             Pie
+          </button>
+          <button
+            onClick={() => setChartType("bar")}
+            className={`px-3 py-1 rounded-md text-sm font-medium transition ${
+              chartType === "bar"
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+            }`}
+          >
+            Bar
           </button>
         </div>
       </div>
