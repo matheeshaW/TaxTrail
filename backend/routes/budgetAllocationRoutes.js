@@ -12,6 +12,7 @@ const {
   updateAllocation,
   deleteAllocation,
   getSummaryBySector,
+  getAvailableYears,
   getAdjustedAllocations,
 } = require("../controllers/budgetAllocationController");
 
@@ -25,6 +26,14 @@ router.get(
   protect,
   authorize("Admin", "Public"),
   getSummaryBySector,
+);
+
+// GET available years with data
+router.get(
+  "/summary/available-years",
+  protect,
+  authorize("Admin", "Public"),
+  getAvailableYears,
 );
 
 router

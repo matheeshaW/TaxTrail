@@ -68,6 +68,29 @@ export const getSummary = async () => {
 };
 
 /**
+ * Get budget summary for a specific year
+ * @param {number} year
+ * @returns {Promise<Array>}
+ */
+export const getSummaryByYear = async (year) => {
+  const response = await API.get("/v1/budget-allocations/summary/by-sector", {
+    params: { year },
+  });
+  return Array.isArray(response.data) ? response.data : response.data.data;
+};
+
+/**
+ * Get available years with budget allocations
+ * @returns {Promise<Array>}
+ */
+export const getAvailableYears = async () => {
+  const response = await API.get(
+    "/v1/budget-allocations/summary/available-years",
+  );
+  return response.data.data || [];
+};
+
+/**
  * Get inflation-adjusted allocations for a year
  * @param {number} year
  * @returns {Promise<Array>}
@@ -84,5 +107,7 @@ export default {
   update,
   remove,
   getSummary,
+  getSummaryByYear,
+  getAvailableYears,
   getAdjusted,
 };
