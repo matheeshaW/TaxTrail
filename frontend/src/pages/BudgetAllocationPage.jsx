@@ -70,6 +70,11 @@ export default function BudgetAllocationPage() {
     }
   }, [view, selectedYear, fetchSummary]);
 
+  // clear error when switching views
+  useEffect(() => {
+    clearError();
+  }, [view, clearError]);
+
   // handle create
   const handleCreate = () => {
     setFormMode("create");

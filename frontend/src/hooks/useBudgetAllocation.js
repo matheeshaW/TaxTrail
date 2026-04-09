@@ -180,11 +180,14 @@ export const useBudgetAllocation = () => {
   // fetch inflation-adjusted data
   const fetchAdjusted = useCallback(async (year) => {
     setAdjustedLoading(true);
+    setError(null);
     try {
       const result = await budgetAllocationService.getAdjusted(year);
       setAdjustedData(result);
+      setError(null);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to load adjusted data");
+      setAdjustedData([]);
     } finally {
       setAdjustedLoading(false);
     }
