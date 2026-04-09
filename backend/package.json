@@ -10,7 +10,7 @@
     "dev": "nodemon server.js",
     "env:gen": "cp .env .env.example",
     "env:init": "cp .env.example .env",
-    "test:performance": "npx artillery run performance_test/load-test.yaml"
+    "test:perf:regiondev": "npx artillery run performance_test/load-test-regiondev.yaml"
   },
   "keywords": [],
   "author": "",
