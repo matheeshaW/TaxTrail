@@ -1350,4 +1350,67 @@ If the collection contains example IDs (e.g., `699...`) from another database, r
 2. The environment `token` will be overwritten with the Public user token.
 3. Re-run GET endpoints (should succeed) and try an Admin-only endpoint (should return `403 Forbidden`).
 
+---
+
+## Performance Testing (Artillery)
+
+The repository includes an Artillery config file at:
+
+```
+backend/load-test.yaml
+```
+
+This load test now covers mixed traffic for all major components:
+
+- Tax Contributions (list + summary)
+- Budget Allocations (list + summary + inflation-adjusted)
+- Social Programs (list + inequality analysis)
+- Regional Development (list + inequality index)
+- Regions core endpoint
+
+It runs in multiple phases (warm-up, moderate, sustained, stress spike) to evaluate performance under different loads.
+
+### Prerequisites
+
+1. Start backend server:
+
+```bash
+cd backend
+npm run dev
+```
+
+2. Ensure an Admin user exists (default values used by the load test):
+
+```json
+{
+  "email": "admin@email.com",
+  "password": "123456"
+}
+```
+
+If your credentials are different, override variables when running Artillery.
+
+### Run the load test
+
+From `backend` directory:
+
+```bash
+npx artillery run load-test.yaml
+```
+
+### Run with custom login variables
+
+```bash
+npx artillery run load-test.yaml --variables '{"adminEmail":"your_admin_email","adminPassword":"your_admin_password","testYear":"2024"}'
+```
+
+### Save JSON result + generate HTML report
+
+```bash
+npx artillery run load-test.yaml --output load-test-result.json
+npx artillery report load-test-result.json
+```
+
+This generates an HTML report file you can open in a browser for latency/throughput/error metrics.
+
 
