@@ -37,22 +37,55 @@ export default function DashboardPage() {
 
   return (
     <div className="mx-auto w-full max-w-7xl space-y-6">
-      <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-        <h1 className="text-2xl font-bold text-gray-900">
-          Welcome{user?.name ? `, ${user.name}` : ""}
-        </h1>
-        <p className="mt-2 text-gray-600">
-          Public Budget Transparency Dashboard
-        </p>
-        <div className="mt-4 flex flex-wrap items-center gap-2 text-xs">
-          <span className="rounded-full bg-blue-50 px-3 py-1 font-medium text-blue-700">
-            Role: {user?.role || "Not available"}
-          </span>
-          <span className="rounded-full bg-gray-100 px-3 py-1 font-medium text-gray-700">
-            Email: {user?.email || "Not available"}
-          </span>
+      <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+          <div className="max-w-2xl">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.35em] text-sky-600">
+              TaxTrail Overview
+            </p>
+            <h1 className="text-2xl font-bold text-gray-900 md:text-3xl">
+              Welcome{user?.name ? `, ${user.name}` : ""}
+            </h1>
+            <p className="mt-3 text-gray-600">
+              TaxTrail helps you explore how public money moves across tax collections,
+              spending priorities, welfare programs, and regional development. Use this
+              dashboard to move between modules, compare trends, and understand where the
+              data is telling a story.
+            </p>
+
+            <div className="mt-5 flex flex-wrap items-center gap-2 text-xs">
+              <span className="rounded-full bg-blue-50 px-3 py-1 font-medium text-blue-700">
+                Role: {user?.role || "Not available"}
+              </span>
+              <span className="rounded-full bg-gray-100 px-3 py-1 font-medium text-gray-700">
+                Email: {user?.email || "Not available"}
+              </span>
+              <span className="rounded-full bg-sky-50 px-3 py-1 font-medium text-sky-700">
+                Built for transparency and SDG 10 analysis
+              </span>
+            </div>
+          </div>
+
+          <div className="grid w-full gap-3 sm:grid-cols-2 lg:max-w-md lg:grid-cols-1">
+            <div className="rounded-xl bg-slate-50 p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                Start here
+              </p>
+              <p className="mt-1 text-sm text-slate-700">
+                Open Tax Contributions to review revenue, filters, and summary charts.
+              </p>
+            </div>
+            <div className="rounded-xl bg-slate-50 p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                For analysis
+              </p>
+              <p className="mt-1 text-sm text-slate-700">
+                Compare Budget, Programs, and Regional Development to understand public impact.
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
         {cards.map((card) =>
@@ -84,6 +117,35 @@ export default function DashboardPage() {
           ),
         )}
       </div>
+
+      <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+        <div className="max-w-3xl">
+          <h2 className="text-lg font-semibold text-gray-900">How to use TaxTrail</h2>
+          <p className="mt-2 text-sm leading-6 text-gray-600">
+            This dashboard is designed to guide you through public finance data in a simple flow.
+            Start with a module card above, then use filters, summaries, and record views to drill down.
+            If you are looking for revenue information, begin with Tax Contributions. If you want to
+            understand spending priorities, switch to Budget Allocations. Social Programs and Regional
+            Development show how public support and regional progress are distributed.
+          </p>
+        </div>
+
+        <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="rounded-xl bg-gray-50 p-4">
+            <p className="text-sm font-semibold text-gray-900">1. Choose a module</p>
+            <p className="mt-1 text-sm text-gray-600">Open the area you want to inspect from the module cards.</p>
+          </div>
+          <div className="rounded-xl bg-gray-50 p-4">
+            <p className="text-sm font-semibold text-gray-900">2. Filter and compare</p>
+            <p className="mt-1 text-sm text-gray-600">Use filters, pagination, and charts to narrow the data.</p>
+          </div>
+          <div className="rounded-xl bg-gray-50 p-4">
+            <p className="text-sm font-semibold text-gray-900">3. Review insights</p>
+            <p className="mt-1 text-sm text-gray-600">Use summary views to spot trends and regional disparities.
+            </p>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
