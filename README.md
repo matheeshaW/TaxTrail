@@ -2,7 +2,7 @@
 
 **TaxTrail** is a web-based platform designed to improve transparency in public budgets and government spending. Its main goal is to promote accountability, reduce inequality, and help citizens better understand how public money is collected and used.
 
-The system brings together key data from different government areas such as tax revenue, budget allocations, social programs, and regional development—into a single, easy-to-use dashboard. It is aligned with Sustainable Development Goal 10: Reduced Inequalities.
+The system brings together key data from different government areas such as tax revenue, budget allocations, social programs, and regional development into a single, easy-to-use dashboard. It is aligned with Sustainable Development Goal 10: Reduced Inequalities.
 
 In many developing countries, limited visibility into public spending can increase inequality and reduce trust in institutions.
 TaxTrail helps address this issue by providing:
@@ -126,7 +126,9 @@ Frontend Component Structure
 Pages → Components → Hooks → Context/Services → API Client
 ```
 
-### Key features
+---
+
+## Key features
 
 - RESTful API design
 - Role-based authentication (JWT)
@@ -148,7 +150,7 @@ Pages → Components → Hooks → Context/Services → API Client
 
 ---
 
-### TaxTrail's Contribution for SGD 10
+## TaxTrail's Contribution for SGD 10
 
 Each component aligns to SDG targets:
 
