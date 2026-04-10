@@ -1,6 +1,18 @@
-﻿# TaxTrail (Backend) - 80% completed
+﻿# TaxTrail – A Public Budget Transparency and Analytics Platform
 
-TaxTrail is a web-based public budget transparency system aligned with **SDG 10 – Reduced Inequalities**.
+**TaxTrail** is a web-based platform designed to improve transparency in public budgets and government spending. Its main goal is to promote accountability, reduce inequality, and help citizens better understand how public money is collected and used.
+
+The system brings together key data from different government areas such as tax revenue, budget allocations, social programs, and regional development—into a single, easy-to-use dashboard. It is aligned with Sustainable Development Goal 10: Reduced Inequalities.
+
+In many developing countries, limited visibility into public spending can increase inequality and reduce trust in institutions.
+TaxTrail helps address this issue by providing:
+
+-- Tax insights – Shows how taxes are collected across different income groups and regions
+-- Budget tracking – Displays how government funds are allocated across sectors
+-- Social program analysis – Measures how effectively public programs reach people and use their budgets
+-- Regional comparisons – Highlights differences in development and funding between provinces
+
+The platform is designed for government agencies, researchers, NGOs, and the general public. By making financial data more accessible and understandable, TaxTrail supports better decision-making and encourages more inclusive and balanced development.
 
 ---
 
@@ -10,8 +22,11 @@ TaxTrail is a web-based public budget transparency system aligned with **SDG 10 
 
 - Node.js + npm installed
 - A MongoDB connection string (e.g., MongoDB Atlas)
+- Git (for cloning the repository)
 
 ### Install
+
+1. **Backend Installation**
 
 From the repository root:
 
@@ -20,7 +35,18 @@ cd backend
 npm install
 ```
 
+2. **Frontend Installation**
+
+From the repository root:
+
+```bash
+cd frontend
+npm install
+```
+
 ### Environment variables
+
+**Backend Setup**
 
 Create the `.env` file (Linux):
 
@@ -39,8 +65,17 @@ PORT=4000
 
 ### Run (dev)
 
+**Terminal 1 — Start Backend**
+
 ```bash
 cd backend
+npm run dev
+```
+
+**Terminal 2 — Start Frontend**
+
+```bash
+cd frontend
 npm run dev
 ```
 
@@ -48,14 +83,32 @@ npm run dev
 
 ## Tech stack
 
+### Backend
+
 - Node.js
 - Express.js
 - MongoDB Atlas
-- Mongoose
+- Mongoose ODM
 - JWT Authentication
 - express-validator
-- Axios (Exchange API)
-- Postman (API testing)
+- Axios (Third-party APIs)
+
+### Frontend
+
+- React 19
+- React Router DOM (Navigation)
+- Vite (Build tool)
+- Tailwind CSS (Styling)
+- Recharts (Data visualization)
+- Axios (API client)
+
+### Testing & Deployment
+
+- Jest (Backend testing)
+- Supertest (API integration tests)
+- mongodb-memory-server (Test isolation)
+- Artillery.io (Load testing)
+- Postman (API documentation & testing)
 
 ---
 
@@ -65,6 +118,12 @@ The backend follows a layered architecture:
 
 ```
 Routes → Controllers → Services → Models
+```
+
+Frontend Component Structure
+
+```
+Pages → Components → Hooks → Context/Services → API Client
 ```
 
 ### Key features
@@ -79,6 +138,26 @@ Routes → Controllers → Services → Models
 - Third-party API integration
 - Pagination
 - In-memory caching for exchange rates
+- Multi-Entity Revenue & Expenditure Tracking
+- Real-Time Inequality Analytics
+- Inflation-Adjusted Budget Analysis
+- Role-Based Access Control (RBAC)
+- Multi-Layer Request Validation
+- High-Performance Aggregation
+- Comprehensive API Documentation
+
+---
+
+### TaxTrail's Contribution for SGD 10
+
+Each component aligns to SDG targets:
+
+| Component           | SDG Target               | How It Contributes                                                                                   |
+| ------------------- | ------------------------ | ---------------------------------------------------------------------------------------------------- |
+| TaxContribution     | 10.1 – Income growth     | Reveals progressive tax collection across brackets, identifies revenue concentration                 |
+| BudgetAllocation    | 10.3 – Equal opportunity | Tracks spending by income group, surface allocation imbalances                                       |
+| SocialPrograms      | 10.2 – Social inclusion  | Measures beneficiary reach, evaluates program effectiveness for vulnerable groups                    |
+| RegionalDevelopment | 10.7 – Managed migration | Monitors regional disparities (income, employment, poverty), guides equitable development investment |
 
 ---
 
@@ -641,7 +720,7 @@ Example
 
 ### Update Budget Allocation (Admin only)
 
-- **PUT** `/api/v1/budget-allocations/:id`
+- **PATCH** `/api/v1/budget-allocations/:id`
 
 ---
 
@@ -676,6 +755,23 @@ Example response
 - **GET** `/api/v1/budget-allocations/adjusted/:year`
 
 Returns allocation values adjusted based on annual inflation rate retrieved from a third-party API.
+
+---
+
+### Available Years
+
+- **GET** `/api/v1/budget-allocations/summary/available-years`
+
+Returns a list of all years that have budget allocation data.
+
+Example response:
+
+```json
+{
+  "success": true,
+  "data": [2024, 2023, 2022]
+}
+```
 
 ---
 
@@ -762,15 +858,16 @@ Optimization strategy
 
 ## Role Access Rules
 
-| Endpoint   | Public | Admin |
-| ---------- | ------ | ----- |
-| GET all    | ✅     | ✅    |
-| GET single | ✅     | ✅    |
-| POST       | ❌     | ✅    |
-| PUT        | ❌     | ✅    |
-| DELETE     | ❌     | ✅    |
-| Summary    | ✅     | ✅    |
-| Adjusted   | ✅     | ✅    |
+| Endpoint          | Public | Admin |
+| ----------------- | ------ | ----- |
+| GET all           | Yes    | Yes   |
+| GET single        | Yes    | Yes   |
+| POST              | No     | Yes   |
+| PATCH             | No     | Yes   |
+| DELETE            | No     | Yes   |
+| Summary by sector | Yes    | Yes   |
+| Available years   | Yes    | Yes   |
+| Adjusted          | Yes    | Yes   |
 
 ---
 
