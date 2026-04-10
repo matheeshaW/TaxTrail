@@ -130,7 +130,7 @@ export default function SocialProgramPage() {
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-gray-900">Social programs</h1>
           <p className="mt-2 text-gray-600">
-            Welfare programs, beneficiaries, and inequality context (SDG 10)
+            Welfare programs, beneficiaries, and inequality context 
           </p>
         </div>
 
