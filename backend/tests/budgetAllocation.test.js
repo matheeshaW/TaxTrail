@@ -1,6 +1,7 @@
 const request = require("supertest");
 const mongoose = require("mongoose");
 const { MongoMemoryServer } = require("mongodb-memory-server");
+jest.mock("axios");
 
 const app = require("../server");
 
@@ -236,6 +237,34 @@ describe("Budget Allocation API", () => {
     expect(res.statusCode).toBe(200);
   });
 
+  // Mock axios before testing adjusted allocations
+  beforeEach(() => {
+    require("axios").get.mockClear();
+  });
+
+  // ADJUSTED ALLOCATIONS BY YEAR - ADMIN
+  it("should get inflation-adjusted allocations by year", async () => {
+    // Mock the World Bank API response
+    const mockAxios = require("axios");
+    mockAxios.get.mockResolvedValue({
+      data: [
+        { id: "FP.CPI.TOTL.ZG" },
+        [
+          { date: "2023", value: 5.5 }, // 5.5% inflation
+          { date: "2022", value: 4.2 },
+        ],
+      ],
+    });
+
+    const res = await request(app)
+      .get("/api/v1/budget-allocations/adjusted/2023")
+      .set("Authorization", `Bearer ${adminToken}`);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.data).toBeDefined();
+    expect(res.body.inflationRate).toBe(5.5);
+  });
+
   // ADJUSTED ALLOCATIONS BY YEAR - ADMIN
   it("should get inflation-adjusted allocations by year", async () => {
     const res = await request(app)
@@ -283,5 +312,116 @@ describe("Budget Allocation API", () => {
       .set("Authorization", `Bearer ${adminToken}`);
 
     expect(res.statusCode).toBe(404);
+  });
+
+  // Specific enum validation tests
+  it("should return 400 for invalid targetIncomeGroup enum", async () => {
+    const res = await request(app)
+      .post("/api/v1/budget-allocations")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({
+        sector: "Education",
+        allocatedAmount: 500000,
+        targetIncomeGroup: "VeryHigh", // INVALID
+        year: 2023,
+        region: regionId,
+      });
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body.success).toBe(false);
+  });
+
+  it("should return 400 for invalid sector enum", async () => {
+    const res = await request(app)
+      .post("/api/v1/budget-allocations")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({
+        sector: "Transportation", // INVALID
+        allocatedAmount: 500000,
+        targetIncomeGroup: "Low",
+        year: 2023,
+        region: regionId,
+      });
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body.success).toBe(false);
+  });
+
+  // Test year < 2000
+  it("should return 400 for year less than 2000", async () => {
+    const res = await request(app)
+      .post("/api/v1/budget-allocations")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({
+        sector: "Health",
+        allocatedAmount: 500000,
+        targetIncomeGroup: "Low",
+        year: 1999, // INVALID
+        region: regionId,
+      });
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body.errors).toBeDefined();
+  });
+
+  // Test negative amount (express-validator catches this)
+  it("should return 400 for negative allocatedAmount", async () => {
+    const res = await request(app)
+      .post("/api/v1/budget-allocations")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({
+        sector: "Health",
+        allocatedAmount: -5000, // INVALID - express-validator catches this
+        targetIncomeGroup: "Low",
+        year: 2023,
+        region: regionId,
+      });
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body.errors).toBeDefined(); // This has errors array
+  });
+
+  // Test region filter
+  it("should filter allocations by region", async () => {
+    // First create another allocation for testing
+    await request(app)
+      .post("/api/v1/budget-allocations")
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({
+        sector: "Health",
+        allocatedAmount: 300000,
+        targetIncomeGroup: "Middle",
+        year: 2024,
+        region: regionId,
+      });
+
+    const res = await request(app)
+      .get(`/api/v1/budget-allocations?region=${regionId}`)
+      .set("Authorization", `Bearer ${adminToken}`);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.data.length).toBeGreaterThan(0);
+  });
+
+  // Test pagination
+  it("should handle pagination with page and limit parameters", async () => {
+    const res = await request(app)
+      .get("/api/v1/budget-allocations?page=1&limit=5")
+      .set("Authorization", `Bearer ${adminToken}`);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.page).toBe(1);
+    expect(res.body.pages).toBeDefined();
+    expect(res.body.total).toBeDefined();
+  });
+
+  // Test available years endpoint
+  it("should get available years with data", async () => {
+    const res = await request(app)
+      .get("/api/v1/budget-allocations/summary/available-years")
+      .set("Authorization", `Bearer ${adminToken}`);
+
+    expect(res.statusCode).toBe(200);
+    expect(Array.isArray(res.body.data)).toBe(true);
   });
 });
