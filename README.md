@@ -1593,7 +1593,7 @@ This load test now covers mixed traffic for all major components:
 - Budget Allocations (list + summary + inflation-adjusted)
 - Social Programs (list + inequality analysis)
 - Regional Development (list + inequality index)
-- Regions core endpoint
+- Regions core endpoint 
 
 It runs in multiple phases (warm-up, moderate, sustained, stress spike) to evaluate performance under different loads.
 
