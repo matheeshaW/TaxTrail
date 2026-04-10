@@ -158,7 +158,7 @@ const getInequalityAnalysis = async (country) => {
         totalBudgetUsed,
         totalBeneficiaries,
         analysis: analysisMessage,
-        sdgAlignment: 'SDG 10 - Reduced Inequalities'
+        sdgAlignment: 'Reduced Inequalities'
     }
 }
 
