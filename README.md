@@ -1,4 +1,4 @@
-﻿# TaxTrail – A Public Budget Transparency and Analytics Platform
+﻿# TaxTrail – A Public Budget Transparency Platform
 
 **TaxTrail** is a web-based platform designed to improve transparency in public budgets and government spending. Its main goal is to promote accountability, reduce inequality, and help citizens better understand how public money is collected and used.
 
@@ -7,10 +7,10 @@ The system brings together key data from different government areas such as tax 
 In many developing countries, limited visibility into public spending can increase inequality and reduce trust in institutions.
 TaxTrail helps address this issue by providing:
 
--- Tax insights – Shows how taxes are collected across different income groups and regions
--- Budget tracking – Displays how government funds are allocated across sectors
--- Social program analysis – Measures how effectively public programs reach people and use their budgets
--- Regional comparisons – Highlights differences in development and funding between provinces
+- Tax insights – Shows how taxes are collected across different income groups and regions
+- Budget tracking – Displays how government funds are allocated across sectors
+- Social program analysis – Measures how effectively public programs reach people and use their budgets
+- Regional comparisons – Highlights differences in development and funding between provinces
 
 The platform is designed for government agencies, researchers, NGOs, and the general public. By making financial data more accessible and understandable, TaxTrail supports better decision-making and encourages more inclusive and balanced development.
 
