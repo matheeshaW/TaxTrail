@@ -69,7 +69,7 @@ if (process.env.NODE_ENV !== "test") {
     .connect(process.env.MONGO_URI)
     .then(() => {
       //listen for requests
-      app.listen(PORT, () => {
+      app.listen(PORT, "0.0.0.0", () => {
         console.log(
           "connected to db and listening on port " + PORT,
         );
