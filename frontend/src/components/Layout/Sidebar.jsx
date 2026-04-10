@@ -20,7 +20,13 @@ export default function Sidebar() {
         <div className="flex items-center gap-2 leading-none">
           {/* Badge container */}
           <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-blue-600">
-            <svg width="32" height="32" viewBox="0 2 32 34" fill="none">
+            <svg
+              width="32"
+              height="32"
+              viewBox="0 2 32 34"
+              fill="none"
+              aria-hidden="true"
+            >
               {/* Base */}
               <rect x="3" y="27" width="24" height="4" rx="1" fill="white" />
               {/* Pillars */}
