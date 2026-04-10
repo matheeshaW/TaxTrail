@@ -6,28 +6,65 @@ Complete guide for running unit tests and understanding the testing environment 
 
 ## How to Run Unit Tests
 
-### 1) Run All Tests (Complete Suite)
+### 1) Run All Unit Tests
 
 ```bash
 cd backend
-npm test
+npm test -- *.service.test.js
 ```
 
-### 2) Run Specific Component Test
+### 2) Run Specific Unit Test
 
 ```bash
-npm test -- budgetAllocation.test.js
+npm test -- budgetAllocation.service.test.js
 ```
 
 or
 
 ```bash
+npm test -- taxContribution.service.test.js
+npm test -- socialProgram.service.test.js
+```
+
+### 3) Watch Mode
+
+```bash
+npm test:watch -- *.service.test.js
+```
+
+### 4) Generate Coverage Report
+
+```bash
+npm test -- *.service.test.js --coverage
+```
+
+---
+
+## How to Run Integration Tests
+
+### Run All Integration Tests
+
+```bash
+cd backend
+npm test -- --testPathPattern="(budgetAllocation|taxContribution|socialPrograms|regionDev)\.test\.js$"
+```
+
+or simply:
+
+```bash
+npm test
+```
+
+### 2) Run Specific Integration Test
+
+```bash
+npm test -- budgetAllocation.test.js
 npm test -- taxContribution.test.js
 npm test -- socialPrograms.int.test.js
 npm test -- regionDev.test.js
 ```
 
-### 3) Watch Mode (Auto-rerun on Changes)
+### 3) Watch Mode
 
 ```bash
 npm test:watch
@@ -37,70 +74,6 @@ npm test:watch
 
 ```bash
 npm test -- --coverage
-```
-
----
-
-## Testing Environment Configuration
-
-### Jest Configuration
-
-File: `jest.config.js`
-
-```bash
-module.exports = {
-  testEnvironment: 'node',
-  testTimeout: 20000
-}
-```
-
-What This Does:
-
-| Setting           | Value           | Purpose                                 |
-| ----------------- | --------------- | --------------------------------------- |
-| testEnvironment   | 'node'          | Tests run in Node.js (not browser)      |
-| testTimeout       | 20000           | 20 seconds per test                     |
-| testMatch         | Auto-detected   | Finds \*.test.js files in tests/ folder |
-| detectOpenHandles | true (npm test) | Warns if resources not cleaned up       |
-
-### npm Test Scripts
-
-File: `package.json`
-
-```bash
-{
-  "scripts": {
-    "test": "jest --detectOpenHandles",
-    "test:watch": "jest --watchAll --detectOpenHandles",
-    "start": "node server.js",
-    "dev": "nodemon server.js",
-    "env:gen": "cp .env .env.example",
-    "env:init": "cp .env.example .env",
-    "test:perf:regiondev": "npx artillery run performance_test/load-test-regiondev.yaml"
-  }
-}
-```
-
-Script Details:
-
-- **npm test** → Run all tests once with handle detection
-- **npm test:watch** → Watch mode, auto-rerun on file changes
-- **npm test:perf:regiondev** → Performance/load testing
-
-### Backend .env Configuration
-
-Create `.env`
-
-```bash
-# Database
-MONGO_URI=your_mongodb_atlas_connection_string
-
-# JWT
-JWT_SECRET=your_secret_key
-
-# Server
-PORT=4000
-NODE_ENV=development
 ```
 
 ---
@@ -265,3 +238,67 @@ npx artillery report load-test-result.json
 ```
 
 This generates an HTML report file you can open in a browser for latency/throughput/error metrics.
+
+---
+
+## Testing Environment Configuration
+
+### Jest Configuration
+
+File: `jest.config.js`
+
+```bash
+module.exports = {
+  testEnvironment: 'node',
+  testTimeout: 20000
+}
+```
+
+What This Does:
+
+| Setting           | Value           | Purpose                                 |
+| ----------------- | --------------- | --------------------------------------- |
+| testEnvironment   | 'node'          | Tests run in Node.js (not browser)      |
+| testTimeout       | 20000           | 20 seconds per test                     |
+| testMatch         | Auto-detected   | Finds \*.test.js files in tests/ folder |
+| detectOpenHandles | true (npm test) | Warns if resources not cleaned up       |
+
+### npm Test Scripts
+
+File: `package.json`
+
+```bash
+{
+  "scripts": {
+    "test": "jest --detectOpenHandles",
+    "test:watch": "jest --watchAll --detectOpenHandles",
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "env:gen": "cp .env .env.example",
+    "env:init": "cp .env.example .env",
+    "test:perf:regiondev": "npx artillery run performance_test/load-test-regiondev.yaml"
+  }
+}
+```
+
+Script Details:
+
+- **npm test** → Run all tests once with handle detection
+- **npm test:watch** → Watch mode, auto-rerun on file changes
+- **npm test:perf:regiondev** → Performance/load testing
+
+### Backend .env Configuration
+
+Create `.env`
+
+```bash
+# Database
+MONGO_URI=your_mongodb_atlas_connection_string
+
+# JWT
+JWT_SECRET=your_secret_key
+
+# Server
+PORT=4000
+NODE_ENV=development
+```
