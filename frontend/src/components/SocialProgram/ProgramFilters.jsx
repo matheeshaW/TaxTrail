@@ -121,7 +121,7 @@ export default function ProgramFilters({ filters, onFilterChange, onReset }) {
         <button
           type="button"
           onClick={handleReset}
-          className="rounded-md bg-gray-200 px-4 py-2 font-medium text-gray-800 transition hover:bg-gray-300"
+          className="inline-flex h-10 items-center rounded-md border border-gray-300 bg-white px-4 text-sm font-medium text-gray-700 transition hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
         >
           Reset filters
         </button>
