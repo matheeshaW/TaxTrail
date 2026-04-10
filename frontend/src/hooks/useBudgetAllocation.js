@@ -13,7 +13,7 @@ export const useBudgetAllocation = () => {
   // pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(6);
 
   // filters
   const [filters, setFilters] = useState({
