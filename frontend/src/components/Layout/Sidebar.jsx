@@ -4,15 +4,21 @@ export default function Sidebar() {
   const navItems = [
     { label: "Dashboard", path: "/dashboard", enabled: true },
     { label: "Tax Contributions", path: "/tax", enabled: true },
-    { label: "Budget", path: "/budget", enabled: true },
-    { label: "Programs", path: "/programs", enabled: true },
-    { label: "Regional Development", path: "/regional-development", enabled: true },
+    { label: "Budget Allocations", path: "/budget", enabled: true },
+    { label: "Social programs", path: "/programs", enabled: true },
+    {
+      label: "Regional Development",
+      path: "/regional-development",
+      enabled: true,
+    },
   ];
 
   return (
     <aside className="w-64 border-r border-gray-200 bg-white p-4">
       <h2 className="mb-1 text-xl font-bold text-gray-900">TaxTrail</h2>
-      <p className="mb-6 text-xs text-gray-500">Transparency in public finance</p>
+      <p className="mb-6 text-xs text-gray-500">
+        Transparency in public finance
+      </p>
 
       <nav className="space-y-2">
         {navItems.map((item) =>

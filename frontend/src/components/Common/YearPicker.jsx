@@ -8,6 +8,7 @@ export default function YearPicker({
   onChange,
   label = "Year",
   placeholder = "Enter year",
+  error = "",
 }) {
   const normalizedValue = value ? String(value) : "";
   const hasPresetValue = YEAR_OPTIONS.includes(normalizedValue);
@@ -43,7 +44,12 @@ export default function YearPicker({
 
       <div className="space-y-2">
         <select
-          className="w-full rounded-md border border-gray-300 bg-white p-2.5 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          aria-invalid={!!error}
+          className={`w-full rounded-md bg-white p-2.5 outline-none transition focus:ring-2 ${
+            error
+              ? "border border-red-300 focus:border-red-500 focus:ring-red-100"
+              : "border border-gray-300 focus:border-blue-500 focus:ring-blue-100"
+          }`}
           value={selectValue}
           onChange={handleSelectChange}
         >
@@ -63,12 +69,19 @@ export default function YearPicker({
             pattern="[0-9]{4}"
             maxLength={4}
             placeholder={placeholder}
-            className="w-full rounded-md border border-gray-300 p-2.5 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            aria-invalid={!!error}
+            className={`w-full rounded-md p-2.5 outline-none transition focus:ring-2 ${
+              error
+                ? "border border-red-300 focus:border-red-500 focus:ring-red-100"
+                : "border border-gray-300 focus:border-blue-500 focus:ring-blue-100"
+            }`}
             value={normalizedValue}
             onChange={(event) => onChange(event.target.value)}
           />
         )}
       </div>
+
+      {error && <p className="text-xs text-red-600">{error}</p>}
     </div>
   );
 }

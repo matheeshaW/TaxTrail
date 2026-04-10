@@ -34,6 +34,10 @@ export const useBudgetAllocation = () => {
   const [adjustedData, setAdjustedData] = useState([]);
   const [adjustedLoading, setAdjustedLoading] = useState(false);
 
+  // available years and selected year for summary
+  const [availableYears, setAvailableYears] = useState([]);
+  const [selectedYear, setSelectedYear] = useState(null);
+
   // fetch all allocations based on current filters & pagination
   const fetchAll = useCallback(async () => {
     setLoading(true);
@@ -51,6 +55,7 @@ export const useBudgetAllocation = () => {
       );
 
       const result = await budgetAllocationService.getAll(params);
+      //  Use server-side sorted data directly
       setData(result.data || []);
       setTotalPages(result.totalPages || 1);
       setCurrentPage(result.currentPage || 1);
@@ -73,39 +78,47 @@ export const useBudgetAllocation = () => {
   }, []);
 
   // create new allocation
-  const create = useCallback(async (formData) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const result = await budgetAllocationService.create(formData);
-      setData((prev) => [result, ...prev]);
-      return result;
-    } catch (err) {
-      const errorMsg = err.response?.data?.message || "Failed to create";
-      setError(errorMsg);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const create = useCallback(
+    async (formData) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const result = await budgetAllocationService.create(formData);
+        // Refresh data to maintain server-side sort order
+        await fetchAll();
+        return result;
+      } catch (err) {
+        const errorMsg = err.response?.data?.message || "Failed to create";
+        setError(errorMsg);
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [fetchAll],
+  );
 
   // update existing allocation
-  const update = useCallback(async (id, formData) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const result = await budgetAllocationService.update(id, formData);
-      setData((prev) => prev.map((item) => (item._id === id ? result : item)));
-      setSelectedRecord(result);
-      return result;
-    } catch (err) {
-      const errorMsg = err.response?.data?.message || "Failed to update";
-      setError(errorMsg);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const update = useCallback(
+    async (id, formData) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const result = await budgetAllocationService.update(id, formData);
+        // Refresh data to maintain server-side sort order
+        await fetchAll();
+        setSelectedRecord(result);
+        return result;
+      } catch (err) {
+        const errorMsg = err.response?.data?.message || "Failed to update";
+        setError(errorMsg);
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [fetchAll],
+  );
 
   // delete an allocation
   const remove = useCallback(async (id) => {
@@ -130,11 +143,28 @@ export const useBudgetAllocation = () => {
     setCurrentPage(1);
   }, []);
 
-  // fetch sector summary
-  const fetchSummary = useCallback(async () => {
+  // fetch available years
+  const fetchAvailableYears = useCallback(async () => {
+    try {
+      const years = await budgetAllocationService.getAvailableYears();
+      setAvailableYears(years.sort((a, b) => b - a)); // newest first
+
+      // Set default to first year with data
+      if (years.length > 0 && !selectedYear) {
+        setSelectedYear(years[0]);
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to load years");
+    }
+  }, [selectedYear]);
+
+  // fetch summary with year filter
+  const fetchSummary = useCallback(async (year) => {
     setSummaryLoading(true);
     try {
-      const result = await budgetAllocationService.getSummary();
+      const result = year
+        ? await budgetAllocationService.getSummaryByYear(year)
+        : await budgetAllocationService.getSummary();
       setSummary(result);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to load summary");
@@ -146,11 +176,14 @@ export const useBudgetAllocation = () => {
   // fetch inflation-adjusted data
   const fetchAdjusted = useCallback(async (year) => {
     setAdjustedLoading(true);
+    setError(null);
     try {
       const result = await budgetAllocationService.getAdjusted(year);
       setAdjustedData(result);
+      setError(null);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to load adjusted data");
+      setAdjustedData([]);
     } finally {
       setAdjustedLoading(false);
     }
@@ -201,6 +234,11 @@ export const useBudgetAllocation = () => {
     remove,
     fetchSummary,
     fetchAdjusted,
+
+    availableYears,
+    selectedYear,
+    setSelectedYear,
+    fetchAvailableYears,
   };
 };
 
