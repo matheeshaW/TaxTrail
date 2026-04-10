@@ -6,7 +6,7 @@ config:
       name: "Sustained load"
 scenarios:
   - flow:
-      # Step 1: Log in automatically
+      # Log in automatically
       - post:
           url: "/api/auth/login"
           json:
@@ -16,7 +16,7 @@ scenarios:
             - json: "$.token"
               as: "authToken"
 
-      # Step 2: Run the actual test using the captured token
+      # Run the actual test using the captured token
       - get:
           url: "/api/v1/regional-development/inequality-index"
           headers:
