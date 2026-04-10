@@ -80,7 +80,7 @@ app.listen(PORT, "0.0.0.0", () => { ... });
 ### Backend URL
 
 ```
-https://taxtrail-production.up.railway.app
+https://backend-railway-deployment-url
 ```
 
 ---
@@ -98,7 +98,7 @@ Vercel was used to deploy the frontend due to its seamless support for React (Vi
 3. Configured environment variable:
 
 ```env
-VITE_API_BASE_URL=https://taxtrail-production.up.railway.app/api
+VITE_API_BASE_URL=https://backend-railway-deployment-url
 ```
 
 4. Deployed application
