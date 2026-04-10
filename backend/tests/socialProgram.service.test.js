@@ -238,7 +238,7 @@ describe('SocialProgram Service - Unit Tests', () => {
       expect(result.totalBeneficiaries).toBe(30)
       expect(result.giniIndex).toBe(37.7)
       expect(result.analysis).toBeDefined()
-      expect(result.sdgAlignment).toContain('SDG 10')
+      expect(result.sdgAlignment).toContain('Reduced Inequalities')
     })
 
     it('should use high-inequality limited-programs message when gini high and few programs', async () => {
