@@ -29,7 +29,7 @@ npm test -- socialProgram.service.test.js
 ### 3) Watch Mode
 
 ```bash
-npm test:watch -- *.service.test.js
+npm run test:watch -- *.service.test.js
 ```
 
 ### 4) Generate Coverage Report
@@ -46,7 +46,7 @@ npm test -- *.service.test.js --coverage
 
 ```bash
 cd backend
-npm test -- --testPathPattern="(budgetAllocation|taxContribution|socialPrograms|regionDev)\.test\.js$"
+npm test -- --testPathPattern="(budgetAllocation|taxContribution|socialPrograms.*|regionDev)\.test\.js$"
 ```
 
 or simply:
@@ -67,7 +67,7 @@ npm test -- regionDev.test.js
 ### 3) Watch Mode
 
 ```bash
-npm test:watch
+npm run test:watch
 ```
 
 ### 4) Generate Coverage Report
@@ -245,7 +245,7 @@ This generates an HTML report file you can open in a browser for latency/through
 
 ### Jest Configuration
 
-File: `jest.config.js`
+File: `backend/jest.config.js`
 
 ```bash
 module.exports = {

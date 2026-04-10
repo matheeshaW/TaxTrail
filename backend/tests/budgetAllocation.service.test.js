@@ -528,7 +528,7 @@ describe("BudgetAllocation Service - Unit Tests", () => {
     });
 
     await expect(budgetService.getAdjustedAllocations(2023)).rejects.toThrow(
-      "Unexpected response format from World Bank API",
+      "Unexpected response format from World Bank API when retrieving inflation data",
     );
   });
 
@@ -547,7 +547,7 @@ describe("BudgetAllocation Service - Unit Tests", () => {
     axios.get.mockRejectedValue(timeoutError);
 
     await expect(budgetService.getAdjustedAllocations(2023)).rejects.toThrow(
-      "World Bank API request timed out",
+      "World Bank API request timed out while retrieving inflation data. Please try again later.",
     );
   });
 

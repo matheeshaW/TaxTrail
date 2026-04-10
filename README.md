@@ -150,7 +150,7 @@ Pages → Components → Hooks → Context/Services → API Client
 
 ---
 
-## TaxTrail's Contribution for SGD 10
+## TaxTrail's Contribution for SDG 10 (Sustainable Development Goal)
 
 Each component aligns to SDG targets:
 
