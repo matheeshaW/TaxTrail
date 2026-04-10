@@ -1,6 +1,7 @@
 const request = require("supertest");
 const mongoose = require("mongoose");
 const { MongoMemoryServer } = require("mongodb-memory-server");
+jest.mock("axios");
 
 const app = require("../server");
 
@@ -234,6 +235,34 @@ describe("Budget Allocation API", () => {
       .set("Authorization", `Bearer ${publicToken}`);
 
     expect(res.statusCode).toBe(200);
+  });
+
+  // Mock axios before testing adjusted allocations
+  beforeEach(() => {
+    require("axios").get.mockClear();
+  });
+
+  // ADJUSTED ALLOCATIONS BY YEAR - ADMIN
+  it("should get inflation-adjusted allocations by year", async () => {
+    // Mock the World Bank API response
+    const mockAxios = require("axios");
+    mockAxios.get.mockResolvedValue({
+      data: [
+        { id: "FP.CPI.TOTL.ZG" },
+        [
+          { date: "2023", value: 5.5 }, // 5.5% inflation
+          { date: "2022", value: 4.2 },
+        ],
+      ],
+    });
+
+    const res = await request(app)
+      .get("/api/v1/budget-allocations/adjusted/2023")
+      .set("Authorization", `Bearer ${adminToken}`);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.data).toBeDefined();
+    expect(res.body.inflationRate).toBe(5.5);
   });
 
   // ADJUSTED ALLOCATIONS BY YEAR - ADMIN
