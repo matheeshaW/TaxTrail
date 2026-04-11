@@ -181,6 +181,32 @@ It covers the Budget Allocation module flow:
 7. Delete the created record.
 8. Verify the record is removed from the table.
 
+### Current Regional Development flow test
+
+The Regional Development module test lives at:
+
+```text
+frontend/cypress/e2e/RegionalDevelopmentFlowTest.cy.js
+```
+It covers the Regional Development module flow:
+
+1. Log in as Admin.
+
+2. Navigate to Regional Development.
+
+3. Open the add new record form.
+
+4. Fill the form with year, average income, unemployment rate, poverty rate, services index, and region.
+
+5. Save the record and wait for the table to refresh.
+
+6. Verify the newly created record appears in the table.
+
+7. Delete the created record (handling the native browser confirmation).
+
+8. Verify the record is completely removed from the table.
+
+
 ### Prerequisites
 
 1. Install frontend dependencies:
