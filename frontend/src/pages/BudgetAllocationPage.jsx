@@ -282,6 +282,7 @@ export default function BudgetAllocationPage() {
         confirmText="Delete"
         cancelText="Cancel"
         isDangerous={true}
+        isLoading={loading}
         onConfirm={handleDeleteExecute}
         onCancel={() => {
           setDeleteConfirmOpen(false);

@@ -34,6 +34,9 @@ describe("Budget Allocation Flow Test", () => {
     cy.contains("a", "Budget Allocation").click();
     cy.url().should("include", "/budget");
 
+    // Wait for initial page load GET
+    cy.wait("@getBudgets");
+
     // Open create form
     cy.contains("button", "+ New Allocation").click();
     cy.contains("h2", "New Budget Allocation").should("be.visible");
@@ -75,7 +78,7 @@ describe("Budget Allocation Flow Test", () => {
       cy.contains("button", "Create").click();
     });
 
-    // Wait for create and table refresh
+    // Wait for create and table refresh (now this catches the POST + refresh GET)
     cy.wait("@createBudget")
       .its("response.statusCode")
       .should("be.oneOf", [200, 201]);
@@ -100,7 +103,7 @@ describe("Budget Allocation Flow Test", () => {
     // Verify modal is closed
     cy.get('[role="alertdialog"]').should("not.exist");
 
-    // Wait for table refresh
+    // Wait for table refresh (now this definitely catches the post-delete GET)
     cy.wait("@getBudgets");
 
     // Verify row removed from table
