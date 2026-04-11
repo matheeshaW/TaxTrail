@@ -181,6 +181,23 @@ It covers the Budget Allocation module flow:
 7. Delete the created record.
 8. Verify the record is removed from the table.
 
+### Current Social Program flow test
+
+The Social Program module test lives at:
+
+```
+frontend/cypress/e2e/SocialProgramFlowTest.cy.js
+```
+
+It covers the Social Program module flow:
+
+1. Log in as Admin.
+2. Navigate to Social programs.
+3. Open the create form.
+4. Fill the form with program name, sector, target group, beneficiaries, budget, year, and region.
+5. Wait for the table to reflect the new record.
+6. Delete the newly created program.
+7. Verify the record is removed from the table.
 ### Current Regional Development flow test
 
 The Regional Development module test lives at:
