@@ -120,6 +120,7 @@ export default function BudgetAllocationPage() {
   const handleDeleteExecute = async () => {
     try {
       await remove(recordToDelete);
+      await fetchAll();
       setDeleteConfirmOpen(false);
       setRecordToDelete(null);
     } catch (err) {
@@ -276,7 +277,11 @@ export default function BudgetAllocationPage() {
       {/* Delete Confirmation */}
       <ConfirmModal
         isOpen={deleteConfirmOpen}
+        title="Delete Budget Allocation"
         message="Are you sure you want to delete this budget allocation? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        isDangerous={true}
         onConfirm={handleDeleteExecute}
         onCancel={() => {
           setDeleteConfirmOpen(false);
