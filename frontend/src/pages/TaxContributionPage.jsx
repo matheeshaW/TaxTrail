@@ -8,6 +8,7 @@ import LoadingSpinner from "../components/Common/LoadingSpinner";
 import TaxSummaryChart from "../components/TaxContribution/TaxSummaryChart";
 import ConfirmModal from "../components/Common/ConfirmModal";
 import ErrorAlert from "../components/Common/ErrorAlert";
+import TaxContributionDetails from "../components/TaxContribution/TaxContributionDetails";
 
 import TaxForm from "../components/TaxContribution/TaxForm";
 import useAuth from "../hooks/useAuth";
@@ -27,6 +28,7 @@ export default function TaxContributionPage() {
         setPagination,
         fetchAll,
         fetchSummary,
+        fetchOne,
         create,
         update,
         remove,
@@ -40,6 +42,9 @@ export default function TaxContributionPage() {
     const [activeView, setActiveView] = useState("records");
     const [summaryRefreshing, setSummaryRefreshing] = useState(false);
     const [hasLoadedSummary, setHasLoadedSummary] = useState(false);
+    const [detailOpen, setDetailOpen] = useState(false);
+    const [detailLoading, setDetailLoading] = useState(false);
+    const [detailRecord, setDetailRecord] = useState(null);
 
     const { user } = useAuth();
 
@@ -90,6 +95,34 @@ export default function TaxContributionPage() {
     const handleDelete = async (id) => {
         setDeleteId(id);
         setShowConfirm(true);
+    };
+
+    const handleView = async (id) => {
+        setDetailOpen(true);
+        setDetailLoading(true);
+        setDetailRecord(null);
+
+        try {
+            const record = await fetchOne(id);
+            setDetailRecord(record);
+        } catch {
+            setDetailOpen(false);
+        } finally {
+            setDetailLoading(false);
+        }
+    };
+
+    const closeDetails = () => {
+        if (detailLoading) return;
+        setDetailOpen(false);
+        setDetailRecord(null);
+    };
+
+    const editFromDetails = (record) => {
+        setSelected(record);
+        setShowForm(true);
+        setDetailOpen(false);
+        setDetailRecord(null);
     };
 
     const confirmDelete = async () => {
@@ -197,6 +230,7 @@ export default function TaxContributionPage() {
 
                     <TaxTable
                         data={data}
+                        onView={handleView}
                         onEdit={(item) => {
                             setSelected(item);
                             setShowForm(true);
@@ -253,6 +287,14 @@ export default function TaxContributionPage() {
                         setDeleteId(null);
                     }
                 }}
+            />
+
+            <TaxContributionDetails
+                isOpen={detailOpen}
+                loading={detailLoading}
+                record={detailRecord}
+                onClose={closeDetails}
+                onEdit={editFromDetails}
             />
         </div>
     );
