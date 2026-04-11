@@ -1464,7 +1464,7 @@ Example response:
 ## Testing & Quality Assurance
 
 - **Unit & Integration Testing:** Implemented using `Jest`, `Supertest`, and `mongodb-memory-server`. Achieved 100% pass rate across core controller operations.
-- **Performance Testing:** Evaluated using `Artillery.io`. Successfully handled sustained loads of 1,000 requests via 50 concurrent users over 20 seconds, yielding a 0% failure rate and a median response time of 1ms.
+- **Performance Testing:**Evaluated using Artillery.io with dynamic JWT authentication flows. Successfully simulated real-world sustained traffic, achieving a 100% success rate with zero timeouts. The system maintained an average response time of ~600ms even while resolving external network requests to the World Bank API and executing complex MongoDB aggregation pipelines.
 
 ---
 
