@@ -130,7 +130,7 @@ export default function SocialProgramPage() {
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-gray-900">Social programs</h1>
           <p className="mt-2 text-gray-600">
-            Welfare programs, beneficiaries, and inequality context (SDG 10)
+            Welfare programs, beneficiaries, and inequality context 
           </p>
         </div>
 
@@ -161,7 +161,7 @@ export default function SocialProgramPage() {
               type="button"
               onClick={handleRefresh}
               disabled={loading}
-              className="h-fit rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-800 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex h-10 items-center rounded-md border border-gray-300 bg-white px-4 text-sm font-medium text-gray-700 transition hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60"
             >
               Refresh
             </button>
@@ -169,7 +169,7 @@ export default function SocialProgramPage() {
               <button
                 type="button"
                 onClick={handleCreate}
-                className="h-fit rounded-md bg-green-600 px-4 py-2 font-medium text-white transition hover:bg-green-700"
+                className="inline-flex h-10 items-center rounded-md bg-blue-600 px-4 text-sm font-medium text-white transition hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
               >
                 + New program
               </button>

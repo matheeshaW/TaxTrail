@@ -63,7 +63,7 @@ export default function ProgramTable({
               <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
                 Updated
               </th>
-              <th className="px-6 py-3 text-center text-sm font-semibold text-gray-700">
+              <th className="w-56 px-6 py-3 text-center text-sm font-semibold text-gray-700">
                 Actions
               </th>
             </tr>
@@ -97,12 +97,12 @@ export default function ProgramTable({
                 <td className="px-6 py-4 text-sm text-gray-500">
                   {formatDate(record.updatedAt)}
                 </td>
-                <td className="px-6 py-4 text-center">
-                  <div className="flex flex-wrap justify-center gap-2">
+                <td className="px-6 py-4 text-center align-middle">
+                  <div className="flex flex-nowrap items-center justify-center gap-2">
                     <button
                       type="button"
                       onClick={() => onView(record._id)}
-                      className="rounded bg-blue-500 px-2 py-1 text-xs text-white transition hover:bg-blue-600"
+                      className="inline-flex h-9 items-center justify-center rounded-md border border-gray-300 bg-white px-3 text-sm font-medium text-gray-700 transition hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                     >
                       View
                     </button>
@@ -111,14 +111,14 @@ export default function ProgramTable({
                         <button
                           type="button"
                           onClick={() => onEdit(record)}
-                          className="rounded bg-yellow-500 px-2 py-1 text-xs text-white transition hover:bg-yellow-600"
+                          className="inline-flex h-9 items-center justify-center rounded-md border border-amber-300 bg-amber-50 px-3 text-sm font-medium text-amber-800 transition hover:bg-amber-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
                         >
                           Edit
                         </button>
                         <button
                           type="button"
                           onClick={() => onDelete(record)}
-                          className="rounded bg-red-500 px-2 py-1 text-xs text-white transition hover:bg-red-600"
+                          className="inline-flex h-9 items-center justify-center rounded-md bg-red-600 px-3 text-sm font-medium text-white transition hover:bg-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
                         >
                           Delete
                         </button>

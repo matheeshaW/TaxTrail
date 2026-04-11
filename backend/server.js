@@ -20,15 +20,23 @@ require('./models/regionModel')
 const app = express()
 
 // allow frontend dev origins
-const allowedOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173']
+const allowedOrigins = [
+  'http://localhost:5173',
+   'http://127.0.0.1:5173',
+   process.env.FRONTEND_URL
+  ]
 
 app.use(
   cors({
     origin(origin, callback) {
       // allow non-browser tools (Postman/curl) where origin may be undefined
-      if (!origin || allowedOrigins.includes(origin)) return callback(null, true)
+      if (!origin || allowedOrigins.includes(origin)){
+
+       return callback(null, true)
+      }
       return callback(new Error('Not allowed by CORS'))
     },
+    credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   }),
@@ -52,6 +60,8 @@ app.use('/api/v1/regional-development', regionalDevelopmentRoutes)
 
 app.use(errorHandler) // keep at bottom
 
+const PORT = process.env.PORT || 4000;
+
 
 // connect to db and start server
 if (process.env.NODE_ENV !== "test") {
@@ -59,9 +69,9 @@ if (process.env.NODE_ENV !== "test") {
     .connect(process.env.MONGO_URI)
     .then(() => {
       //listen for requests
-      app.listen(process.env.PORT, () => {
+      app.listen(PORT, "0.0.0.0", () => {
         console.log(
-          "connected to db and listening on port " + process.env.PORT,
+          "connected to db and listening on port " + PORT,
         );
       });
     })

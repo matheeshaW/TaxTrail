@@ -1,6 +1,24 @@
-﻿# TaxTrail (Backend) -  80% completed
+﻿# TaxTrail – A Public Budget Transparency Platform
 
-TaxTrail is a web-based public budget transparency system aligned with **SDG 10 – Reduced Inequalities**.
+**TaxTrail** is a web-based platform designed to improve transparency in public budgets and government spending. Its main goal is to promote accountability, reduce inequality, and help citizens better understand how public money is collected and used.
+
+The system brings together key data from different government areas such as tax revenue, budget allocations, social programs, and regional development into a single, easy-to-use dashboard. It is aligned with Sustainable Development Goal 10: Reduced Inequalities.
+
+In many developing countries, limited visibility into public spending can increase inequality and reduce trust in institutions.
+TaxTrail helps address this issue by providing:
+
+- Tax insights – Shows how taxes are collected across different income groups and regions
+- Budget tracking – Displays how government funds are allocated across sectors
+- Social program analysis – Measures how effectively public programs reach people and use their budgets
+- Regional comparisons – Highlights differences in development and funding between provinces
+
+The platform is designed for government agencies, researchers, NGOs, and the general public. By making financial data more accessible and understandable, TaxTrail supports better decision-making and encourages more inclusive and balanced development.
+
+---
+
+## Try it Online
+
+Access the live application at: https://tax-trail.vercel.app
 
 ---
 
@@ -10,8 +28,11 @@ TaxTrail is a web-based public budget transparency system aligned with **SDG 10 
 
 - Node.js + npm installed
 - A MongoDB connection string (e.g., MongoDB Atlas)
+- Git (for cloning the repository)
 
 ### Install
+
+1. **Backend Installation**
 
 From the repository root:
 
@@ -20,7 +41,18 @@ cd backend
 npm install
 ```
 
+2. **Frontend Installation**
+
+From the repository root:
+
+```bash
+cd frontend
+npm install
+```
+
 ### Environment variables
+
+**Backend Setup**
 
 Create the `.env` file (Linux):
 
@@ -39,8 +71,17 @@ PORT=4000
 
 ### Run (dev)
 
+**Terminal 1 — Start Backend**
+
 ```bash
 cd backend
+npm run dev
+```
+
+**Terminal 2 — Start Frontend**
+
+```bash
+cd frontend
 npm run dev
 ```
 
@@ -48,14 +89,32 @@ npm run dev
 
 ## Tech stack
 
+### Backend
+
 - Node.js
 - Express.js
 - MongoDB Atlas
-- Mongoose
+- Mongoose ODM
 - JWT Authentication
 - express-validator
-- Axios (Exchange API)
-- Postman (API testing)
+- Axios (Third-party APIs)
+
+### Frontend
+
+- React 19
+- React Router DOM (Navigation)
+- Vite (Build tool)
+- Tailwind CSS (Styling)
+- Recharts (Data visualization)
+- Axios (API client)
+
+### Testing & Deployment
+
+- Jest (Backend testing)
+- Supertest (API integration tests)
+- mongodb-memory-server (Test isolation)
+- Artillery.io (Load testing)
+- Postman (API documentation & testing)
 
 ---
 
@@ -67,7 +126,15 @@ The backend follows a layered architecture:
 Routes → Controllers → Services → Models
 ```
 
-### Key features
+Frontend Component Structure
+
+```
+Pages → Components → Hooks → Context/Services → API Client
+```
+
+---
+
+## Key features
 
 - RESTful API design
 - Role-based authentication (JWT)
@@ -79,6 +146,26 @@ Routes → Controllers → Services → Models
 - Third-party API integration
 - Pagination
 - In-memory caching for exchange rates
+- Multi-Entity Revenue & Expenditure Tracking
+- Real-Time Inequality Analytics
+- Inflation-Adjusted Budget Analysis
+- Role-Based Access Control (RBAC)
+- Multi-Layer Request Validation
+- High-Performance Aggregation
+- Comprehensive API Documentation
+
+---
+
+## TaxTrail's Contribution for SDG 10 (Sustainable Development Goal)
+
+Each component aligns to SDG targets:
+
+| Component           | SDG Target               | How It Contributes                                                                                   |
+| ------------------- | ------------------------ | ---------------------------------------------------------------------------------------------------- |
+| TaxContribution     | 10.1 – Income growth     | Reveals progressive tax collection across brackets, identifies revenue concentration                 |
+| BudgetAllocation    | 10.3 – Equal opportunity | Tracks spending by income group, surface allocation imbalances                                       |
+| SocialPrograms      | 10.2 – Social inclusion  | Measures beneficiary reach, evaluates program effectiveness for vulnerable groups                    |
+| RegionalDevelopment | 10.7 – Managed migration | Monitors regional disparities (income, employment, poverty), guides equitable development investment |
 
 ---
 
@@ -86,12 +173,12 @@ Routes → Controllers → Services → Models
 
 This project was done by 4 members, splitting the system into 4 major components:
 
-| Member | Real Entity | Real CRUD | Real Third-Party API | Clear Topic Alignment |
-|--------|------------|-----------|----------------------|-----------------------|
-| 1 | TaxContributions | ✅ | Exchange Rate | Revenue inequality |
-| 2 | BudgetAllocations | ✅ | Inflation API | Spending fairness |
-| 3 | SocialPrograms | ✅ | World Bank API | Poverty reduction |
-| 4 | RegionalDevelopmentData | ✅ | UN SDG API | Regional disparity |
+| Member | Real Entity             | Real CRUD | Real Third-Party API | Clear Topic Alignment |
+| ------ | ----------------------- | --------- | -------------------- | --------------------- |
+| 1      | TaxContributions        | ✅        | Exchange Rate        | Revenue inequality    |
+| 2      | BudgetAllocations       | ✅        | Inflation API        | Spending fairness     |
+| 3      | SocialPrograms          | ✅        | World Bank API       | Poverty reduction     |
+| 4      | RegionalDevelopmentData | ✅        | UN SDG API           | Regional disparity    |
 
 ---
 
@@ -270,21 +357,22 @@ It supports analysis of wealth distribution and revenue patterns aligned with **
 
 Query parameters:
 
-| Parameter | Description |
-|-----------|------------|
-| region | Filter by region ID |
-| year | Filter by year |
-| incomeBracket | Filter by income group |
-| currency | Convert amount (e.g., USD) |
-| page | Pagination page |
-| limit | Records per page |
+| Parameter     | Description                |
+| ------------- | -------------------------- |
+| region        | Filter by region ID        |
+| year          | Filter by year             |
+| incomeBracket | Filter by income group     |
+| currency      | Convert amount (e.g., USD) |
+| page          | Pagination page            |
+| limit         | Records per page           |
 
 Example:
 
 ```
 /api/v1/tax-contributions?page=1&limit=10
 ```
-or 
+
+or
 
 ```
 /api/v1/tax-contributions?page=1&limit=10&region=6995c2703622ab6c85af4f4e&year=2019&incomeBracket=Low&currency=USD
@@ -294,32 +382,33 @@ Response:
 
 ```json
 {
-    "success": true,
-    "total": 1,
-    "page": 1,
-    "pages": 1,
-    "data": [
-        {
-            "_id": "6997265f8bbd7d4657eef954",
-            "payerType": "Individual",
-            "incomeBracket": "Low",
-            "taxType": "VAT",
-            "amount": 8952,
-            "year": 2019,
-            "region": {
-                "_id": "6995c2703622ab6c85af4f4e",
-                "regionName": "Central Province"
-            },
-            "createdAt": "2026-02-19T15:03:59.436Z",
-            "updatedAt": "2026-02-19T15:03:59.436Z",
-            "__v": 0,
-            "originalAmount": 8952,
-            "convertedAmount": 28.96,
-            "convertedCurrency": "USD"
-        }
-    ]
+  "success": true,
+  "total": 1,
+  "page": 1,
+  "pages": 1,
+  "data": [
+    {
+      "_id": "6997265f8bbd7d4657eef954",
+      "payerType": "Individual",
+      "incomeBracket": "Low",
+      "taxType": "VAT",
+      "amount": 8952,
+      "year": 2019,
+      "region": {
+        "_id": "6995c2703622ab6c85af4f4e",
+        "regionName": "Central Province"
+      },
+      "createdAt": "2026-02-19T15:03:59.436Z",
+      "updatedAt": "2026-02-19T15:03:59.436Z",
+      "__v": 0,
+      "originalAmount": 8952,
+      "convertedAmount": 28.96,
+      "convertedCurrency": "USD"
+    }
+  ]
 }
 ```
+
 ---
 
 ### Get Single Tax Contribution
@@ -350,19 +439,19 @@ Response:
 
 ```json
 {
-    "success": true,
-    "data": [
-        {
-            "_id": "6995c2953622ab6c85af4f54",
-            "totalTax": 1114429,
-            "regionName": "Sabaragamuwa Province"
-        },
-        {
-            "_id": "6995c2703622ab6c85af4f4e",
-            "totalTax": 9174,
-            "regionName": "Central Province"
-        }
-    ]
+  "success": true,
+  "data": [
+    {
+      "_id": "6995c2953622ab6c85af4f54",
+      "totalTax": 1114429,
+      "regionName": "Sabaragamuwa Province"
+    },
+    {
+      "_id": "6995c2703622ab6c85af4f4e",
+      "totalTax": 9174,
+      "regionName": "Central Province"
+    }
+  ]
 }
 ```
 
@@ -448,14 +537,14 @@ https://open.er-api.com/v6/latest/LKR
 
 ## Role Access Rules
 
-| Endpoint | Public | Admin |
-|----------|--------|--------|
-| GET all | Yes | Yes |
-| GET single | Yes | Yes |
-| GET summary | Yes | Yes |
-| POST | No | Yes |
-| PUT | No | Yes |
-| DELETE | No | Yes |
+| Endpoint    | Public | Admin |
+| ----------- | ------ | ----- |
+| GET all     | Yes    | Yes   |
+| GET single  | Yes    | Yes   |
+| GET summary | Yes    | Yes   |
+| POST        | No     | Yes   |
+| PUT         | No     | Yes   |
+| DELETE      | No     | Yes   |
 
 ---
 
@@ -615,13 +704,13 @@ This module also integrates third-party inflation data to provide adjusted budge
 
 Query parameters
 
- Parameter | Description 
-----------|-------------
- sector | Filter by sector name 
- year | Filter by year 
- region | Filter by region ID 
- page | Pagination page number 
- limit | Records per page 
+| Parameter | Description            |
+| --------- | ---------------------- |
+| sector    | Filter by sector name  |
+| year      | Filter by year         |
+| region    | Filter by region ID    |
+| page      | Pagination page number |
+| limit     | Records per page       |
 
 Example
 
@@ -639,7 +728,7 @@ Example
 
 ### Update Budget Allocation (Admin only)
 
-- **PUT** `/api/v1/budget-allocations/:id`
+- **PATCH** `/api/v1/budget-allocations/:id`
 
 ---
 
@@ -656,6 +745,7 @@ Example
 Returns total allocated amount grouped by sector using MongoDB aggregation.
 
 Example response
+
 ```json
 {
   "success": true,
@@ -673,6 +763,23 @@ Example response
 - **GET** `/api/v1/budget-allocations/adjusted/:year`
 
 Returns allocation values adjusted based on annual inflation rate retrieved from a third-party API.
+
+---
+
+### Available Years
+
+- **GET** `/api/v1/budget-allocations/summary/available-years`
+
+Returns a list of all years that have budget allocation data.
+
+Example response:
+
+```json
+{
+  "success": true,
+  "data": [2024, 2023, 2022]
+}
+```
 
 ---
 
@@ -708,8 +815,25 @@ Returns allocation values adjusted based on annual inflation rate retrieved from
 ```
 
 Indexes
+
 - Compound index on { region, year }
 - Index on sector
+
+---
+
+## Validation & Business Rules
+
+Validation is implemented using `express-validator`, ObjectId checks, and service-layer validation.
+
+Rules include:
+
+- `sector` must be one of: Health, Education, Welfare, Infrastructure
+- `allocatedAmount` must be a positive number (min: 0)
+- `targetIncomeGroup` must be one of: Low, Middle, High
+- `year` must be an integer ≥ 2000
+- `region` must be a valid MongoDB ObjectId
+- Referenced `region` must exist in the Region collection
+- All required fields must be present
 
 ---
 
@@ -742,15 +866,16 @@ Optimization strategy
 
 ## Role Access Rules
 
- Endpoint | Public | Admin 
---------|--------|----------
- GET all | ✅ | ✅ 
- GET single | ✅ | ✅ 
- POST | ❌ | ✅ 
- PUT | ❌ | ✅ 
- DELETE | ❌ | ✅ 
- Summary | ✅ | ✅ 
- Adjusted | ✅ | ✅ 
+| Endpoint          | Public | Admin |
+| ----------------- | ------ | ----- |
+| GET all           | Yes    | Yes   |
+| GET single        | Yes    | Yes   |
+| POST              | No     | Yes   |
+| PATCH             | No     | Yes   |
+| DELETE            | No     | Yes   |
+| Summary by sector | Yes    | Yes   |
+| Available years   | Yes    | Yes   |
+| Adjusted          | Yes    | Yes   |
 
 ---
 
@@ -791,6 +916,107 @@ Benefits
 
 ---
 
+## Validation & Error Handling
+
+Validation and error handling are implemented at multiple layers:
+
+- Route-level validation via `express-validator`
+- ObjectId validation for `:id` route parameters
+- Service-layer validation for region existence and field constraints
+- Centralized error middleware for standardized responses
+
+### Error Response Examples
+
+Validation failure (express-validator):
+
+```json
+{
+  "success": false,
+  "errors": [
+    {
+      "msg": "Allocated amount must be a positive number",
+      "path": "allocatedAmount"
+    }
+  ]
+}
+```
+
+Enum validation failure (Mongoose):
+
+```json
+{
+  "success": false,
+  "message": "Invalid sector. Must be one of: Health, Education, Welfare, Infrastructure"
+}
+```
+
+Resource not found:
+
+```json
+{
+  "success": false,
+  "message": "Allocation not found"
+}
+```
+
+Status code mapping:
+
+- `400` → Validation errors, invalid ObjectId, invalid enum values
+- `401` → Missing or invalid authentication token
+- `403` → Unauthorized role access
+- `404` → Resource not found
+- `500` → Unexpected server error
+
+---
+
+## Testing & Quality Assurance
+
+Integration tests are implemented using:
+
+- `Jest`
+- `Supertest`
+- `mongodb-memory-server`
+
+Test file location:
+
+```
+backend/tests/budgetAllocation.test.js
+```
+
+### Covered Scenarios
+
+- Admin and Public user registration
+- JWT authentication enforcement (`401` for missing token)
+- Role-based access control (`403` for unauthorized access)
+- Successful allocation creation (Admin)
+- Validation failures (`400` for invalid payload)
+  - Invalid sector enum
+  - Invalid targetIncomeGroup enum
+  - Negative allocatedAmount
+  - Year < 2000
+- ObjectId format validation (`400`)
+- Retrieval of all allocations with filtering
+- Retrieval of single allocation by ID
+- Filtering by sector, year, and region
+- Pagination with page and limit parameters
+- Update operation (Admin only)
+- Delete operation (Admin only)
+- Post-deletion `404` behavior
+- Region dependency validation
+- Budget summary by sector aggregation
+- Inflation-adjusted allocations endpoint
+- Available years endpoint
+
+Testing ensures:
+
+- Correct HTTP status codes
+- Proper RBAC enforcement
+- Validation correctness
+- Database isolation using in-memory MongoDB
+- Full CRUD lifecycle integrity
+- Third-party API integration with World Bank inflation data
+
+---
 
 # Member 3 — SocialPrograms Component
 
@@ -875,6 +1101,7 @@ Example:
 ```
 
 Returns:
+
 - Latest Gini index and year from the World Bank indicator API
 - Total program count
 - Total budget used
@@ -932,6 +1159,7 @@ Returns:
 ```
 
 Model options:
+
 - `timestamps: true`
 
 ---
@@ -941,6 +1169,7 @@ Model options:
 Validation is enforced through `express-validator`, ObjectId checks, and service-layer rules.
 
 Rules include:
+
 - `programName` is required, non-empty, max 100 chars
 - `sector` must be one of: Health, Education, Welfare, Infrastructure
 - `targetGroup` must be one of: Low Income, Middle Income, Rural, Urban Poor, Disabled
@@ -988,6 +1217,7 @@ Current error response shapes:
 ```
 
 Status code mapping:
+
 - `400` for validation/business rule failures and invalid ObjectId format
 - `404` for missing resources
 - `500` for unexpected server errors
@@ -1003,6 +1233,7 @@ https://api.worldbank.org/v2/country/{countryCode}/indicator/SI.POV.GINI?format=
 ```
 
 Service behavior:
+
 - Fetches latest available non-null Gini value
 - Maps response to `{ year, giniIndex }`
 - Returns a normalized analysis payload with local SocialPrograms aggregates
@@ -1011,14 +1242,14 @@ Service behavior:
 
 ## Role Access Rules
 
-| Endpoint | Public | Admin |
-|----------|--------|--------|
-| GET all | Yes | Yes |
-| GET single | Yes | Yes |
-| GET inequality-analysis | Yes | Yes |
-| POST | No | Yes |
-| PUT | No | Yes |
-| DELETE | No | Yes |
+| Endpoint                | Public | Admin |
+| ----------------------- | ------ | ----- |
+| GET all                 | Yes    | Yes   |
+| GET single              | Yes    | Yes   |
+| GET inequality-analysis | Yes    | Yes   |
+| POST                    | No     | Yes   |
+| PUT                     | No     | Yes   |
+| DELETE                  | No     | Yes   |
 
 ---
 
@@ -1029,6 +1260,7 @@ Integration tests are implemented in:
 - `backend/tests/socialPrograms.int.test.js`
 
 Covered scenarios:
+
 - Admin and Public registration
 - Auth and RBAC enforcement (`401` and `403` cases)
 - Create with valid and invalid payloads
@@ -1149,19 +1381,21 @@ Returns a calculated analysis of wealth and development disparities across regio
     min: 0,
     max: 100
   },
-  accessToServicesIndex: { 
-    type: Number, 
-    default: 50, 
-    min: 0, 
-    max: 100 
+  accessToServicesIndex: {
+    type: Number,
+    default: 50,
+    min: 0,
+    max: 100
   }
 }
 ```
 
 Indexes:
+
 - Compound index on `{ region, year }` to prevent duplicate regional entries for the same year.
 
 Optimization strategy:
+
 - Advanced `/inequality-index` calculations are handled using MongoDB aggregation pipelines to minimize data transfer and memory usage on the Node.js server.
 
 ---
@@ -1175,6 +1409,7 @@ Inequality analytics uses the World Bank indicator endpoint:
 ```
 
 Service behavior:
+
 - Fetches latest available non-null Gini value for Sri Lanka.
 - Maps response to `globalBenchmark` for SDG 10 alignment.
 - Implements a safety fallback to cached offline data (27.7) if the API times out, preventing server crashes.
@@ -1184,14 +1419,14 @@ Service behavior:
 
 ## Role Access Rules
 
-| Endpoint | Public | Admin |
-|----------|--------|--------|
-| GET all | ✅ | ✅ |
-| GET inequality-index | ✅ | ✅ |
-| GET sdg-metrics | ✅ | ✅ |
-| POST | ❌ | ✅ |
-| PUT | ❌ | ✅ |
-| DELETE | ❌ | ✅ |
+| Endpoint             | Public | Admin |
+| -------------------- | ------ | ----- |
+| GET all              | ✅     | ✅    |
+| GET inequality-index | ✅     | ✅    |
+| GET sdg-metrics      | ✅     | ✅    |
+| POST                 | ❌     | ✅    |
+| PUT                  | ❌     | ✅    |
+| DELETE               | ❌     | ✅    |
 
 ---
 
@@ -1229,7 +1464,7 @@ Example response:
 ## Testing & Quality Assurance
 
 - **Unit & Integration Testing:** Implemented using `Jest`, `Supertest`, and `mongodb-memory-server`. Achieved 100% pass rate across core controller operations.
-- **Performance Testing:** Evaluated using `Artillery.io`. Successfully handled sustained loads of 1,000 requests via 50 concurrent users over 20 seconds, yielding a 0% failure rate and a median response time of 1ms.
+- **Performance Testing:**Evaluated using Artillery.io with dynamic JWT authentication flows. Successfully simulated real-world sustained traffic, achieving a 100% success rate with zero timeouts. The system maintained an average response time of ~600ms even while resolving external network requests to the World Bank API and executing complex MongoDB aggregation pipelines.
 
 ---
 
@@ -1250,167 +1485,9 @@ Example:
 
 ---
 
+# Documentation Navigation
 
-
-## Postman Collection (How to Use)
-
-This repository includes the Postman artifacts the team used to test all component APIs (including JWT-protected routes and role-based access).
-
-### Files
-
-- Collection: `postman/TaxTrail - AF MERN project.postman_collection.json`
-- Environment: `postman/TaxTrail Local.postman_environment.json`
-
-### Import into Postman
-
-1. Open Postman.
-2. Click **Import**.
-3. Import both JSON files:
-   - `postman/TaxTrail - AF MERN project.postman_collection.json`
-   - `postman/TaxTrail Local.postman_environment.json`
-4. In the top-right environment dropdown, select **TaxTrail Local**.
-
-### Configure environment variables
-
-Open **Environments → TaxTrail Local** and set:
-
-- `base_url` = `http://localhost:4000/api`
-- `token` = (leave empty; it will be set automatically after login)
-
-Notes:
-
-- Most requests in the collection use `{{base_url}}` (for example `{{base_url}}/v1/regions`).
-- A small number of requests (e.g., some under **Regional Development.**) are hard-coded to `http://localhost:4000/...`. If you are not running on `localhost:4000`, update those request URLs in Postman to use `{{base_url}}`.
-
-### How authentication works in the collection
-
-- The collection uses **Bearer Token** auth with `{{token}}`.
-- In the **auth component** folder, the **Login** request has a test script that stores the JWT into the environment variable `token`.
-- If `token` is missing, some folders log a message in the Postman console (“Please login first.”).
-
-### Suggested flow to run the APIs (recommended order)
-
-Because routes are protected and RBAC is enforced, run requests in this order.
-
-#### 1) Start the backend
-
-```bash
-cd backend
-npm run dev
-```
-
-#### 2) Create users (once)
-
-In Postman:
-
-1. Go to **auth component → /auth/register**.
-2. Register at least one **Admin** user and one **Public** user.
-
-Tip: You can duplicate the register request and change the `role` field to create both roles.
-
-#### 3) Login as Admin (to test write operations)
-
-1. Go to **auth component → /auth/login**.
-2. Send the request using the Admin credentials.
-3. Confirm the environment variable `token` is now set.
-
-At this point, Admin-only endpoints (POST/PUT/DELETE) should work.
-
-#### 4) Create Region(s) first (core dependency)
-
-Many entities reference a Region by MongoDB ObjectId.
-
-1. Go to **regions component (core) → POST /v1/regions**.
-2. Create a region.
-3. Copy the returned region `_id` and use it in other components’ requests where `region` is required.
-
-If the collection contains example IDs (e.g., `699...`) from another database, replace them with IDs created in your own database.
-
-#### 5) Test each component
-
-- **Tax Contributions**
-  - Create (Admin), then GET / filters / summary.
-  - Ensure you replace `:id` and `region` values with real IDs from your DB.
-
-- **Budget Allocations**
-  - Create allocations (Admin) using a valid `region` ID.
-  - Test summary and inflation-adjusted endpoints after you have some data.
-
-- **Social Programs**
-  - Create programs (Admin) using a valid `region` ID.
-  - Test public GET routes and the inequality-analysis endpoint.
-
-- **Regional Development**
-  - Follow the folder’s request sequence (create base region → create regional data → analytics).
-  - Prefer using the **auth component** login so `token` is stored into the environment automatically.
-
-#### 6) Login as Public (to verify RBAC)
-
-1. Send **auth component → /auth/login** using the Public user credentials.
-2. The environment `token` will be overwritten with the Public user token.
-3. Re-run GET endpoints (should succeed) and try an Admin-only endpoint (should return `403 Forbidden`).
+- [Testing Guide](TESTING.md) — Unit tests, integration tests, performance testing, and Testing environment configuration details
+- [Deployment Report](DEPLOYMENT.md) — Cloud deployment setup and architecture
 
 ---
-
-## Performance Testing (Artillery)
-
-The repository includes an Artillery config file at:
-
-```
-backend/load-test.yaml
-```
-
-This load test now covers mixed traffic for all major components:
-
-- Tax Contributions (list + summary)
-- Budget Allocations (list + summary + inflation-adjusted)
-- Social Programs (list + inequality analysis)
-- Regional Development (list + inequality index)
-- Regions core endpoint
-
-It runs in multiple phases (warm-up, moderate, sustained, stress spike) to evaluate performance under different loads.
-
-### Prerequisites
-
-1. Start backend server:
-
-```bash
-cd backend
-npm run dev
-```
-
-2. Ensure an Admin user exists (default values used by the load test):
-
-```json
-{
-  "email": "admin@email.com",
-  "password": "123456"
-}
-```
-
-If your credentials are different, override variables when running Artillery.
-
-### Run the load test
-
-From `backend` directory:
-
-```bash
-npx artillery run load-test.yaml
-```
-
-### Run with custom login variables
-
-```bash
-npx artillery run load-test.yaml --variables '{"adminEmail":"your_admin_email","adminPassword":"your_admin_password","testYear":"2024"}'
-```
-
-### Save JSON result + generate HTML report
-
-```bash
-npx artillery run load-test.yaml --output load-test-result.json
-npx artillery report load-test-result.json
-```
-
-This generates an HTML report file you can open in a browser for latency/throughput/error metrics.
-
-
