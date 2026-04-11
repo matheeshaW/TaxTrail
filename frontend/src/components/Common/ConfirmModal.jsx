@@ -1,4 +1,5 @@
 import { useEffect, useRef, useId } from "react";
+import { createPortal } from "react-dom";
 
 export default function ConfirmModal({
   isOpen,
@@ -31,16 +32,16 @@ export default function ConfirmModal({
 
   if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+  return createPortal(
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4">
       <div
         role="alertdialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="bg-white rounded-lg shadow-lg max-w-sm w-full mx-4"
+        className="mx-4 w-full max-w-sm rounded-lg bg-white shadow-lg"
       >
         {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="border-b border-gray-200 px-6 py-4">
           <h2 id={titleId} className="text-lg font-semibold text-gray-900">
             {title}
           </h2>
@@ -52,19 +53,19 @@ export default function ConfirmModal({
         </div>
 
         {/* Buttons */}
-        <div className="px-6 py-4 bg-gray-50 rounded-b-lg flex gap-3 justify-end">
+        <div className="flex justify-end gap-3 rounded-b-lg bg-gray-50 px-6 py-4">
           <button
             ref={cancelRef}
             onClick={onCancel}
             disabled={isLoading}
-            className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md font-medium transition disabled:opacity-50"
+            className="rounded-md bg-gray-200 px-4 py-2 font-medium text-gray-800 transition hover:bg-gray-300 disabled:opacity-50"
           >
             {cancelText}
           </button>
           <button
             onClick={onConfirm}
             disabled={isLoading}
-            className={`px-4 py-2 text-white rounded-md font-medium transition disabled:opacity-50 ${
+            className={`rounded-md px-4 py-2 font-medium text-white transition disabled:opacity-50 ${
               isDangerous
                 ? "bg-red-600 hover:bg-red-700"
                 : "bg-blue-600 hover:bg-blue-700"
@@ -74,6 +75,7 @@ export default function ConfirmModal({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
