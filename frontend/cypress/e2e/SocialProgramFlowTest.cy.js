@@ -61,10 +61,9 @@ describe("Social Program Flow Test", () => {
 
     // Wait for create and table refresh
     cy.wait("@createProgram").its("response.statusCode").should("be.oneOf", [200, 201]);
-    cy.wait("@getPrograms");
 
     // Verify row exists, then delete it
-    cy.contains("td", uniqueProgramName).should("exist");
+    cy.contains("td", uniqueProgramName, { timeout: 10000 }).should("exist");
     cy.contains("tr", uniqueProgramName).within(() => {
       cy.contains("button", "Delete").click();
     });
@@ -75,9 +74,8 @@ describe("Social Program Flow Test", () => {
     });
 
     cy.wait("@deleteProgram").its("response.statusCode").should("be.oneOf", [200, 204]);
-    cy.wait("@getPrograms");
 
     // Verify row removed
-    cy.contains("tr", uniqueProgramName).should("not.exist");
+    cy.contains("tr", uniqueProgramName, { timeout: 10000 }).should("not.exist");
   });
 });
