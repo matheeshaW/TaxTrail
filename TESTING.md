@@ -141,6 +141,94 @@ This generates an HTML report file you can open in a browser for latency/through
 
 ---
 
+## Frontend Cypress Testing (E2E)
+
+The frontend uses Cypress for end-to-end testing. This is a lightweight setup intended for component-by-component or module-by-module flows, so each team member can add a single spec file for their own area.
+
+### Current TaxTrail flow test
+
+The main example test lives at:
+
+```
+frontend/cypress/e2e/TaxContributionFlowTest.cy.js
+```
+
+It covers the Tax Contribution module flow:
+
+1. Log in as Admin.
+2. Navigate to Tax Contributions.
+3. Open the create form.
+4. Fill the form and create a record.
+5. Wait for the table to refresh.
+6. Delete the newly created record.
+
+### Current Budget Allocation flow test
+
+The Budget Allocation module test lives at:
+
+```
+frontend/cypress/e2e/BudgetAllocationFlowTest.cy.js
+```
+
+It covers the Budget Allocation module flow:
+
+1. Log in as Admin.
+2. Navigate to Budget Allocation.
+3. Open the create form.
+4. Fill the form with sector, income group, amount, year, and region.
+5. Wait for the table to refresh.
+6. Verify the newly created record appears in the table.
+7. Delete the created record.
+8. Verify the record is removed from the table.
+
+### Prerequisites
+
+1. Install frontend dependencies:
+
+```bash
+cd frontend
+npm install
+```
+
+2. Make sure Cypress is installed as a dev dependency in the frontend package.
+
+3. Provide Admin credentials for Cypress in `frontend/cypress.env.json`:
+
+```json
+{
+  "adminEmail": "your-admin-email@example.com",
+  "adminPassword": "your-admin-password"
+}
+```
+
+### Run the Cypress test
+
+Start the backend and frontend in separate terminals:
+
+```bash
+cd backend
+npm run dev
+```
+
+```bash
+cd frontend
+npm run dev
+```
+
+Run the Cypress spec from the frontend folder:
+
+```bash
+npm run cy:run
+```
+
+Or open the Cypress runner interactively:
+
+```bash
+npm run cy:open
+```
+
+---
+
 ## Testing Environment Configuration
 
 ### Jest Configuration
