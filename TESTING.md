@@ -162,6 +162,25 @@ It covers the Tax Contribution module flow:
 5. Wait for the table to refresh.
 6. Delete the newly created record.
 
+### Current Budget Allocation flow test
+
+The Budget Allocation module test lives at:
+
+```
+frontend/cypress/e2e/BudgetAllocationFlowTest.cy.js
+```
+
+It covers the Budget Allocation module flow:
+
+1. Log in as Admin.
+2. Navigate to Budget Allocation.
+3. Open the create form.
+4. Fill the form with sector, income group, amount, year, and region.
+5. Wait for the table to refresh.
+6. Verify the newly created record appears in the table.
+7. Delete the created record.
+8. Verify the record is removed from the table.
+
 ### Prerequisites
 
 1. Install frontend dependencies:
@@ -207,7 +226,6 @@ Or open the Cypress runner interactively:
 ```bash
 npm run cy:open
 ```
-
 
 ---
 
