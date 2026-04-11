@@ -1463,9 +1463,68 @@ Example response:
 
 ## Testing & Quality Assurance
 
-- **Unit & Integration Testing:** Implemented using `Jest`, `Supertest`, and `mongodb-memory-server`. Achieved 100% pass rate across core controller operations.
-- **Performance Testing:**Evaluated using Artillery.io with dynamic JWT authentication flows. Successfully simulated real-world sustained traffic, achieving a 100% success rate with zero timeouts. The system maintained an average response time of ~600ms even while resolving external network requests to the World Bank API and executing complex MongoDB aggregation pipelines.
+Testing is implemented across Unit, Integration, and Performance layers using:
 
+- `Jest`
+- `Supertest`
+- `mongodb-memory-server`
+- `Artillery (Load Testing)`
+
+Test File Locations:
+```
+Integration: backend/tests/regionDev.test.js
+```
+```
+Unit: backend/tests/regionDev.service.test.js
+```
+```
+Performance: backend/performance_test/load-test-regiondev.yaml
+```
+**Covered Scenarios**
+
+- Admin and Public user registration
+
+- JWT authentication enforcement (401 for missing token)
+
+- Role-based access control (403 for unauthorized access)
+
+- Successful regional data creation (Admin)
+
+- Validation failures (400 for invalid payload)
+
+- ObjectId format validation (400)
+
+- Retrieval of all regional records with pagination/sorting
+
+- Retrieval of single regional record by ID
+
+- Update operation (Admin only)
+
+- Delete operation (Admin only)
+
+- Post-deletion 404 behavior
+
+- Region dependency validation (Foreign key constraints)
+
+- SDG Network Resilience: Handling World Bank API successful fetches and graceful offline fallback caching during ETIMEDOUT network failures.
+
+- Performance Testing: System stability validation across warm-up, moderate load, sustained high load (50 req/sec), and stress spike phases.
+
+**Testing ensures:**
+
+- Correct HTTP status codes
+
+- Proper RBAC enforcement
+
+- Validation correctness
+
+- Database isolation using in-memory MongoDB
+
+- Full CRUD lifecycle integrity
+
+- Resilience against third-party API network failures and timeouts
+
+- System endurance and acceptable response times under heavy user traffic
 ---
 
 ## Validation & Error Handling
