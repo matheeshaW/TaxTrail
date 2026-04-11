@@ -103,6 +103,17 @@ export default function useTaxContribution() {
         }
     };
 
+    const fetchOne = async (id) => {
+        setError(null);
+        try {
+            const res = await taxService.getTaxById(id);
+            return res.data.data;
+        } catch (err) {
+            setError("Failed to fetch tax record details");
+            throw err;
+        }
+    };
+
     return {
         data,
         summary,
@@ -117,6 +128,7 @@ export default function useTaxContribution() {
         setPagination,
         fetchAll,
         fetchSummary,
+        fetchOne,
         create,
         update,
         remove
